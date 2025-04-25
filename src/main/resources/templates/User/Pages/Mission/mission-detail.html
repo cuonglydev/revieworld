@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reviewords</title>
+
+  <div th:replace="~{User/Fragment/element :: head}"></div>
+  
+  <link rel="stylesheet" href="/User/css/mission.css">
+
+
+</head>
+
+<body>
+
+ <div th:replace="~{User/Fragment/element :: header}"></div>
+
+
+  <div class="container">
+    <div class="border-bottom border-secondary-subtle d-flex justify-content-between p-2">
+        <a href="#" id="goBack" class="text-secondary fs__12px"><i class="fa-solid fa-arrow-left"></i> Trở về</a>
+        <span class="fw-semibold">Dịch vụ reviews map</span>
+    </div>
+</div>
+
+
+  <section class="mt-3">
+    <div class="container">
+        <h5 class="mb-0 fw-semibold">Dịch vụ review</h5>
+        <span class="text-success">$0.5</span>
+
+        <div class="rounded shadow-sm bg-light p-2 mt-2">
+            <div class="row">
+                <div class="col-12 col-md-4">
+                    <img class="w-100 rounded" src="/User/assets/photo/order.png"> 
+                </div>
+                <div class="col-12 col-md-8">
+                    <p class="mb-0 fw-semibold fs-5">Description</p>
+                    <span class="text-secondary">user@gmail.com</span>
+                    <div>
+                        <span class="fw-semibold">Link:</span>
+                        <span>https://maps.app.goo.gl/9KEdRYgVZzTmNcaW6</span>
+                    </div>
+                    <div>
+                        <span class="fw-semibold">Số lượng đã đánh giá:</span>
+                        <span>10/100</span>
+                    </div>
+                    <div>
+                        <p class="mb-0 fw-semibold">Yêu cầu chi tiết:</p>
+                        <div>
+                        	<span class="fw-semibold">Ngôn ngữ:</span>
+                        	<span >Tiếng việt</span>
+                        </div>
+                        <span>Bài viết review cần phải đảm bảo nội dung mang tính khách quan nhất có thể, nhưng vẫn đan xen ý kiến chủ quan của người viết trong quá trình sử dụng sản phẩm để giúp khách hàng hiểu rõ hơn về lợi ích mà sản phẩm có thể mang lại. Đây là lời giải đáp cho câu hỏi vì sao những bài review thường thu hút rất nhiều người đọc, song mang lại độ tin cậy cao hơn những bài quảng cáo, PR thông thường.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="rounded shadow-sm p-2 bg-light mt-2">
+            
+            
+
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">
+                    <div class="fw-semibold">
+                        <span class=" bg__orange__subtle rounded p-1">Bước 1:</span>
+                        <span>Copy tên ở đây</span>
+                    </div>
+                </label>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" readonly value="map name" id="copyInput">
+                    <button class="btn btn-outline-secondary" type="button"  id="copyButton">Copy</button>
+                  </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">
+                    <div class="fw-semibold">
+                        <span class=" bg__orange__subtle rounded p-1">Bước 2:</span>
+                        <span>Dán tên được copy ở trên vào thanh tìm kiếm ở trang dưới đây</span>
+                    </div>
+                </label>
+                <a class="btn w-100 btn__orange">Mở trang web</a>
+              </div>
+
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">
+                    <div class="fw-semibold">
+                        <span class=" bg__orange__subtle rounded p-1">Bước 3:</span>
+                        <span>Viết đánh giá theo yêu cầu của đơn hàng</span>
+                    </div>
+                </label>
+                
+              </div>
+
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">
+                    <div class="fw-semibold">
+                        <span class=" bg__orange__subtle rounded p-1">Bước 4:</span>
+                        <span>Dán link bạn đã đánh giá và ấn xác nhận hoàn thành</span>
+                    </div>
+                </label>
+                <input type="text" class="form-control" placeholder="Nhập link đã đánh giá ở đây" required>
+              </div>
+              
+              <button class="btn btn-primary w-100">Xác nhận</button>
+        </div>
+
+    </div>
+  </section>
+
+
+
+
+  <div th:replace="~{User/Fragment/element :: footer}"></div>
+
+  <script src="/User/js/copyText.js"></script>
+  <script src="/User/js/bootstrap.bundle.min.js"></script>
+  <script src="/User/js/menu.js"></script>
+  <script src="/User/js/goBack.js"></script>
+</body>
+
+</html>

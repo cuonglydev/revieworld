@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reviewords</title>
+
+        <div th:replace="~{User/Fragment/element :: head}"></div>
+
+</head>
+
+<body>
+
+        <div th:replace="~{User/Fragment/element :: header}"></div>
+  
+    
+  <div class="container">
+    <div class="border-bottom border-secondary-subtle d-flex justify-content-between p-2">
+        <a href="#" id="goBack" class="text-secondary fs__12px"><i class="fa-solid fa-arrow-left"></i> Trở về</a>
+        <span class="fw-semibold">Nạp tiền</span>
+    </div>
+</div>
+
+<section class="mt-3">
+    <div class="medium__container">
+        <div class="rounded shadow-sm p-2 bg-light">
+            <form >
+                
+                  <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">1. Nhập số tiền muốn nạp vào ví</label>
+                    <div class="input-group ">
+                        <span class="input-group-text">$</span>
+                        <div class="form-floating">
+                          <input type="number" class="form-control" id="floatingInputGroup1" placeholder="Số tiền" required min="5" step="0.01" >
+                          <label for="floatingInputGroup1">Số tiền</label>
+                        </div>
+                      </div>
+                    <div  class="form-text">Số tiền nạp tối thiểu là $5</div>
+                  </div>
+                  
+                  
+
+				<label for="exampleInputEmail1" class="form-label">2. Chọn cổng thanh toán</label>
+                  <div class="mb-3 d-flex">
+                    <input type="radio" class="btn-check" name="method" id="sepay-check" autocomplete="off" checked>
+                    <label class="btn btn-outline-dark w-50 py-3 rounded-end-0" for="sepay-check"><img src="/User/assets/photo/sepay_icon.png" style="height: 30px;"> Sepay</label>
+                    
+                    <input type="radio" class="btn-check" name="method" id="paypal-check" autocomplete="off">
+                    <label class="btn btn-outline-dark w-50 py-3 rounded-start-0" for="paypal-check"><img src="/User/assets/photo/usdt_icon.png" style="height: 30px;"> USDT</label>
+                  </div>
+
+                  <button class="btn btn-success w-100">Thanh toán</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+
+
+ 
+
+  <script src="/User/js/goBack.js"></script>
+  <script src="/User/js/bootstrap.bundle.min.js"></script>
+  <script src="/User/js/menu.js"></script>
+</body>
+
+</html>

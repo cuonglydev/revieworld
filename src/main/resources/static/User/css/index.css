@@ -1,0 +1,47 @@
+.landing-hero, .landing-section {
+    padding: 40px 20px;
+    text-align: center;
+  }
+  .landing-hero {
+    background-color: var(--color-orange);
+    color: white;
+  }
+  .landing-hero__title {
+    font-size: 2.5rem;
+  }
+
+  .landing-highlight {
+    background-color: #fff0e0;
+    padding: 20px;
+    border-radius: 12px;
+    margin: 20px auto;
+    max-width: 800px;
+  }
+  .landing-table {
+    margin: 0 auto;
+    max-width: 800px;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  .landing-table th, .landing-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    background-color: white;
+  }
+  .landing-table th {
+    background-color: #ffe0c0;
+  }
+  .landing-testimonial {
+    font-style: italic;
+    background-color: #fff3e0;
+    padding: 15px 20px;
+    border-left: 6px solid #ff7a00;
+    margin: 20px auto;
+    max-width: 700px;
+    border-radius: 8px;
+  }
+  .landing-footer {
+    text-align: center;
+    padding: 30px;
+    background-color: #f2f2f2;
+  }

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reviewords</title>
+
+    <div th:replace="~{User/Fragment/element :: head}"></div>
+  <link rel="stylesheet" href="/User/css/booking.css">
+
+
+</head>
+
+<body>
+
+  <div th:replace="~{User/Fragment/element :: header}"></div>
+
+
+
+  <section class="mt-3">
+    <div class="container">
+
+        <div class="p-2 rounded mt-2 bg-light">
+            <div class="d-flex justify-content-between">
+                <span>user@gmail.com</span>
+                <div>
+                    <span class="text-secondary"><i class="fa-solid fa-wallet"></i></span>
+                    <span>$50</span>
+                </div>
+            </div>
+        </div>
+
+        <h6 class="fw-semibold mt-2">Booking dịch vụ</h6>
+        <div class="row">
+            <div class="col-md-4  col-6 mb-2">
+                <div class=" bg-light rounded shadow-sm  overflow-hidden">
+                    <div class="w-100 booking__element" >
+                        <img class="w-100 h-100 object-fit-cover" src="User/assets/photo/reviews-map-service.jpg">
+                    </div>
+                    <div class="p-2">
+                        <a href="/booking-detail" class="mb-1 fw-semibold text-decoration-none text-dark" >Reviewmap service</a>
+                        <div class="d-flex justify-content-between align-items-end">
+                            <div>
+                               
+                                <span class="text-decoration-line-through text-secondary">$1</span>
+                                <span class="text-danger fw-semibold">$0.5</span>
+                            </div>
+                            <a class="btn btn-primary " href="/booking-detail"><i class="fa-solid fa-plus"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4  col-6 mb-2">
+                <div class=" bg-light rounded shadow-sm  overflow-hidden">
+                    <div class="w-100 booking__element" >
+                        <img class="w-100 h-100 object-fit-cover" src="/User/assets/photo/reviews-fanpage-service.jpg">
+                    </div>
+                    <div class="p-2">
+                        <p class="mb-1 fw-semibold">Review fanpage service</p>
+                        <div class="d-flex justify-content-between align-items-end">
+                            <div>
+                               
+                                <span class="text-decoration-line-through text-secondary">$1</span>
+                                <span class="text-danger fw-semibold">$0.5</span>
+                            </div>
+                            <a class="btn btn-primary "><i class="fa-solid fa-plus"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h6 class="fw-semibold ">Dịch vụ bạn đang đặt</h6>
+
+        <div class="row">
+            <div class="col-12 col-md-6 mb-3">
+                <div class=" bg__gray__subtle rounded  d-flex">
+                    <a class="w-50 overflow-hidden rounded-start order__element bg-light" href="/order-detail">
+                        <img class="h-100 w-100 object-fit-cover hover__img " src="/User/assets/photo/order.png" >
+                    </a>
+                    <div class="w-50 text-light p-2 position-relative d-flex flex-column justify-content-between">
+
+                      <div>
+                        <div class="position-absolute end-0">
+                            <div class="btn-group">
+                                <a type="button" class="px-2 text-light " data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end fs__12px" >
+                                  <li><a  href="/order-detail" class="dropdown-item" type="button">Chi tiết</a></li>
+                                  <li><a class="dropdown-item" type="button">Tạm dừng</a></li>
+                                </ul>
+                              </div>
+                        </div>
+
+                        <div class="pe-3">
+                            <a  href="/order-detail" class="text-decoration-none text-light ">Dịch vụ reviewmap </a>
+                        </div>
+
+                        <div>
+                            <span class=" d-inline-block fs__12px text__gray text-truncate" style="max-width: 150px;" >Nội dung hay content là những thông tin chứa đựng bên trong các phương tiện truyền thông bao gồm Internet, điện ảnh, truyền hình, truyền thanh radio, đĩa CD/VCD, DVD, sách báo, tạp chí, nghệ thuật tạo hình cũng như các sự kiện trực tiếp.</span>
+                        </div>
+                      </div>
+
+                        <div class=" d-flex justify-content-between align-items-center">
+                            <span>100/100</span>    
+                            <span class="fs__12px text__gray">00:00 15/05/2025</span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6 mb-3">
+                <div class=" bg__gray__subtle rounded  d-flex">
+                    <a class="w-50 overflow-hidden rounded-start order__element bg-light" href="#">
+                        <img class="h-100 w-100 object-fit-cover hover__img " src="/User/assets/photo/order.png" >
+                    </a>
+                    <div class="w-50 text-light p-2 position-relative d-flex flex-column justify-content-between">
+
+                      <div>
+                        <div class="position-absolute end-0">
+                            <div class="btn-group">
+                                <a type="button" class="px-2 text-light " data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end fs__12px" >
+                                  <li><a class="dropdown-item" type="button">Chi tiết</a></li>
+                                  <li><a class="dropdown-item" type="button">Tạm dừng</a></li>
+                                </ul>
+                              </div>
+                        </div>
+
+                        <div class="pe-3">
+                            <a class="text-decoration-none text-light " href="#">Dịch vụ reviewmap </a>
+                        </div>
+
+                        <div>
+                            <span class=" d-inline-block fs__12px text__gray text-truncate" style="max-width: 150px;" >Nội dung hay content là những thông tin chứa đựng bên trong các phương tiện truyền thông bao gồm Internet, điện ảnh, truyền hình, truyền thanh radio, đĩa CD/VCD, DVD, sách báo, tạp chí, nghệ thuật tạo hình cũng như các sự kiện trực tiếp.</span>
+                        </div>
+                      </div>
+
+                        <div class=" d-flex justify-content-between align-items-center">
+                            <span>100/100</span>    
+                            <span class="fs__12px text__gray">00:00 15/05/2025</span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6 mb-3">
+                <div class=" bg__gray__subtle rounded  d-flex">
+                    <a class="w-50 overflow-hidden rounded-start order__element bg-light" href="#">
+                        <img class="h-100 w-100 object-fit-cover hover__img " src="/User/assets/photo/order.png" >
+                    </a>
+                    <div class="w-50 text-light p-2 position-relative d-flex flex-column justify-content-between">
+
+                      <div>
+                        <div class="position-absolute end-0">
+                            <div class="btn-group">
+                                <a type="button" class="px-2 text-light " data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end fs__12px" >
+                                  <li><a class="dropdown-item" type="button">Chi tiết</a></li>
+                                  <li><a class="dropdown-item" type="button">Tạm dừng</a></li>
+                                </ul>
+                              </div>
+                        </div>
+
+                        <div class="pe-3">
+                            <a class="text-decoration-none text-light " href="#">Dịch vụ reviewmap </a>
+                        </div>
+
+                        <div>
+                            <span class=" d-inline-block fs__12px text__gray text-truncate" style="max-width: 150px;" >Nội dung hay content là những thông tin chứa đựng bên trong các phương tiện truyền thông bao gồm Internet, điện ảnh, truyền hình, truyền thanh radio, đĩa CD/VCD, DVD, sách báo, tạp chí, nghệ thuật tạo hình cũng như các sự kiện trực tiếp.</span>
+                        </div>
+                      </div>
+
+                        <div class=" d-flex justify-content-between align-items-center">
+                            <span>100/100</span>    
+                            <span class="fs__12px text__gray">00:00 15/05/2025</span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+              <a href="/all-order" class="text-dark">Tất cả dịch vụ bạn đã đặt <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+        </div>
+
+    </div>
+  </section>
+
+  <div th:replace="~{User/Fragment/element :: footer}"></div>
+
+  <script src="/User/js/bootstrap.bundle.min.js"></script>
+  <script src="/User/js/menu.js"></script>
+</body>
+
+</html>

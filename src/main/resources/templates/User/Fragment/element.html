@@ -1,0 +1,178 @@
+<div th:fragment="head">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <link rel="stylesheet" href="/User/css/bootstrap.css">
+
+  <link rel="stylesheet" href="/User/css/header.css">
+  <link rel="stylesheet" href="/User/css/font.css">
+  <link rel="stylesheet" href="/User/css/main.css">
+  <link rel="stylesheet" href="/User/css/variables.css">
+  <link rel="stylesheet" href="/User/css/footer.css"> 
+</div>
+
+<div th:fragment="header">
+ <header class="bg-light shadow-sm d-flex align-items-center">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center">
+        <a href="/index" class="d-flex align-items-center">
+          <img class="logo-header" src="/User/assets/photo/media_1eeac4f414fef7a2538f45d131ecae95e859923d9.png">
+        </a>
+
+        <div class="large-content">
+
+          <ul class="nav fw-medium">
+            <li class="nav-item">
+              <a class="nav-link menu-item menu__item btn__orange__subtle__hover mx-1 " aria-current="page"
+                href="/index">Trang chủ</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link menu-item menu__item btn__orange__subtle__hover mx-1" href="/booking">Booking</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link menu-item menu__item btn__orange__subtle__hover mx-1 " href="/mission">Nhiệm vụ</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link menu-item menu__item btn__orange__subtle__hover mx-1" href="https://t.me/lilcuong23" target="_blank">Hỗ trợ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link menu-item menu__item btn__orange__subtle__hover ms-1" href="/account">Tài khoản</a>
+            </li>
+
+          </ul>
+
+        </div>
+
+        <div class="medium-content">
+          <button class="btn btn__orange" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu"
+            aria-controls="offcanvasMenu"><i class="fa-solid fa-bars"></i></button>
+
+          <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title" id="offcanvasMenuLabel"> <img class="logo-header" src="/User/assets/photo/media_1eeac4f414fef7a2538f45d131ecae95e859923d9.png"></h5>
+              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+              <div class="list-group">
+                <a href="/index.html" class="list-group-item list-group-item-action menu-item" aria-current="true">
+                  Trang chủ
+                </a>
+                <a href="/booking" class="list-group-item list-group-item-action menu-item">Booking</a>
+                <a href="/mission" class="list-group-item list-group-item-action menu-item">Nhiệm vụ</a>
+                <a href="https://t.me/lilcuong23" target="_blank" class="list-group-item list-group-item-action menu-item">Hỗ trợ</a>
+                <a href="/account" class="list-group-item list-group-item-action menu-item">Tài khoản</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </header>
+</div>
+
+<div th:fragment="footer">
+<footer  class="bg-dark mt-3">
+    <div class="container">
+      <div class="row py-2">
+       <div class="col-md-6 col-12">
+        <img class="logo-footer" src="/User/assets/photo/media_1eeac4f414fef7a2538f45d131ecae95e859923d9.png">
+       </div>
+
+        <div class="col-md-6 col-12 ">
+          <ul class="nav fw-medium menu-footer">
+            <li class="nav-item">
+              <a class="nav-link  mx-1 text-light " aria-current="page"
+                href="/index.html">FAQ</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link text-light " href="#">Miễn trừ trách nhiệm</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link text-light " href="#">item</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link text-light " href="#">item</a>
+            </li>
+          </ul>
+
+        </div>
+      </div>
+
+      <div class="text-center">
+        <i style="font-size: 11px;" class="text-light">COPYRIGHT © 2025 REVIEWORD.</i>
+      </div>
+    </div>
+
+  </footer>
+
+</div>
+
+ <div th:fragment="toast">
+
+	<div class="position-fixed top-0 end-0 p-3 " style="z-index: 1000">
+		<div class="toast align-items-center text-bg-light border border-success-subtle mb-2 notice" role="alert"
+			aria-live="assertive" aria-atomic="true" data-bs-delay="3000" th:if="${success != null}">
+			<div class="toast-header">
+        <i class="fa-solid fa-circle-check  me-2 text-success"></i>
+        <strong class="me-auto text-success" >Thành công</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body ">
+       <span th:text="${success}"></span>
+      </div>
+		</div>
+
+		<div class="toast align-items-center text-bg-light border border-danger-subtle mb-2 notice" role="alert"
+			aria-live="assertive" aria-atomic="true" data-bs-delay="3000" th:if="${danger != null}">
+			<div class="toast-header">
+        <i class="fa-solid fa-triangle-exclamation me-2 text-danger"></i>
+        <strong class="me-auto text-danger" >Thất bại</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body ">
+       <span th:text="${danger}"></span>
+      </div>
+		</div>
+	</div>
+
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			// Initialize all toasts on the page
+			const toastElements = document.querySelectorAll('.notice');
+			toastElements.forEach(toastEl => {
+				// Use Bootstrap's Toast API to show the toast
+				const toast = new bootstrap.Toast(toastEl);
+				toast.show();
+			});
+		});
+	</script>
+</div>
+
+<div th:fragment="spinners">
+
+<div id="spinner-overlay" style="display: none;">
+  <div class="spinner-border text-secondary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+
+<script>
+  window.addEventListener("beforeunload", function () {
+    document.getElementById("spinner-overlay").style.display = "flex";
+  });
+
+  window.addEventListener("load", function () {
+    document.getElementById("spinner-overlay").style.display = "none";
+  });
+</script>
+</div>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reviewords</title>
+
+     <div th:replace="~{User/Fragment/element :: head}"></div>
+
+
+
+</head>
+
+<body>
+
+     <div th:replace="~{User/Fragment/element :: header}"></div>
+
+
+  <div class="container">
+    <div class="border-bottom border-secondary-subtle d-flex justify-content-between p-2">
+        <a href="#" id="goBack" class="text-secondary fs__12px"><i class="fa-solid fa-arrow-left"></i> Trở về</a>
+        <span class="fw-semibold">Dịch vụ reviews map</span>
+    </div>
+</div>
+
+
+
+<section class="my-3">
+    <div class="container">
+       <div class="rounded shadow-sm p-2 bg-light">
+        <h5 class="fw-semibold">Map name</h5>
+        <p class="mb-0 text-success">+$0.5</p>
+        <span>10:10 17/02/2025</span>
+        <div class="mb-3">
+            <span>Link:</span>
+            <a href="#">http://127.0.0.1:5500/pages/mission-history-detail.html</a>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center">
+            <span class="badge bg-danger">Đã từ chối</span>
+            <a class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#exampleModal-appeal">Kháng đơn</a>
+
+            <div class="modal fade" id="exampleModal-appeal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header border-0">
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">Kháng đơn</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      Khi kháng đơn sẽ gửi đơn lên ADMIN chờ xem xét và sẽ có kết quả sau 3-5 ngày, bạn có muốn kháng đơn?
+                    </div>
+                    <div class="modal-footer border-0">
+                      <button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button>
+                      <button type="button" class="btn btn-primary">Xác nhận</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+        </div>
+       </div>
+
+       <div class="mt-2 rounded shadow-sm p-2 bg-light">
+        <h6 class="fw-semibold">Nội dung từ người thuê:</h6>
+        <span>Thái độ khi từ chối đóng vai trò quan trọng trong việc duy trì mối quan hệ và bảo vệ giá trị cá nhân. Để từ chối một cách hiệu quả, cá nhân cần duy trì một thái độ tôn trọng và lịch sự, không tỏ ra thô lỗ hay thiếu kiên nhẫn. </span>
+       </div>
+
+       <div class="mt-2 rounded shadow-sm p-2 bg-light">
+        <h6 class="fw-semibold">Nội dung từ ADMIN:</h6>
+        <span>Thái độ khi từ chối đóng vai trò quan trọng trong việc duy trì mối quan hệ và bảo vệ giá trị cá nhân. Để từ chối một cách hiệu quả, cá nhân cần duy trì một thái độ tôn trọng và lịch sự, không tỏ ra thô lỗ hay thiếu kiên nhẫn. </span>
+       </div>
+
+    </div>
+</section>
+
+
+
+  
+
+  <script src="/User/js/copyText.js"></script>
+  <script src="/User/js/bootstrap.bundle.min.js"></script>
+  <script src="/User/js/menu.js"></script>
+  <script src="/User/js/goBack.js"></script>
+</body>
+
+</html>

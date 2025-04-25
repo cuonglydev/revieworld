@@ -1,0 +1,17 @@
+.booking__element{
+    height: 200px ;
+}
+
+.order__element{
+    height: 120px;
+}
+
+@media screen and (max-width: 768px) {
+    .booking__element{
+        height: 120px;
+    }
+    .order__element{
+        height: 100px;
+    }
+    
+}
