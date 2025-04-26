@@ -54,8 +54,8 @@ public class User {
 	@Column(name = "bonus_amount")
 	private Double bonusAmount;
 	
-	@Column(name = "total_deposit")
-	private Double totalDeposit;
+	@Column(name = "total_deposited")
+	private Double totalDeposited;
 	
 	@Column(name = "invite_code")
 	private String inviteCode;
