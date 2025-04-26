@@ -55,6 +55,9 @@ public class User {
 	@Column(name = "bonus_amount")
 	private Double bonusAmount;
 	
+	@Column(name = "total_deposit")
+	private Double totalDeposit;
+	
 	@Column(name = "invite_code")
 	private String inviteCode;
 	
