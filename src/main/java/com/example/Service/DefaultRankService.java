@@ -20,7 +20,7 @@ public class DefaultRankService {
 		defaultRankRepository.save(defaultRank);
 	}
 	
-	public void update2(DefaultRank defaultRank) {
+	public void update3(DefaultRank defaultRank) {
 		defaultRankRepository.save(defaultRank);
 	}
 }
