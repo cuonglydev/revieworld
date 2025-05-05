@@ -26,15 +26,11 @@ public class UserAuthDetailsService implements UserDetailsService {
 	        throw new UsernameNotFoundException("Email không tồn tại: " + email);
 	    }
 	    
-	    System.out.println("☎️ Đang xác thực: " + email);
+	    System.out.println("Đang xác thực: " + email);
 	    System.out.println("Hash trong DB: " + user.getPassword());
 	    
 	   
 
-	    return new org.springframework.security.core.userdetails.User(
-	            user.getEmail(),
-	            user.getPassword(),
-	            Collections.emptyList() // không có role
-	    );
+	    return new CustomUserDetails(user);
 	}
 }

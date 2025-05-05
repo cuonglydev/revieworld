@@ -79,7 +79,7 @@ public class SecurityConfig {
 	public SecurityFilterChain userSecurityFilterChain(HttpSecurity http,  ClientRegistrationRepository clientRegistrationRepository) throws Exception{
 		http
 		.authorizeHttpRequests(auth -> auth
-	            .requestMatchers("/User/Pages/account/**").authenticated() 
+	            .requestMatchers("/User/Pages/account/**", "/account/**").authenticated() 
 	            .anyRequest().permitAll() 
 	        )
 			.formLogin(form -> form

@@ -4,6 +4,10 @@ function checkPasswordsMatch() {
     const toastEl = document.getElementById('passwordError'); // toast element
     const toast = new bootstrap.Toast(toastEl); // tạo đối tượng Toast
 
+	if (password === '' || confirmPassword === '') {
+	     return false; // Ngừng gửi form
+	 }
+	
     if (password !== confirmPassword) {
       toast.show(); // gọi hiển thị
       return false; // Ngăn form submit

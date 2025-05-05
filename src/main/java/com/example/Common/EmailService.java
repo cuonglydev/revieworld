@@ -1,6 +1,7 @@
 package com.example.Common;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -15,10 +16,13 @@ public class EmailService {
 	@Autowired
 	JavaMailSender javaMailSender;
 
+	 @Value("${spring.mail.username}") 
+	 private String fromEmail;
 	
 	public void sendEmail(String to, String subject, String body) throws MessagingException {
 		MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        helper.setFrom(fromEmail); 
         helper.setTo(to);
         helper.setSubject(subject);
         helper.setText(body, true);
