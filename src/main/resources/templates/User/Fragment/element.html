@@ -73,7 +73,7 @@
               <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body">
-              <div class="list-group">
+              <div class="list-group" th:if="${#authorization.expression('isAuthenticated()')}">
                 <a href="/index.html" class="list-group-item list-group-item-action menu-item" aria-current="true">
                   Trang chủ
                 </a>
@@ -82,6 +82,13 @@
                 <a href="https://t.me/lilcuong23" target="_blank" class="list-group-item list-group-item-action menu-item">Hỗ trợ</a>
                 <a href="/account" class="list-group-item list-group-item-action menu-item">Tài khoản</a>
               </div>
+              
+               <div class="list-group"  th:if="${#authorization.expression('isAnonymous()')}">
+               
+                <a href="/login" class="list-group-item list-group-item-action menu-item">Đăng nhập</a>
+                <a href="/register" class="list-group-item list-group-item-action menu-item">Đăng ký</a>
+              </div>
+              
             </div>
           </div>
         </div>
