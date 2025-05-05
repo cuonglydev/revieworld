@@ -26,10 +26,6 @@ public class AdminDetailsService implements UserDetailsService{
 			throw new UsernameNotFoundException("Admin không tồn tại!");
 		}
 		
-		return new org.springframework.security.core.userdetails.User(
-			admin.getUsername(),
-			admin.getPassword(),
-			Collections.singletonList(new SimpleGrantedAuthority(admin.getRole()))
-		);
+		return new CustomAdminDetails(admin);
 	}
 }

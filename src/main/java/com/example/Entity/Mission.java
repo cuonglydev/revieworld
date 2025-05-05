@@ -36,6 +36,9 @@ public class Mission {
 	@Column(name = "note", nullable = true, length = 500)
 	private String note;
 	
+	@Column(name = "note_photo", nullable = true)
+	private String notePhoto;
+	
 	@Column(name = "admin_note", nullable = true, length = 500)
 	private String adminNote;
 	

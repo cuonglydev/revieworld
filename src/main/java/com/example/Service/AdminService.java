@@ -32,12 +32,6 @@ public class AdminService {
 	}
 	
 	public void save(Admin admin) {
-		if(admin.getPassword() != null && !admin.getPassword().isEmpty()) {
-			admin.setPassword(passwordEncoder.encode(admin.getPassword()));
-		}else {
-			Admin existingAdmin = findById(admin.getId());
-			admin.setPassword(existingAdmin.getPassword());
-		}
 		adminRepository.save(admin);
 	}
 	
