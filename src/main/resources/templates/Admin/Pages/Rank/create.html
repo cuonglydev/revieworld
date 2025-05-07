@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+
+<!-- =========================================================
+* Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
+==============================================================
+
+* Product Page: https://themeselection.com/products/sneat-bootstrap-html-admin-template/
+* Created by: ThemeSelection
+* License: You must have a valid license purchased in order to legally use the theme for your project.
+* Copyright ThemeSelection (https://themeselection.com)
+
+=========================================================
+ -->
+<!-- beautify ignore:start -->
+<html
+  lang="en"
+  class="light-style layout-menu-fixed"
+  dir="ltr"
+  data-theme="theme-default"
+  data-assets-path="/Admin/assets/"
+  data-template="vertical-menu-template-free"
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+    />
+
+    <title>ADMIN - Analytics</title>
+
+    <meta name="description" content="" />
+
+    <!-- Favicon -->
+   <div th:replace="~{Admin/Fragment/element :: head}"></div>
+   
+
+  </head>
+
+  <body>
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+      <div class="layout-container">
+        <!-- Menu -->
+<div th:replace="~{Admin/Fragment/element :: menu}"></div>
+        <!-- / Menu -->
+
+        <!-- Layout container -->
+        <div class="layout-page">
+          <!-- Navbar -->
+
+         <div th:replace="~{Admin/Fragment/element :: header}"></div>
+
+          <!-- / Navbar -->
+
+          <!-- Content wrapper -->
+          <div class="content-wrapper">
+            <!-- Content -->
+
+            <div class="container-xxl flex-grow-1 container-p-y">
+              <div class="row">
+              
+                <h1 class="mb-4">Create New Rank</h1>
+                <form th:action="@{/admin/rank/new}" method="post" class="needs-validation" novalidate>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="name" th:field="*{name}" required/>
+                        <div class="invalid-feedback">
+                            Please enter a rank name.
+                        </div>
+                    </div>
+                
+                    <div class="mb-3">
+                        <label for="threshold" class="form-label">Threshold</label>
+                        <input type="number" class="form-control" id="threshold" th:field="*{threshold}" required/>
+                    </div>
+                
+                    <div class="mb-3">
+                        <label for="percentage" class="form-label">Percentage</label>
+                        <input type="number" class="form-control" id="percentage" th:field="*{percentage}" required/>
+                    </div>
+                
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </form>
+             
+              </div>
+              
+            </div>
+            <!-- / Content -->
+
+            <!-- Footer -->
+            <!-- / Footer -->
+
+            <div class="content-backdrop fade"></div>
+          </div>
+          <!-- Content wrapper -->
+        </div>
+        <!-- / Layout page -->
+      </div>
+
+      <!-- Overlay -->
+      <div class="layout-overlay layout-menu-toggle"></div>
+    </div>
+    <!-- / Layout wrapper -->
+
+    
+    <!-- Core JS -->
+    <!-- build:js assets/vendor/js/core.js -->
+    <div th:replace="~{Admin/Fragment/element :: bag}"></div>
+<div th:replace="~{Admin/Fragment/element :: footer}"></div>
+  </body>
+</html>
