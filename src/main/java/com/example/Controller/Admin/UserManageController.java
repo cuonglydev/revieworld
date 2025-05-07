@@ -4,7 +4,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 
-
 @Controller
 @RequestMapping("/admin")
 public class UserManageController {
@@ -13,10 +12,10 @@ public class UserManageController {
 	public String userPage() {
 		return "Admin/Pages/User/user";
 	}
-	
-	@GetMapping("/rank")
-	public String rankPage() {
-		return "Admin/Pages/User/rank";
-	}
-	
+
+	// @GetMapping("/rank")
+	// public String rankPage() {
+	// return "Admin/Pages/User/rank";
+	// }
+
 }

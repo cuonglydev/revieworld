@@ -1,24 +1,11 @@
 <!DOCTYPE html>
-
-<!-- =========================================================
-* Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
-==============================================================
-
-* Product Page: https://themeselection.com/products/sneat-bootstrap-html-admin-template/
-* Created by: ThemeSelection
-* License: You must have a valid license purchased in order to legally use the theme for your project.
-* Copyright ThemeSelection (https://themeselection.com)
-
-=========================================================
- -->
-<!-- beautify ignore:start -->
 <html
-  lang="en"
-  class="light-style layout-menu-fixed"
-  dir="ltr"
-  data-theme="theme-default"
-  data-assets-path="/Admin/assets/"
-  data-template="vertical-menu-template-free"
+lang="en"
+class="light-style layout-menu-fixed"
+dir="ltr"
+data-theme="theme-default"
+data-assets-path="/Admin/assets/"
+data-template="vertical-menu-template-free"
 >
   <head>
     <meta charset="utf-8" />
@@ -27,14 +14,9 @@
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
 
-    <title>ADMIN - Analytics</title>
-
+    <title>ADMIN - Order Types</title>
     <meta name="description" content="" />
-
-    <!-- Favicon -->
-   <div th:replace="~{Admin/Fragment/element :: head}"></div>
-   
-
+    <div th:replace="~{Admin/Fragment/element :: head}"></div>
   </head>
 
   <body>
@@ -42,33 +24,213 @@
     <div class="layout-wrapper layout-content-navbar">
       <div class="layout-container">
         <!-- Menu -->
-<div th:replace="~{Admin/Fragment/element :: menu}"></div>
+        <div th:replace="~{Admin/Fragment/element :: menu}"></div>
         <!-- / Menu -->
 
         <!-- Layout container -->
         <div class="layout-page">
           <!-- Navbar -->
-
-         <div th:replace="~{Admin/Fragment/element :: header}"></div>
-
+          <div th:replace="~{Admin/Fragment/element :: header}"></div>
           <!-- / Navbar -->
 
           <!-- Content wrapper -->
           <div class="content-wrapper">
             <!-- Content -->
-
             <div class="container-xxl flex-grow-1 container-p-y">
               <div class="row">
-              
-              
-             
+                <div class="col-xl">
+                  <div class="card mb-4 p-2">
+                    <h5 class="mb-0 py-3 ps-2">Order Types</h5>
+
+                    <!-- Nút thêm OrderType -->
+                    <button type="button" class="btn btn-primary my-2" data-bs-toggle="modal" data-bs-target="#exampleModal-new">
+                      Thêm Order Type
+                    </button>
+                    <div class="modal fade" id="exampleModal-new" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Thêm Order Type</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <form th:action="@{/admin/ordertype/save}" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                              <div class="mb-3">
+                                <label for="name" class="form-label">Tên</label>
+                                <input type="text" class="form-control" id="name" name="name" required/>
+                                <div class="invalid-feedback">
+                                  Vui lòng nhập tên Order Type.
+                                </div>
+                              </div>
+                              <div class="mb-3">
+                                <label for="feePercentage" class="form-label">Phí phần trăm</label>
+                                <div class="input-group">
+                                  <span class="input-group-text">%</span>
+                                  <input type="number" class="form-control" id="feePercentage" name="feePercentage" required/>
+                                </div>
+                              </div>
+                              <div class="mb-3">
+                                <label for="photo" class="form-label">Ảnh</label>
+                                <input type="file" class="form-control" id="photo" name="photoFile" accept="image/*"/>
+                              </div>
+                              <div class="mb-3">
+                                <label for="price" class="form-label">Giá</label>
+                                <div class="input-group">
+                                  <span class="input-group-text">$</span>
+                                  <input type="number" class="form-control" id="price" name="price" required/>
+                                </div>
+                              </div>
+                              <div class="mb-3">
+                                <label for="promotionalPrice" class="form-label">Giá khuyến mãi</label>
+                                <div class="input-group">
+                                  <span class="input-group-text">$</span>
+                                  <input type="number" class="form-control" id="promotionalPrice" name="promotionalPrice"/>
+                                </div>
+                              </div>
+                              <div class="mb-3">
+                                <label for="slug" class="form-label">Slug</label>
+                                <input type="text" class="form-control" id="slug" name="slug" required/>
+                                <div class="invalid-feedback">
+                                  Vui lòng nhập slug.
+                                </div>
+                              </div>
+                              <div class="mb-3">
+                                <label for="url" class="form-label">URL</label>
+                                <input type="text" class="form-control" id="url" name="url"/>
+                              </div>
+                              <div class="mb-3">
+                                <label for="guide" class="form-label">Hướng dẫn</label>
+                                <textarea class="form-control" id="guide" name="guide"></textarea>
+                              </div>
+                              <button type="submit" class="btn btn-primary">Tạo</button>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Bảng danh sách OrderType -->
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th scope="col">Tên</th>
+                          <th scope="col">Phí phần trăm</th>
+                          <th scope="col">Giá</th>
+                          <th scope="col">Giá khuyến mãi</th>
+                          <th scope="col">Slug</th>
+                          <th scope="col">Hành động</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr th:each="orderType : ${orderTypes}">
+                          <td th:text="${orderType.name}"></td>
+                          <td th:text="${#numbers.formatDecimal(orderType.feePercentage, 0, 'COMMA', orderType.feePercentage % 1 == 0 ? 0 : 2, 'POINT')} + '%'"></td>
+                          <td th:text="'$ ' + ${#numbers.formatDecimal(orderType.price, 0, 'COMMA', 2, 'POINT')}"></td>
+                          <td th:text="${orderType.promotionalPrice} != null ? '$ ' + ${#numbers.formatDecimal(orderType.promotionalPrice, 0, 'COMMA', 2, 'POINT')} : 'N/A'"></td>
+                          <td th:text="${orderType.slug}"></td>
+                          <td>
+                            <!-- Modal sửa OrderType -->
+                            <div class="modal fade" th:id="'exampleModal-update-' + ${orderType.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Sửa Order Type</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <form th:action="@{/admin/ordertype/save}" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                                      <input type="hidden" name="id" th:value="${orderType.id}"/>
+                                      <div class="mb-3">
+                                        <label for="name" class="form-label">Tên</label>
+                                        <input type="text" class="form-control" id="name" name="name" th:value="${orderType.name}" required/>
+                                        <div class="invalid-feedback">
+                                          Vui lòng nhập tên Order Type.
+                                        </div>
+                                      </div>
+                                      <div class="mb-3">
+                                        <label for="feePercentage" class="form-label">Phí phần trăm</label>
+                                        <div class="input-group">
+                                          <span class="input-group-text">%</span>
+                                          <input type="number" class="form-control" id="feePercentage" name="feePercentage" th:value="${orderType.feePercentage}" required/>
+                                        </div>
+                                      </div>
+                                      <div class="mb-3">
+                                        <label for="photo" class="form-label">Ảnh hiện tại</label>
+                                        <div th:if="${orderType.photo}">
+                                          <img th:src="@{'/uploads/' + ${orderType.photo}}" width="100" alt="Order Type Photo"/>
+                                        </div>
+                                        <label for="photoFile" class="form-label">Chọn ảnh mới (nếu muốn thay đổi)</label>
+                                        <input type="file" class="form-control" id="photoFile" name="photoFile" accept="image/*"/>
+                                      </div>
+                                      <div class="mb-3">
+                                        <label for="price" class="form-label">Giá</label>
+                                        <div class="input-group">
+                                          <span class="input-group-text">$</span>
+                                          <input type="number" class="form-control" id="price" name="price" th:value="${orderType.price}" required/>
+                                        </div>
+                                      </div>
+                                      <div class="mb-3">
+                                        <label for="promotionalPrice" class="form-label">Giá khuyến mãi</label>
+                                        <div class="input-group">
+                                          <span class="input-group-text">$</span>
+                                          <input type="number" class="form-control" id="promotionalPrice" name="promotionalPrice" th:value="${orderType.promotionalPrice}"/>
+                                        </div>
+                                      </div>
+                                      <div class="mb-3">
+                                        <label for="slug" class="form-label">Slug</label>
+                                        <input type="text" class="form-control" id="slug" name="slug" th:value="${orderType.slug}" required/>
+                                        <div class="invalid-feedback">
+                                          Vui lòng nhập slug.
+                                        </div>
+                                      </div>
+                                      <div class="mb-3">
+                                        <label for="url" class="form-label">URL</label>
+                                        <input type="text" class="form-control" id="url" name="url" th:value="${orderType.url}"/>
+                                      </div>
+                                      <div class="mb-3">
+                                        <label for="guide" class="form-label">Hướng dẫn</label>
+                                        <textarea class="form-control" id="guide" name="guide" th:text="${orderType.guide}"></textarea>
+                                      </div>
+                                      <button type="submit" class="btn btn-primary">Lưu</button>
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <button type="button" class="btn btn-warning btn-sm" th:attr="data-bs-target='#exampleModal-update-' + ${orderType.id}" data-bs-toggle="modal">
+                              Edit
+                            </button>
+
+                            <!-- Modal xóa OrderType -->
+                            <div class="modal fade" th:id="'exampleModal-delete-' + ${orderType.id}" tabindex="-1" aria-labelledby="exampleModalLabel-delete" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Xóa</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                    Bạn có chắc rằng muốn xóa?
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <a th:href="@{/admin/ordertype/delete/{id}(id=${orderType.id})}" class="btn btn-danger btn-sm">Delete</a>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <button type="button" class="btn btn-danger btn-sm" th:attr="data-bs-target='#exampleModal-delete-' + ${orderType.id}" data-bs-toggle="modal">
+                              Xóa
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
-              
             </div>
             <!-- / Content -->
-
-            <!-- Footer -->
-            <!-- / Footer -->
 
             <div class="content-backdrop fade"></div>
           </div>
@@ -82,10 +244,7 @@
     </div>
     <!-- / Layout wrapper -->
 
-    
-    <!-- Core JS -->
-    <!-- build:js assets/vendor/js/core.js -->
     <div th:replace="~{Admin/Fragment/element :: bag}"></div>
-<div th:replace="~{Admin/Fragment/element :: footer}"></div>
+    <div th:replace="~{Admin/Fragment/element :: footer}"></div>
   </body>
 </html>

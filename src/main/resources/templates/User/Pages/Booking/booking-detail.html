@@ -38,58 +38,60 @@
 
 
             <div class=" mt-2">
-                <div class="bg-light p-2 rounded  shadow-sm">
-
-
-                    <form class=" m-3">
+                <div class="bg-light p-2 rounded shadow-sm " >
+                    <form class="m-3" th:object="${order}" th:action="@{/create-order}" method="post" enctype="multipart/form-data">
+                        <!-- Bước 1: Nhập tên map hoặc fanpage -->
                         <div class="mb-3">
-                            <label for="maps" class="form-label">
+                            <label for="mapName" class="form-label">
                                 <b>Bước 1: </b>
-                                <span class="fs-14">Nhập tên map hoặc fanpage của bạn </span>
+                                <span class="fs-14">Nhập tên map hoặc fanpage của bạn</span>
                             </label>
-                            <input type="text" class="form-control"  required
-                                placeholder="Tên map, fanpage ...">
+                            <input type="text" class="form-control" id="mapName" required placeholder="Tên map, fanpage ...">
                         </div>
+                    
+                        <!-- Bước 2: Nhập link cần review -->
                         <div class="mb-3">
-                            <label for="link" class="form-label">
-                                <b class="fs-14">Bước 2: </b>
+                            <label for="reviewLink" class="form-label">
+                                <b>Bước 2: </b>
                                 <span class="fs-14">Nhập link cần review của bạn</span>
                             </label>
-                            <input type="url" class="form-control" id="exampleInputEmail1" aria-describedby="link" required
-                                placeholder="https://...">
+                            <input type="url" class="form-control" id="reviewLink" aria-describedby="link" required placeholder="https://...">
                         </div>
+                    
+                        <!-- Bước 3: Mô tả dịch vụ -->
                         <div class="mb-3">
-                            <label for="maps" class="form-label">
+                            <label for="description" class="form-label">
                                 <b>Bước 3: </b>
-                                <span class="fs-14">Mô tả </span>
+                                <span class="fs-14">Mô tả dịch vụ của bạn</span>
                             </label>
-                            <input type="text" class="form-control" id="maps" required
-                                placeholder="Mô tả dịch vụ của bạn ...">
+                            <input type="text" class="form-control" id="description" required placeholder="Mô tả dịch vụ của bạn ...">
                         </div>
+                    
+                        <!-- Bước 4: Nhập số lượng review -->
                         <div class="mb-3">
-                            <label for="number" class="form-label">
-                                <b class="fs-14">Bước 4: </b>
-                                <span class="fs-14"> Nhập số lượng review cần mua</span>
+                            <label for="reviewQuantity" class="form-label">
+                                <b>Bước 4: </b>
+                                <span class="fs-14">Nhập số lượng review cần mua</span>
                             </label>
-                            <input type="number" class="form-control " id="numberInput" aria-describedby="number" required
-                                min="1" value="1">
+                            <input type="number" class="form-control" id="reviewQuantity" aria-describedby="quantity" required min="1" value="1">
                         </div>
-
+                    
+                        <!-- Bước 5: Tải lên hình ảnh -->
                         <div class="mb-3">
-                            <label for="maps" class="form-label">
+                            <label for="uploadImage" class="form-label">
                                 <b>Bước 5: </b>
                                 <span class="fs-14">Tải lên hình ảnh map hoặc fanpage cần review</span>
                             </label>
-                            <input type="file" class="form-control" required>
+                            <input type="file" class="form-control" id="uploadImage" required>
                         </div>
-
+                    
+                        <!-- Bước 6: Số lượng review 1 ngày -->
                         <div class="mb-3">
-                            <label for="maps" class="form-label">
+                            <label for="dailyReviewQuantity" class="form-label">
                                 <b>Bước 6: </b>
                                 <span class="fs-14">Số lượng review 1 ngày</span>
                             </label>
-                            <input type="number" class="form-control" id="turnNumber" required min="1"
-                                >
+                            <input type="number" class="form-control" id="dailyReviewQuantity" required min="1">
                         </div>
 
                         <div class="mb-3">
@@ -277,46 +279,48 @@
                         </div>
 
                         <div class="form-floating mb-3">
-                          
-                            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" required
-                                style="height: 100px"></textarea>
+                            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" required style="height: 100px"></textarea>
                             <label for="floatingTextarea2">Nhập yêu cầu chi tiết</label>
                         </div>
-
+                    
+                        <!-- Tổng tiền -->
                         <div class="mb-3 d-flex justify-content-end">
-                            <span class="fs-6 fw-bold  pe-1">Tổng tiền:</span>
+                            <span class="fs-6 fw-bold pe-1">Tổng tiền:</span>
                             <span class="fs-6 text-danger fw-bold" data-price-display></span>
                         </div>
+                    
+                        <!-- Xác nhận thanh toán -->
                         <div>
-                            <button type="button" id="confirmBtn" class="btn btn-primary form-control " data-bs-toggle="modal" data-bs-target="#exampleModal-confirm">Xác nhận</button>
+                            <button type="button" id="confirmBtn" class="btn btn-primary form-control" data-bs-toggle="modal" data-bs-target="#exampleModal-confirm">Xác nhận</button>
                         </div>
-
+                    
+                        <!-- Modal Xác nhận thanh toán -->
                         <div class="modal fade" id="exampleModal-confirm" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
-                              <div class="modal-content">
-                                <div class="modal-header border-0">
-                                  <h1 class="modal-title fs-5" id="exampleModalLabel">Xác nhận thanh toán đơn hàng</h1>
-                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <div class="modal-content">
+                                    <div class="modal-header border-0">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Xác nhận thanh toán đơn hàng</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="d-flex justify-content-between">
+                                            <span class="text-secondary">Số dư tài khoản:</span>
+                                            <span class="fw-semibold">$500</span>
+                                        </div>
+                                        <hr>
+                                        <div class="d-flex justify-content-between">
+                                            <span class="text-secondary">Giá trị đơn hàng:</span>
+                                            <span class="fw-semibold fs-6 text-danger" data-price-display>$50</span>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer border-0">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Thanh toán</button>
+                                    </div>
                                 </div>
-                                <div class="modal-body">
-                                  <div class="d-flex justify-content-between">
-                                    <span class="text-secondary">Số dư tài khoản:</span>
-                                    <span class="fw-semibold">$500</span>
-                                  </div>
-                                  <hr>
-                                  <div class="d-flex justify-content-between">
-                                    <span class="text-secondary">Giá trị đơn hàng:</span>
-                                    <span class="fw-semibold fs-6 text-danger" data-price-display>$50</span>
-                                  </div>
-                                </div>
-                                <div class="modal-footer border-0">
-                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                  <button type="button" class="btn btn-primary">Thanh toán</button>
-                                </div>
-                              </div>
                             </div>
-                          </div>
-
+                        </div>
+                    
                     </form>
 
 
