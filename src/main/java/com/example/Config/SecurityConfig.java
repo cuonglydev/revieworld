@@ -84,6 +84,7 @@ public class SecurityConfig {
 				.requestMatchers("/User/Pages/account/**").authenticated()
 				.anyRequest().permitAll()
 			)
+
 			.formLogin(form -> form
 				.loginPage("/login")
 				.loginProcessingUrl("/login")

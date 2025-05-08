@@ -20,27 +20,43 @@
           <img class="logo-header" src="/User/assets/photo/media_1eeac4f414fef7a2538f45d131ecae95e859923d9.png">
         </a>
 
-        <div class="large-content">
+        <div class="large-content" th:if="${#authorization.expression('isAuthenticated()')}">
 
           <ul class="nav fw-medium">
             <li class="nav-item">
               <a class="nav-link menu-item menu__item btn__orange__subtle__hover mx-1 " aria-current="page"
-                href="/index">Trang chủ</a>
+                href="/index"><i class="fa-solid fa-house text-warning"></i> Trang chủ</a>
             </li>
 
             <li class="nav-item">
-              <a class="nav-link menu-item menu__item btn__orange__subtle__hover mx-1" href="/booking">Booking</a>
+              <a class="nav-link menu-item menu__item btn__orange__subtle__hover mx-1" href="/booking"><i class="fa-solid fa-pager text-success"></i> Booking</a>
             </li>
 
             <li class="nav-item">
-              <a class="nav-link menu-item menu__item btn__orange__subtle__hover mx-1 " href="/mission">Nhiệm vụ</a>
+              <a class="nav-link menu-item menu__item btn__orange__subtle__hover mx-1 " href="/mission"><i class="fa-solid fa-notes-medical text-danger"></i> Nhiệm vụ</a>
             </li>
 
             <li class="nav-item">
-              <a class="nav-link menu-item menu__item btn__orange__subtle__hover mx-1" href="https://t.me/lilcuong23" target="_blank">Hỗ trợ</a>
+              <a class="nav-link menu-item menu__item btn__orange__subtle__hover mx-1" href="https://t.me/lilcuong23" target="_blank"><i class="fa-solid fa-headset text-info"></i> Hỗ trợ</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link menu-item menu__item btn__orange__subtle__hover ms-1" href="/account">Tài khoản</a>
+              <a class="nav-link menu-item menu__item btn__orange__subtle__hover ms-1" href="/account"><i class="fa-solid fa-user text-primary"></i> Tài khoản</a>
+            </li>
+
+          </ul>
+
+        </div>
+        
+         <div class="large-content" th:if="${#authorization.expression('isAnonymous()')}">
+
+          <ul class="nav fw-medium">
+            <li class="nav-item">
+              <a class="nav-link menu-item menu__item btn__orange__subtle__hover mx-1 " aria-current="page"
+                href="/login">Đăng nhập</a>
+            </li>
+             <li class="nav-item">
+              <a class="nav-link menu-item menu__item btn__orange__subtle__hover mx-1 " aria-current="page"
+                href="/register">Đăng ký</a>
             </li>
 
           </ul>
@@ -57,7 +73,7 @@
               <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body">
-              <div class="list-group">
+              <div class="list-group" th:if="${#authorization.expression('isAuthenticated()')}">
                 <a href="/index.html" class="list-group-item list-group-item-action menu-item" aria-current="true">
                   Trang chủ
                 </a>
@@ -66,6 +82,13 @@
                 <a href="https://t.me/lilcuong23" target="_blank" class="list-group-item list-group-item-action menu-item">Hỗ trợ</a>
                 <a href="/account" class="list-group-item list-group-item-action menu-item">Tài khoản</a>
               </div>
+              
+               <div class="list-group"  th:if="${#authorization.expression('isAnonymous()')}">
+               
+                <a href="/login" class="list-group-item list-group-item-action menu-item">Đăng nhập</a>
+                <a href="/register" class="list-group-item list-group-item-action menu-item">Đăng ký</a>
+              </div>
+              
             </div>
           </div>
         </div>

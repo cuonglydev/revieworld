@@ -31,6 +31,7 @@ import com.example.Service.MissionService;
 import com.example.Service.UserAffiliateService;
 import com.example.Service.DisputeService;
 
+
 @Controller
 @RequestMapping("/admin")
 public class UserManageController {
@@ -62,6 +63,7 @@ public class UserManageController {
 		model.addAttribute("users", users);
 		return "Admin/Pages/User/user";
 	}
+
 	
 	@GetMapping("/user/detail/{id}")
 	public String getUserDetail(@PathVariable("id") int userId, Model model) {
@@ -302,4 +304,12 @@ public class UserManageController {
 			return "Có lỗi xảy ra: " + e.getMessage();
 		}
 	}
+=======
+
+	// @GetMapping("/rank")
+	// public String rankPage() {
+	// return "Admin/Pages/User/rank";
+	// }
+
+
 }

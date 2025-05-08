@@ -1,7 +1,4 @@
-.landing-hero, .landing-section {
-    padding: 40px 20px;
-    text-align: center;
-  }
+
   .landing-hero {
     background-color: var(--color-orange);
     color: white;

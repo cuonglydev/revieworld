@@ -170,7 +170,7 @@ public class AuthController {
 				return "redirect:/login";
 			}else {
 				redirectAttributes.addFlashAttribute("danger", "Sai mã token!");
-				return "redirect:/register/confirm-token?" + userId;
+				return "redirect:/register-token?userId=" + userId;
 			}
 		}catch (Exception e) {
 			// TODO: handle exception
@@ -179,6 +179,110 @@ public class AuthController {
 		}
 		
 		
+	}
+	
+	
+	@GetMapping("/forgot-password")
+	public String forgotPasswordPage() {
+		return "User/Auth/forgot-password";
+	}
+	
+	@PostMapping("/confirm-email")
+	public String confirmEmailFunction(@RequestParam("email") String email, RedirectAttributes redirectAttributes) {
+		try {
+			User userByEmail = userService.findByEmail(email);
+			if(userByEmail == null) {
+				redirectAttributes.addFlashAttribute("danger", "Không tìm thấy tài khoản với email được đăng ký!");
+				return "redirect:/forgot-password";
+			}else {
+				
+				User user = userService.findById(userByEmail.getId());
+				
+				String token = tokenGenerator.generateToken();
+				user.setToken(token);
+				userService.save(user);
+				
+				String subject = "Xác thực tài khoản";
+				String text = "Mã token của bạn là:" + token;
+
+				try {
+					emailService.sendEmail(email, subject, text);
+					redirectAttributes.addFlashAttribute("success", "Đã gửi mã token đến địa chỉ email của bạn!");
+					
+					return "redirect:/forgot-password-token?userId=" + user.getId();
+				}catch (Exception e) {
+					 redirectAttributes.addFlashAttribute("danger", "Địa chỉ email không tồn tại hoặc không hợp lệ!");
+					return "redirect:/forgot-password";
+				}
+				
+			}
+		}catch (Exception e) {
+			// TODO: handle exception
+			redirectAttributes.addFlashAttribute("danger", "Lỗi không thể lấy lại mật khẩu!");
+			return "redirect:/forgot-password";
+		}
+		
+		
+	}
+	
+	
+	@GetMapping("/forgot-password-token")
+	public String forgotPasswordConfirmTokenPage(@RequestParam("userId") int userId, Model model, RedirectAttributes redirectAttributes) {
+	    User user = userService.findById(userId);
+	    if (user == null) {
+	    	if("NOT-CONFIRMED".equals(user.getStatus())) {
+	    		redirectAttributes.addFlashAttribute("danger", "Không tìm thấy người dùng!");
+	    		return "redirect:/login";
+	    	}
+	    	redirectAttributes.addFlashAttribute("danger", "Lỗi không tìm thấy người dùng!");
+	        return "redirect:/login"; 
+	    }
+	    model.addAttribute("userId", user.getId());
+		return "User/Auth/forgot-password-token";
+	}
+	
+	@PostMapping("/confirm-forgot-password-token")
+	public String confirmTokenInForgotPasswordFunction(@RequestParam("userId") int userId, @RequestParam("token") String token, Model model, RedirectAttributes redirectAttributes) {
+		//TODO: process POST request
+		User user = userService.findById(userId);
+		if(user == null) {
+			redirectAttributes.addFlashAttribute("danger", "Lỗi không tìm thấy người dùng");
+			return "redirect:/login";
+		}
+		try {
+			if(token.equals(user.getToken())) {
+				model.addAttribute("success", "Xác nhận thành công vui lòng nhập mật khẩu mới!");
+				model.addAttribute("user", user);
+				return "User/Auth/change-password";
+			}else {
+				redirectAttributes.addFlashAttribute("danger", "Mã token không khớp!");
+				return "redirect:/forgot-password-token?userId=" + userId;
+			}
+		}catch (Exception e) {
+			redirectAttributes.addFlashAttribute("danger", "Lỗi không thể xác thực!");
+			return "redirect:/login";
+		}
+		
+	}
+	
+	@PostMapping("/forgot-password/change-password")
+	public String changePasswordFuncion(@RequestParam("userId") int userId, @RequestParam(value = "password", required = false) String password, RedirectAttributes redirectAttributes) {
+		//TODO: process POST request
+		if(password == null) {
+			redirectAttributes.addFlashAttribute("danger", "Mật khẩu không được để trống!");
+			return "redirect:/login";
+		}
+		User user = userService.findById(userId);
+		try {
+			String encodedPassword = passwordEncoder.encode(password);
+			user.setPassword(encodedPassword);
+			userService.save(user);
+			redirectAttributes.addFlashAttribute("success", "Cập nhật mật khẩu thành công!");
+			return "redirect:/login";
+		}catch (Exception e) {
+			redirectAttributes.addFlashAttribute("danger", "Cập nhật mật khẩu thất bại!");
+			return "redirect:/login";
+		}
 	}
 	
 	
