@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     menuItems.forEach(link => {
         if(link.getAttribute('href') === currentPath){
-            link.classList.add("menu__active", "fw-semibold", "text-light");
+            link.classList.add("menu__active");
             
         }
     })

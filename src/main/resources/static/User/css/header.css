@@ -17,9 +17,9 @@ header{
 
 .menu__item:focus{
     color: #000;
-    background-color: var(--color-orange-subtle);
+    background-color: var(--color-orange-light-light);
 }
 
 .menu__active{
-    background-color: var(--color-orange-subtle);
+    background-color: var(--color-orange-light-light);
 }
