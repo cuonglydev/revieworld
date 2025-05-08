@@ -1,7 +1,7 @@
 <div th:fragment="withdraw-history">
 <div class="p-2">
                   <h5 class="fw-semibold">Lịch sử rút tiền</h5>
-                  <table id="withdraw-data" class="table table-striped   text-nowrap w-100">
+                  <table id="withdraw-data" class="table table-striped text-nowrap w-100">
                     <thead>
                       <tr>
                         <th>Mã rút</th>
@@ -9,22 +9,35 @@
                         <th>Thông tin rút tiền</th>
                         <th>Số tiền</th>
                         <th>Trạng thái</th>
-                        <th>ghi chú</th>
+                        <th>Ghi chú</th>
                         <th>Ngày thực hiện</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>Herrod Chandler</td>
-                        <td>Sales Assistant</td>
-                        <td>Sales Assistant</td>
-                        <td>59</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                      <tr th:each="withdraw : ${withdraws}">
+                        <td th:text="${withdraw.id}"></td>
+                        <td>
+                            <span th:switch="${withdraw.userBankMethod}">
+                                <span th:case="'BANK'" class="badge bg-label-primary">Chuyển khoản</span>
+                                <span th:case="'MOMO'" class="badge bg-label-danger">Ví Momo</span>
+                                <span th:case="*" th:text="${withdraw.userBankMethod}"></span>
+                            </span>
+                        </td>
+                        <td>
+                            <div>Ngân hàng: <span th:text="${withdraw.bankName}"></span></div>
+                            <div>Tên tài khoản: <span th:text="${withdraw.accountName}"></span></div>
+                            <div>Số tài khoản: <span th:text="${withdraw.accountNumber}"></span></div>
+                        </td>
+                        <td th:text="${#numbers.formatDecimal(withdraw.amount, 1, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                        <td>
+                            <span th:class="${withdraw.status == 'SUCCESS' ? 'badge bg-success' : (withdraw.status == 'PENDING' ? 'badge bg-warning' : 'badge bg-danger')}"
+                                  th:text="${withdraw.status == 'SUCCESS' ? 'Thành công' : (withdraw.status == 'PENDING' ? 'Đang xử lý' : 'Từ chối')}">
+                            </span>
+                        </td>
+                        <td th:text="${withdraw.note}"></td>
+                        <td th:text="${#dates.format(withdraw.createAt, 'dd/MM/yyyy HH:mm')}"></td>
                       </tr>
                     </tbody>
-
                   </table>
                 </div>
 

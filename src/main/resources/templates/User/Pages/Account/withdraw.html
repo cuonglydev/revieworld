@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reviewords</title>
+  <title>Rút tiền</title>
 
           <div th:replace="~{User/Fragment/element :: head}"></div>
 
@@ -25,102 +25,120 @@
 </div>
 
 <section class="mt-3">
-    <div class="medium__container">
-    
-      <div class="p-2 rounded mt-2 bg-light shadow-sm mb-2">
-                <div class="d-flex justify-content-between">
-                    <span>Số dư ví thưởng:</span>
-                    <span class="fw-semibold">$50</span>
-                </div>
-            </div>
-
+    <div class="container">
+        <!-- Form rút tiền -->
         <div class="rounded shadow-sm p-2 bg-light mb-2">
-             <form>
-                 <div class="mb-3">
-                    <label for="exampleInputEmail1" class="form-label">Nhập số tiền muốn rút</label>
-                    <div class="input-group ">
+            <form th:action="@{/account/withdraw}" method="post">
+                <div class="mb-3">
+                    <label for="amount" class="form-label">Nhập số tiền muốn rút</label>
+                    <div class="input-group">
                         <span class="input-group-text">$</span>
                         <div class="form-floating">
-                          <input type="number" class="form-control" id="floatingInputGroup1" placeholder="Số tiền" required min="5" step="0.01" >
-                          <label for="floatingInputGroup1">Số tiền</label>
+                            <input type="number" class="form-control" id="amount" name="amount" 
+                                   placeholder="Số tiền" required min="5" max="500" step="0.01">
+                            <label for="amount">Số tiền</label>
                         </div>
-                      </div>
-                    <div  class="form-text">Số tiền rút tối thiểu là $5 - $500</div>
-                  </div>
-                  
-                  <div class="mt-3">
-										<p>Chọn tài khoản muốn rút về</p>
-										<select class="form-select"
-											aria-label="Default select example" id="bankSelect">
-											<option value="1">One</option>
-											<option value="2">two</option>
-										</select>
+                    </div>
+                    <div class="form-text">Số tiền rút tối thiểu là $5 - $500</div>
+                </div>
 
-										<div id="bank1" class="bank-info p-2 rounded border mt-1 mb-2" style="display: none;">
-											<div class="row">
-												
-												<div class="col-12 d-flex flex-column justify-content-center">
-													<div class="d-flex justify-content-between py-1">
-														<span class="text-secondary">Họ và tên:</span> <span
-															class="fw-semibold" >NGUYEN VAN A Nguiyeen kohon </span>
-													</div>
-													<div class="d-flex justify-content-between py-1">
-														<span class="text-secondary">Số tài khoản:</span> <span
-															class="fw-semibold" >NGUYEN VAN A /Nguyenvan !0 </span>
-													</div>
-													<div class="d-flex justify-content-between py-1">
-														<span class="text-secondary">Ngân hàng:</span> <span
-															class="fw-semibold" >NGUYEN VAN A</span>
-													</div>
-													<div class="d-flex justify-content-between py-1">
-														<span class="text-secondary">Chi nhánh N/Hàng:</span> <span
-															class="fw-semibold"  >NGUYEN VA vcl N A</span>
-													</div>
-													<div class="d-flex justify-content-between py-1">
-														<span class="text-secondary">Nội dung chuyển khoản:</span> <span
-															class="fw-semibold" >NGUYEN VAN  nnguyen choA</span>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div id="bank2" class="bank-info p-2 rounded border mt-1 mb-2" style="display: none;">Thông
-											tin Ngân hàng B</div>
-										
-									</div>
-                  
-                  
-                  <button class="btn btn-success w-100">Xác nhận rút</button>
-                  
-             </form>
-    </div>
+                <div class="mt-3">
+                    <p>Chọn tài khoản muốn rút về</p>
+                    <select class="form-select" name="bankId" id="bankSelect" required>
+                        <option value="">-- Chọn tài khoản --</option>
+                        <th:block th:each="bank : ${userBanks}">
+                            <option th:value="${bank.id}" 
+                                    th:data-method="${bank.method}"
+                                    th:data-bank-name="${bank.bankName}"
+                                    th:data-account-number="${bank.accountNumber}"
+                                    th:data-account-name="${bank.accountName}">
+                                [[${bank.method == 'BANK' ? bank.bankName + ' - ' + bank.accountNumber : 'USDT - ' + bank.accountNumber}]]
+                            </option>
+                        </th:block>
+                    </select>
 
+                    <!-- Thông tin ngân hàng -->
+                    <div id="bankInfo" class="bank-info p-2 rounded border mt-2" style="display: none;">
+                        <div class="row">
+                            <div class="col-12">
+                                <!-- Cho BANK -->
+                                <div id="bankDetails" class="bank-details">
+                                    <div class="d-flex justify-content-between py-1">
+                                        <span class="text-secondary">Tên tài khoản:</span>
+                                        <span class="fw-semibold" id="accountNameDisplay"></span>
+                                    </div>
+                                    <div class="d-flex justify-content-between py-1">
+                                        <span class="text-secondary">Số tài khoản:</span>
+                                        <span class="fw-semibold" id="accountNumberDisplay"></span>
+                                    </div>
+                                    <div class="d-flex justify-content-between py-1 bank-only">
+                                        <span class="text-secondary">Ngân hàng:</span>
+                                        <span class="fw-semibold" id="bankNameDisplay"></span>
+                                    </div>
+                                </div>
+                                <!-- Cho USDT -->
+                                <div id="usdtDetails" class="usdt-details" style="display: none;">
+                                    <div class="d-flex justify-content-between py-1">
+                                        <span class="text-secondary">Địa chỉ ví USDT:</span>
+                                        <span class="fw-semibold" id="usdtAddressDisplay"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        <div class="rounded shadow-sm p-2 bg-light">
-                
-                <div class="d-flex flex-column align-items-center justify-content-center py-5">
-                    <img style="width: 50px; height: 50px;" src="/User/assets/photo/empty-icon.png">
-                    <p class="text-secondary fs__12px">Chưa có ngân hàng nào</p>
-                    <a class="btn btn__orange" href="/account/detail">Thêm ngân hàng ngay</a>
-                  </div>
+                <button type="submit" class="btn btn-success w-100 mt-3">Xác nhận rút</button>
+            </form>
         </div>
 
+        <!-- Hiển thị khi chưa có tài khoản -->
+        <div th:if="${#lists.isEmpty(userBanks)}" class="rounded shadow-sm p-2 bg-light">
+            <div class="d-flex flex-column align-items-center justify-content-center py-5">
+                <img style="width: 50px; height: 50px;" src="/User/assets/photo/empty-icon.png" alt="Empty">
+                <p class="text-secondary fs__12px">Chưa có ngân hàng nào</p>
+                <a class="btn btn__orange" href="/account/detail">Thêm ngân hàng ngay</a>
+            </div>
+        </div>
     </div>
 </section>
 
 
  <script>
         function updateBankInfo() {
-            document.querySelectorAll(".bank-info").forEach(div => div.style.display = "none");
+            const select = document.getElementById("bankSelect");
+            const bankInfo = document.getElementById("bankInfo");
+            const bankDetails = document.getElementById("bankDetails");
+            const usdtDetails = document.getElementById("usdtDetails");
+            
+            if (select.value) {
+                const selectedOption = select.options[select.selectedIndex];
+                const method = selectedOption.getAttribute('data-method');
+                const bankName = selectedOption.getAttribute('data-bank-name');
+                const accountNumber = selectedOption.getAttribute('data-account-number');
+                const accountName = selectedOption.getAttribute('data-account-name');
 
-            let selectedValue = document.getElementById("bankSelect").value;
-
-            if (selectedValue) {
-                document.getElementById("bank" + selectedValue).style.display = "block";
+                if (method === 'BANK') {
+                    // Hiển thị thông tin ngân hàng
+                    document.getElementById("accountNameDisplay").textContent = accountName;
+                    document.getElementById("accountNumberDisplay").textContent = accountNumber;
+                    document.getElementById("bankNameDisplay").textContent = bankName;
+                    bankDetails.style.display = "block";
+                    usdtDetails.style.display = "none";
+                    document.querySelectorAll('.bank-only').forEach(el => el.style.display = "flex");
+                } else {
+                    // Hiển thị thông tin USDT
+                    document.getElementById("usdtAddressDisplay").textContent = accountNumber;
+                    bankDetails.style.display = "none";
+                    usdtDetails.style.display = "block";
+                }
+                bankInfo.style.display = "block";
+            } else {
+                bankInfo.style.display = "none";
             }
         }
 
         document.getElementById("bankSelect").addEventListener("change", updateBankInfo);
-
         window.onload = updateBankInfo;
     </script>
 

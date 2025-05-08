@@ -27,7 +27,7 @@
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
 
-    <title>ADMIN - Analytics</title>
+    <title>Quản lý yêu cầu rút tiền</title>
 
     <meta name="description" content="" />
 
@@ -58,17 +58,152 @@
             <!-- Content -->
 
             <div class="container-xxl flex-grow-1 container-p-y">
-              <div class="row">
-              
-              
-             
-              </div>
-              
-            </div>
-            <!-- / Content -->
+              <!-- Tabs -->
+              <ul class="nav nav-tabs mb-3" role="tablist">
+                <li class="nav-item">
+                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#pending-requests" type="button" role="tab">
+                    Đơn đang chờ
+                  </button>
+                </li>
+                <li class="nav-item">
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#all-requests" type="button" role="tab">
+                    Tất cả đơn
+                  </button>
+                </li>
+                <li class="nav-item">
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#approved-requests" type="button" role="tab">
+                    Đơn đã duyệt
+                  </button>
+                </li>
+                <li class="nav-item">
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#rejected-requests" type="button" role="tab">
+                    Đơn đã từ chối
+                  </button>
+                </li>
+              </ul>
 
-            <!-- Footer -->
-            <!-- / Footer -->
+              <!-- Tab Content -->
+              <div class="tab-content">
+                <!-- Pending Requests Tab -->
+                <div class="tab-pane fade show active" id="pending-requests" role="tabpanel">
+                  <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                      <h5 class="mb-0">Danh sách đơn rút tiền đang chờ</h5>
+                    </div>
+                    <div class="table-responsive text-nowrap">
+                      <table class="table table-hover" id="pendingTable">
+                        <thead>
+                          <tr>
+                            <th>ID</th>
+                            <th>Người dùng</th>
+                            <th>Số tiền</th>
+                            <th>Ngân hàng</th>
+                            <th>Số tài khoản</th>
+                            <th>Ngày tạo</th>
+                            <th>Thao tác</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr th:each="request : ${pendingRequests}">
+                            <td th:text="${request.id}"></td>
+                            <td th:text="${request.userId}"></td>
+                            <td th:text="${#numbers.formatDecimal(request.amount, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></td>
+                            <td th:text="${request.bankName}"></td>
+                            <td th:text="${request.bankAccount}"></td>
+                            <td th:text="${#temporals.format(request.createdAt, 'dd-MM-yyyy HH:mm')}"></td>
+                            <td>
+                              <button class="btn btn-success btn-sm" 
+                                      th:onclick="'approveRequest(' + ${request.id} + ')'">
+                                Duyệt
+                              </button>
+                              <button class="btn btn-danger btn-sm" 
+                                      th:onclick="'showRejectModal(' + ${request.id} + ')'">
+                                Từ chối
+                              </button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- All Requests Tab -->
+                <div class="tab-pane fade" id="all-requests" role="tabpanel">
+                  <div class="card">
+                    <div class="card-header">
+                      <h5 class="mb-0">Tất cả đơn rút tiền</h5>
+                    </div>
+                    <div class="table-responsive text-nowrap">
+                      <table class="table table-hover" id="allTable">
+                        <thead>
+                          <tr>
+                            <th>ID</th>
+                            <th>Người dùng</th>
+                            <th>Số tiền</th>
+                            <th>Ngân hàng</th>
+                            <th>Số tài khoản</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày tạo</th>
+                            <th>Ngày xử lý</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr th:each="request : ${allRequests}">
+                            <td th:text="${request.id}"></td>
+                            <td th:text="${request.userId}"></td>
+                            <td th:text="${#numbers.formatDecimal(request.amount, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></td>
+                            <td th:text="${request.bankName}"></td>
+                            <td th:text="${request.bankAccount}"></td>
+                            <td>
+                              <span th:class="${'badge bg-' + 
+                                (request.status == 'PENDING' ? 'warning' : 
+                                (request.status == 'APPROVED' ? 'success' : 'danger'))}"
+                                th:text="${request.status == 'PENDING' ? 'Đang chờ' : 
+                                        (request.status == 'APPROVED' ? 'Đã duyệt' : 'Đã từ chối')}">
+                              </span>
+                            </td>
+                            <td th:text="${#temporals.format(request.createdAt, 'dd-MM-yyyy HH:mm')}"></td>
+                            <td th:text="${request.processedAt != null ? #temporals.format(request.processedAt, 'dd-MM-yyyy HH:mm') : '-'}"></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Similar tables for approved and rejected tabs -->
+                <div class="tab-pane fade" id="approved-requests" role="tabpanel">
+                  <!-- Similar table structure with approved requests -->
+                </div>
+                <div class="tab-pane fade" id="rejected-requests" role="tabpanel">
+                  <!-- Similar table structure with rejected requests -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Reject Modal -->
+            <div class="modal fade" id="rejectModal" tabindex="-1">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Từ chối yêu cầu rút tiền</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                  </div>
+                  <div class="modal-body">
+                    <input type="hidden" id="rejectRequestId">
+                    <div class="mb-3">
+                      <label class="form-label">Lý do từ chối</label>
+                      <textarea class="form-control" id="rejectReason" rows="3"></textarea>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-danger" onclick="rejectRequest()">Xác nhận từ chối</button>
+                  </div>
+                </div>
+              </div>
+            </div>
 
             <div class="content-backdrop fade"></div>
           </div>
@@ -87,5 +222,83 @@
     <!-- build:js assets/vendor/js/core.js -->
     <div th:replace="~{Admin/Fragment/element :: bag}"></div>
 <div th:replace="~{Admin/Fragment/element :: footer}"></div>
+
+    <!-- Custom JavaScript -->
+    <script>
+      // Load data when page loads
+      document.addEventListener('DOMContentLoaded', function() {
+        loadPendingRequests();
+        loadAllRequests();
+      });
+
+      // Load pending requests
+      function loadPendingRequests() {
+        fetch('/api/withdrawal-requests/pending')
+          .then(response => response.json())
+          .then(data => {
+            updatePendingTable(data);
+          });
+      }
+
+      // Load all requests
+      function loadAllRequests() {
+        fetch('/api/withdrawal-requests')
+          .then(response => response.json())
+          .then(data => {
+            updateAllTable(data);
+          });
+      }
+
+      // Approve request
+      function approveRequest(requestId) {
+        if (confirm('Bạn có chắc chắn muốn duyệt yêu cầu này?')) {
+          fetch(`/api/withdrawal-requests/${requestId}/approve`, {
+            method: 'POST'
+          })
+          .then(response => {
+            if (response.ok) {
+              loadPendingRequests();
+              loadAllRequests();
+              showToast('Đã duyệt yêu cầu thành công!', 'success');
+            }
+          });
+        }
+      }
+
+      // Show reject modal
+      function showRejectModal(requestId) {
+        document.getElementById('rejectRequestId').value = requestId;
+        new bootstrap.Modal(document.getElementById('rejectModal')).show();
+      }
+
+      // Reject request
+      function rejectRequest() {
+        const requestId = document.getElementById('rejectRequestId').value;
+        const reason = document.getElementById('rejectReason').value;
+
+        if (!reason.trim()) {
+          alert('Vui lòng nhập lý do từ chối');
+          return;
+        }
+
+        fetch(`/api/withdrawal-requests/${requestId}/reject?reason=${encodeURIComponent(reason)}`, {
+          method: 'POST'
+        })
+        .then(response => {
+          if (response.ok) {
+            bootstrap.Modal.getInstance(document.getElementById('rejectModal')).hide();
+            loadPendingRequests();
+            loadAllRequests();
+            showToast('Đã từ chối yêu cầu thành công!', 'success');
+          }
+        });
+      }
+
+      // Show toast notification
+      function showToast(message, type) {
+        // Implement toast notification using your preferred library
+        alert(message); // Temporary implementation
+      }
+    </script>
   </body>
 </html>

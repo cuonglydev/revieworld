@@ -58,13 +58,322 @@
             <!-- Content -->
 
             <div class="container-xxl flex-grow-1 container-p-y">
+              <!-- Thêm input ẩn để lưu username -->
+              <input type="hidden" id="currentUsername" th:value="${#authentication.name}" />
+              
               <div class="row">
-              
-              
-             
+                <!-- Active Notifications Display -->
+                <div class="col-12">
+                  <div class="card mb-4">
+                    <h5 class="card-header">Thông báo đang hiển thị</h5>
+                    <div class="card-body">
+                      <div class="row" th:each="popup : ${activePopups}">
+                        <div class="col-12 mb-4">
+                          <div class="card bg-light">
+                            <div class="card-body">
+                              <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                  <h6 class="card-title" th:text="${popup.title}">Tiêu đề thông báo</h6>
+                                  <p class="card-text" th:text="${popup.content}">Nội dung thông báo</p>
+                                </div>
+                                <div class="form-check form-switch">
+                                  <input class="form-check-input" type="checkbox" 
+                                         th:id="'popup-status-' + ${popup.id}"
+                                         th:checked="${popup.active}"
+                                         onchange="updatePopupStatus(this)"/>
+                                </div>
+                              </div>
+                              <div class="mt-3">
+                                <div class="mb-3">
+                                  <label class="form-label">Vị trí hiển thị</label>
+                                  <select class="form-select" th:id="'popup-position-' + ${popup.id}"
+                                          th:onchange="'updatePopupPosition(this, ' + ${popup.id} + ')'">
+                                    <option value="top-right" th:selected="${popup.position == 'top-right'}">Góc phải trên</option>
+                                    <option value="top-left" th:selected="${popup.position == 'top-left'}">Góc trái trên</option>
+                                    <option value="bottom-right" th:selected="${popup.position == 'bottom-right'}">Góc phải dưới</option>
+                                    <option value="bottom-left" th:selected="${popup.position == 'bottom-left'}">Góc trái dưới</option>
+                                    <option value="center" th:selected="${popup.position == 'center'}">Giữa màn hình</option>
+                                  </select>
+                                </div>
+                                <div class="mb-3">
+                                  <label class="form-label">Thời gian hiển thị (giây)</label>
+                                  <input type="number" class="form-control" 
+                                         th:id="'popup-duration-' + ${popup.id}"
+                                         th:value="${popup.duration}"
+                                         th:onchange="'updatePopupDuration(this, ' + ${popup.id} + ')'"
+                                         min="1" max="60"/>
+                                </div>
+                                <div class="mb-3">
+                                  <label class="form-label">Hiệu ứng</label>
+                                  <select class="form-select" th:id="'popup-animation-' + ${popup.id}"
+                                          th:onchange="'updatePopupAnimation(this, ' + ${popup.id} + ')'">
+                                    <option value="fade" th:selected="${popup.animation == 'fade'}">Fade</option>
+                                    <option value="slide" th:selected="${popup.animation == 'slide'}">Slide</option>
+                                    <option value="bounce" th:selected="${popup.animation == 'bounce'}">Bounce</option>
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Basic Bootstrap Table -->
+                <div class="col-12">
+                  <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                      <h5 class="mb-0">Quản lý thông báo</h5>
+                      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPopupModal">
+                        <i class="bx bx-plus"></i> Thêm thông báo mới
+                      </button>
+                    </div>
+                    <div class="table-responsive text-nowrap">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>ID</th>
+                            <th>Tiêu đề</th>
+                            <th>Nội dung</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày tạo</th>
+                            <th>Người tạo</th>
+                            <th>Chỉnh sửa lần cuối</th>
+                            <th>Người chỉnh sửa</th>
+                            <th>Thao tác</th>
+                          </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                          <tr th:if="${#lists.isEmpty(popups)}">
+                            <td colspan="9" class="text-center">Chưa có thông báo nào</td>
+                          </tr>
+                          <tr th:each="popup : ${popups}">
+                            <td th:text="${popup.id}"></td>
+                            <td th:text="${popup.title}"></td>
+                            <td th:text="${popup.content}"></td>
+                            <td>
+                              <span th:class="${popup.active ? 'badge bg-label-success' : 'badge bg-label-secondary'}"
+                                    th:text="${popup.active ? 'Đang hiển thị' : 'Đã ẩn'}">
+                              </span>
+                            </td>
+                            <td th:text="${#temporals.format(popup.createdAt, 'dd-MM-yyyy HH:mm')}"></td>
+                            <td th:text="${popup.createdBy}"></td>
+                            <td th:text="${popup.lastModifiedAt != null ? #temporals.format(popup.lastModifiedAt, 'dd-MM-yyyy HH:mm') : '-'}"></td>
+                            <td th:text="${popup.lastModifiedBy != null ? popup.lastModifiedBy : '-'}"></td>
+                            <td>
+                              <div class="dropdown">
+                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                  <i class="bx bx-dots-vertical-rounded"></i>
+                                </button>
+                                <div class="dropdown-menu">
+                                  <a class="dropdown-item" href="javascript:void(0);" th:onclick="'togglePopup(' + ${popup.id} + ')'">
+                                    <i class="bx bx-toggle-left me-1"></i>
+                                    <span th:text="${popup.active ? 'Ẩn' : 'Hiển thị'}"></span>
+                                  </a>
+                                  <a class="dropdown-item" href="javascript:void(0);" th:onclick="'editPopup(' + ${popup.id} + ')'">
+                                    <i class="bx bx-edit-alt me-1"></i> Chỉnh sửa
+                                  </a>
+                                  <a class="dropdown-item" href="javascript:void(0);" th:onclick="'deletePopup(' + ${popup.id} + ')'">
+                                    <i class="bx bx-trash me-1"></i> Xóa
+                                  </a>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
               </div>
-              
             </div>
+
+            <!-- Create Popup Modal -->
+            <div class="modal fade" id="createPopupModal" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Thêm thông báo mới</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <form id="createPopupForm" th:action="@{/admin/popups/add}" method="POST">
+                    <div class="modal-body">
+                      <div class="row">
+                        <div class="col mb-3">
+                          <label for="title" class="form-label">Tiêu đề</label>
+                          <input type="text" id="title" name="title" class="form-control" placeholder="Nhập tiêu đề" required />
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col mb-3">
+                          <label for="content" class="form-label">Nội dung</label>
+                          <textarea id="content" name="content" class="form-control" rows="3" placeholder="Nhập nội dung" required></textarea>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="active" name="active">
+                            <label class="form-check-label" for="active">
+                              Hiển thị ngay
+                            </label>
+                          </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <p class="mb-0"><strong>Người tạo:</strong> <span th:text="${#authentication.name}"></span></p>
+                          <p class="mb-0"><small class="text-muted" th:text="${#temporals.format(#temporals.createNow(), 'dd-MM-yyyy HH:mm')}"></small></p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Hủy</button>
+                      <button type="submit" class="btn btn-primary">Lưu</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <!-- JavaScript for handling actions -->
+            <script>
+              function updatePopupStatus(checkbox) {
+                const popupId = checkbox.id.split('-')[2];
+                updatePopup(popupId, { active: checkbox.checked });
+              }
+
+              function updatePopupPosition(select, popupId) {
+                updatePopup(popupId, { position: select.value });
+              }
+
+              function updatePopupDuration(input, popupId) {
+                const duration = parseInt(input.value);
+                if (duration < 1 || duration > 60) {
+                  alert('Thời gian hiển thị phải từ 1 đến 60 giây');
+                  return;
+                }
+                updatePopup(popupId, { duration: duration });
+              }
+
+              function updatePopupAnimation(select, popupId) {
+                updatePopup(popupId, { animation: select.value });
+              }
+
+              function updatePopup(id, data) {
+                // Thêm thông tin người dùng hiện tại
+                data.updatedBy = document.getElementById('currentUsername').value;
+                
+                fetch(`/admin/popups/${id}/update`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(result => {
+                  if (result.success) {
+                    showToast('success', result.message);
+                  } else {
+                    showToast('error', result.message);
+                    setTimeout(() => location.reload(), 2000);
+                  }
+                })
+                .catch(error => {
+                  console.error('Error:', error);
+                  showToast('error', 'Có lỗi xảy ra khi cập nhật');
+                });
+              }
+
+              function showToast(type, message) {
+                // Thêm code hiển thị toast message tùy theo UI framework bạn đang sử dụng
+                // Ví dụ với Bootstrap Toast:
+                const toastEl = document.createElement('div');
+                toastEl.className = `toast align-items-center text-white bg-${type === 'success' ? 'success' : 'danger'} border-0`;
+                toastEl.setAttribute('role', 'alert');
+                toastEl.setAttribute('aria-live', 'assertive');
+                toastEl.setAttribute('aria-atomic', 'true');
+                
+                toastEl.innerHTML = `
+                  <div class="d-flex">
+                    <div class="toast-body">
+                      ${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                  </div>
+                `;
+                
+                document.body.appendChild(toastEl);
+                const toast = new bootstrap.Toast(toastEl);
+                toast.show();
+                
+                // Tự động xóa toast sau khi ẩn
+                toastEl.addEventListener('hidden.bs.toast', () => {
+                  toastEl.remove();
+                });
+              }
+
+              // Xử lý form thêm mới popup
+              document.getElementById('createPopupForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const data = {
+                  title: formData.get('title'),
+                  content: formData.get('content'),
+                  active: formData.get('active') === 'on',
+                  position: 'top-right',
+                  duration: 5,
+                  animation: 'fade',
+                  createdBy: document.getElementById('currentUsername').value,
+                  updatedBy: document.getElementById('currentUsername').value
+                };
+                
+                fetch('/admin/popups/add', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(result => {
+                  if (result.success) {
+                    showToast('success', result.message);
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('createPopupModal'));
+                    modal.hide();
+                    setTimeout(() => location.reload(), 1000);
+                  } else {
+                    showToast('error', result.message);
+                  }
+                })
+                .catch(error => {
+                  console.error('Error:', error);
+                  showToast('error', 'Có lỗi xảy ra khi thêm mới');
+                });
+              });
+
+              function deletePopup(id) {
+                if (!confirm('Bạn có chắc chắn muốn xóa thông báo này?')) return;
+
+                fetch(`/admin/popups/delete/${id}`, {
+                  method: 'POST'
+                })
+                .then(response => response.json())
+                .then(result => {
+                  if (result.success) {
+                    showToast('success', result.message);
+                    setTimeout(() => location.reload(), 1000);
+                  } else {
+                    showToast('error', result.message);
+                  }
+                })
+                .catch(error => {
+                  console.error('Error:', error);
+                  showToast('error', 'Có lỗi xảy ra khi xóa');
+                });
+              }
+            </script>
             <!-- / Content -->
 
             <!-- Footer -->
