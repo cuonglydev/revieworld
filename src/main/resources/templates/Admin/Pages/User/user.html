@@ -20,72 +20,529 @@
   data-assets-path="/Admin/assets/"
   data-template="vertical-menu-template-free"
 >
-  <head>
+<head>
     <meta charset="utf-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
 
-    <title>ADMIN - Analytics</title>
+    <title>ADMIN - Quản lý người dùng</title>
 
     <meta name="description" content="" />
 
     <!-- Favicon -->
-   <div th:replace="~{Admin/Fragment/element :: head}"></div>
-   
+    <div th:replace="~{Admin/Fragment/element :: head}"></div>
+    
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
+    
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
-  </head>
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+</head>
 
-  <body>
+<body>
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
       <div class="layout-container">
         <!-- Menu -->
-<div th:replace="~{Admin/Fragment/element :: menu}"></div>
+        <div th:replace="~{Admin/Fragment/element :: menu}"></div>
         <!-- / Menu -->
 
         <!-- Layout container -->
         <div class="layout-page">
           <!-- Navbar -->
-
-         <div th:replace="~{Admin/Fragment/element :: header}"></div>
-
+          <div th:replace="~{Admin/Fragment/element :: header}"></div>
           <!-- / Navbar -->
 
           <!-- Content wrapper -->
           <div class="content-wrapper">
             <!-- Content -->
-
             <div class="container-xxl flex-grow-1 container-p-y">
-              <div class="row">
-              
-              
-             
+              <!-- Thông báo -->
+              <div th:if="${success}" class="alert alert-success alert-dismissible" role="alert">
+                <span th:text="${success}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
               </div>
-              
-            </div>
-            <!-- / Content -->
+              <div th:if="${error}" class="alert alert-danger alert-dismissible" role="alert">
+                <span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
 
-            <!-- Footer -->
-            <!-- / Footer -->
+              <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Danh sách người dùng</h5>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                        <i class="bx bx-plus-circle me-1"></i> Thêm mới
+                    </button>
+                </div>
+
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="userTable" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Email</th>
+                                    <th>Tên người dùng</th>
+                                    <th>Số dư</th>
+                                    <th>Số dư thưởng</th>
+                                    <th>Mức rank</th>
+                                    <th>Trạng thái</th>
+                                    <th>Ngày tạo</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="user : ${users}" th:data-user-id="${user.id}">
+                                    <td th:text="${user.id}"></td>
+                                    <td th:text="${user.email}"></td>
+                                    <td th:text="${user.username}"></td>
+                                    <td th:text="${user.amount}"></td>
+                                    <td th:text="${user.bonusAmount}"></td>
+                                    <td>
+                                        <span class="rank-badge" th:class="'badge ' + 
+                                            ${user.rank == 'BRONZE' ? 'bg-label-secondary' : 
+                                            (user.rank == 'SILVER' ? 'bg-label-light' : 
+                                            (user.rank == 'GOLD' ? 'bg-label-warning' : 
+                                            (user.rank == 'PLATINUM' ? 'bg-label-info' : 
+                                            (user.rank == 'DIAMOND' ? 'bg-label-primary' : ''))))}"
+                                            th:text="${user.rank == 'BRONZE' ? 'Đồng' : 
+                                                    (user.rank == 'SILVER' ? 'Bạc' : 
+                                                    (user.rank == 'GOLD' ? 'Vàng' : 
+                                                    (user.rank == 'PLATINUM' ? 'Bạch Kim' : 
+                                                    (user.rank == 'DIAMOND' ? 'Kim Cương' : ''))))}">
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="status-badge" th:class="${user.status == 'ACTIVE' ? 'badge bg-label-success' : 'badge bg-label-danger'}"
+                                              th:text="${user.status == 'ACTIVE' ? 'Hoạt động' : 'Khóa'}">
+                                        </span>
+                                    </td>
+                                    <td th:text="${#dates.format(user.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                                    <td>
+                                        <div class="d-flex gap-2">
+                                            <button type="button" class="btn btn-sm btn-info btn-view-detail" 
+                                                    th:data-user-id="${user.id}" title="Chi tiết">
+                                                <i class="bx bx-detail"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-warning" 
+                                                    data-bs-toggle="modal" th:data-bs-target="${'#userStatusModal-' + user.id}" 
+                                                    title="Cập nhật trạng thái">
+                                                <i class="bx bx-edit-alt"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-danger btn-delete-user" 
+                                                    th:data-user-id="${user.id}" title="Xóa">
+                                                <i class="bx bx-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+         
+            <div th:replace="~{Admin/Pages/User/Fragments/user-modals :: addUserModal}"></div>
+            <div th:each="user : ${users}" th:id="${'userStatusModal-' + user.id}" 
+                 class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Cập nhật trạng thái</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form th:action="@{/admin/user/update-status}" method="post" class="updateStatusForm">
+                            <div class="modal-body">
+                                <input type="hidden" name="userId" th:value="${user.id}">
+                                <div class="mb-3">
+                                    <label class="form-label">Trạng thái mới</label>
+                                    <select name="status" class="form-select" required>
+                                        <option value="ACTIVE" th:selected="${user.status == 'ACTIVE'}">Hoạt động</option>
+                                        <option value="BLOCKED" th:selected="${user.status == 'BLOCKED'}">Khóa</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                <button type="submit" class="btn btn-primary">Cập nhật</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+          
 
             <div class="content-backdrop fade"></div>
           </div>
-          <!-- Content wrapper -->
+       
         </div>
-        <!-- / Layout page -->
+      
       </div>
 
-      <!-- Overlay -->
+   
       <div class="layout-overlay layout-menu-toggle"></div>
     </div>
-    <!-- / Layout wrapper -->
+ 
 
-    
-    <!-- Core JS -->
-    <!-- build:js assets/vendor/js/core.js -->
+ 
     <div th:replace="~{Admin/Fragment/element :: bag}"></div>
-<div th:replace="~{Admin/Fragment/element :: footer}"></div>
-  </body>
+    <div th:replace="~{Admin/Fragment/element :: footer}"></div>
+
+    <!-- DataTables JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  
+    <script th:inline="javascript">
+        $(document).ready(function() {
+          
+            $('#userTable').DataTable({
+                responsive: true,
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/vi.json'
+                }
+            });
+
+       
+            $('.btn-view-detail').on('click', function() {
+                var userId = $(this).data('user-id');
+                
+               
+                $.ajax({
+                    url: `/admin/user/detail/${userId}`,
+                    method: 'GET',
+                    success: function(response) {
+                     
+                        $('#userDetailModal').remove();
+                        
+                
+                        $('body').append(response);
+                        
+                 
+                        var modal = new bootstrap.Modal(document.getElementById('userDetailModal'));
+                        modal.show();
+                        
+                
+                        $('#userDetailModal .nav-tabs .nav-link:first').tab('show');
+                        
+                        // Handle tab clicks
+                        $('#userDetailModal .nav-tabs .nav-link').on('click', function(e) {
+                            e.preventDefault();
+                            $(this).tab('show');
+                        });
+
+                    
+                        $(document).on('submit', '.updateUserForm', function(e) {
+                            e.preventDefault();
+                            
+                            const form = $(this);
+                            const userId = form.find('input[name="userId"]').val();
+                            const email = form.find('input[name="email"]').val();
+                            const username = form.find('input[name="username"]').val();
+                            const newPassword = form.find('input[name="newPassword"]').val();
+                            const rank = form.find('select[name="rank"]').val();
+                            const status = form.find('select[name="status"]').val();
+                            
+                            const data = {
+                                email: email,
+                                username: username,
+                                newPassword: newPassword,
+                                rank: rank,
+                                status: status
+                            };
+                            
+                            // Disable submit button
+                            const submitBtn = form.find('button[type="submit"]');
+                            submitBtn.prop('disabled', true);
+                            
+                            $.ajax({
+                                url: '/admin/update/' + userId,
+                                type: 'POST',
+                                data: data,
+                                success: function(response) {
+                                    if (response.includes('thành công')) {
+                                        // Update table row data
+                                        const row = $(`tr[data-user-id="${userId}"]`);
+                                        row.find('td:eq(1)').text(email);
+                                        row.find('td:eq(2)').text(username);
+                                        
+                                        // Update status badge
+                                        const statusBadge = row.find('td:eq(5) .status-badge');
+                                        if (status === 'ACTIVE') {
+                                            statusBadge.removeClass('bg-label-danger').addClass('bg-label-success').text('Hoạt động');
+                                        } else {
+                                            statusBadge.removeClass('bg-label-success').addClass('bg-label-danger').text('Khóa');
+                                        }
+                                        
+                                        // Close modal first
+                                        $('#userDetailModal').modal('hide');
+                                        
+                                        // Show success message after modal is hidden
+                                        setTimeout(function() {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Thành công',
+                                                text: response,
+                                                showConfirmButton: true,
+                                                confirmButtonText: 'OK'
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    location.reload();
+                                                }
+                                            });
+                                        }, 500); // Đợi 500ms để modal đóng hoàn toàn
+                                    } else {
+                                        // Show error message
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Lỗi',
+                                            text: response
+                                        });
+                                    }
+                                },
+                                error: function(xhr) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Lỗi',
+                                        text: 'Có lỗi xảy ra khi cập nhật thông tin: ' + (xhr.responseText || 'Không xác định')
+                                    });
+                                },
+                                complete: function() {
+                                    // Re-enable submit button
+                                    submitBtn.prop('disabled', false);
+                                }
+                            });
+                        });
+                    },
+                    error: function(xhr) {
+                        alert('Có lỗi xảy ra khi tải thông tin chi tiết!');
+                        console.error(xhr);
+                    }
+                });
+            });
+
+            // Handle status update form submission
+            $('.updateStatusForm').on('submit', function(e) {
+                e.preventDefault();
+                var form = $(this);
+                var userId = form.find('input[name="userId"]').val();
+                var status = form.find('select[name="status"]').val();
+                
+                // Disable submit button to prevent double submission
+                var submitBtn = form.find('button[type="submit"]');
+                submitBtn.prop('disabled', true);
+                
+                $.ajax({
+                    url: '/admin/user/update-status',
+                    type: 'POST',
+                    data: {
+                        userId: userId,
+                        status: status
+                    },
+                    success: function(response) {
+                        if (response.includes('thành công')) {
+                            // Close modal first
+                            var modal = bootstrap.Modal.getInstance(form.closest('.modal'));
+                            modal.hide();
+
+                            // Show success notification and reload
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: 'Cập nhật trạng thái thành công!',
+                                showConfirmButton: false,
+                                timer: 1000
+                            }).then(() => {
+                                window.location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Lỗi',
+                                text: response
+                            });
+                            // Re-enable submit button on error
+                            submitBtn.prop('disabled', false);
+                        }
+                    },
+                    error: function(xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: 'Có lỗi xảy ra khi cập nhật trạng thái: ' + (xhr.responseText || 'Không xác định')
+                        });
+                        // Re-enable submit button on error
+                        submitBtn.prop('disabled', false);
+                    }
+                });
+            });
+
+            // Update status button click handler
+            $('.btn-update-status').on('click', function() {
+                var userId = $(this).closest('tr').data('user-id');
+                var currentStatus = $(this).closest('tr').find('.status-badge').hasClass('bg-label-success') ? 'ACTIVE' : 'BLOCKED';
+                
+                // Set the current status in the modal
+                var modal = $(`#userStatusModal-${userId}`);
+                modal.find('select[name="status"]').val(currentStatus);
+            });
+
+            // Handle delete user
+            $('.btn-delete-user').on('click', function() {
+                if (confirm('Bạn có chắc chắn muốn xóa người dùng này?')) {
+                    var userId = $(this).data('user-id');
+                    $.post(`/admin/user/delete/${userId}`, function(response) {
+                        alert('Xóa người dùng thành công!');
+                        // Reload page to update table
+                        location.reload();
+                    }).fail(function(error) {
+                        alert('Có lỗi xảy ra khi xóa người dùng!');
+                    });
+                }
+            });
+
+            // View evidence image
+            window.viewEvidence = function(evidenceUrl) {
+                Swal.fire({
+                    imageUrl: evidenceUrl,
+                    imageAlt: 'Bằng chứng',
+                    width: '80%',
+                    confirmButtonText: 'Đóng'
+                });
+            }
+
+            // Approve dispute
+            window.approveDispute = function(disputeId) {
+                Swal.fire({
+                    title: 'Xác nhận duyệt',
+                    text: 'Bạn có chắc chắn muốn duyệt kháng đơn này?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Duyệt',
+                    cancelButtonText: 'Hủy'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '/admin/dispute/approve/' + disputeId,
+                            type: 'POST',
+                            success: function(response) {
+                                if (response.includes('thành công')) {
+                                    // Update status badge
+                                    const row = $(`#dispute tr[data-dispute-id="${disputeId}"]`);
+                                    row.find('.badge')
+                                       .removeClass('bg-warning bg-danger')
+                                       .addClass('bg-success')
+                                       .text('Đã duyệt');
+                                    
+                                    // Remove action buttons
+                                    row.find('.btn-group').remove();
+                                    
+                                    // Show success message
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Thành công',
+                                        text: response,
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Lỗi',
+                                        text: response
+                                    });
+                                }
+                            },
+                            error: function(xhr) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Lỗi',
+                                    text: 'Có lỗi xảy ra khi duyệt kháng đơn'
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+
+            // Reject dispute
+            window.rejectDispute = function(disputeId) {
+                Swal.fire({
+                    title: 'Xác nhận từ chối',
+                    text: 'Bạn có chắc chắn muốn từ chối kháng đơn này?',
+                    input: 'text',
+                    inputPlaceholder: 'Nhập lý do từ chối',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Từ chối',
+                    cancelButtonText: 'Hủy',
+                    inputValidator: (value) => {
+                        if (!value) {
+                            return 'Vui lòng nhập lý do từ chối!';
+                        }
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '/admin/dispute/reject/' + disputeId,
+                            type: 'POST',
+                            data: {
+                                reason: result.value
+                            },
+                            success: function(response) {
+                                if (response.includes('thành công')) {
+                                    // Update status badge
+                                    const row = $(`#dispute tr[data-dispute-id="${disputeId}"]`);
+                                    row.find('.badge')
+                                       .removeClass('bg-warning bg-success')
+                                       .addClass('bg-danger')
+                                       .text('Từ chối');
+                                    
+                                    // Remove action buttons
+                                    row.find('.btn-group').remove();
+                                    
+                                    // Show success message
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Thành công',
+                                        text: response,
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Lỗi',
+                                        text: response
+                                    });
+                                }
+                            },
+                            error: function(xhr) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Lỗi',
+                                    text: 'Có lỗi xảy ra khi từ chối kháng đơn'
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+</body>
 </html>

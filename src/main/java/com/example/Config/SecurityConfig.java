@@ -20,6 +20,7 @@ import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequest
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import com.example.Security.AdminDetailsService;
 import com.example.Security.CustomOAuth2UserService;
@@ -76,43 +77,45 @@ public class SecurityConfig {
 	
 	@Bean
 	@Order(2)
-	public SecurityFilterChain userSecurityFilterChain(HttpSecurity http,  ClientRegistrationRepository clientRegistrationRepository) throws Exception{
+	public SecurityFilterChain userSecurityFilterChain(HttpSecurity http, ClientRegistrationRepository clientRegistrationRepository) throws Exception {
 		http
-		.authorizeHttpRequests(auth -> auth
-	            .requestMatchers("/User/Pages/account/**", "/account/**").authenticated() 
-	            .anyRequest().permitAll() 
-	        )
+			.authorizeHttpRequests(auth -> auth
+				.requestMatchers("/account/bank/**").authenticated()
+				.requestMatchers("/User/Pages/account/**").authenticated()
+				.anyRequest().permitAll()
+			)
+
 			.formLogin(form -> form
-					.loginPage("/login")
-					.loginProcessingUrl("/login")
-					.defaultSuccessUrl("/", true)
-					.failureUrl("/login?error=true")
-					.permitAll()
-					)
-			
-			 .oauth2Login(oauth2 -> oauth2                      
-			            .loginPage("/login")                            
-			            .authorizationEndpoint(authorization ->         
-			                authorization
-			                    .authorizationRequestResolver(
-			                        customAuthorizationRequestResolver(clientRegistrationRepository)))
-			            .userInfoEndpoint(userInfo ->                   
-			                    userInfo.userService(customOAuth2UserService))
-			            .defaultSuccessUrl("/", true))
-			 
-			  .rememberMe(remember -> remember
-				        .rememberMeParameter("remember-me") 
-				        .tokenValiditySeconds(7 * 24 * 60 * 60) 
-						.userDetailsService(userAuthDetailsService)
-				    )
+				.loginPage("/login")
+				.loginProcessingUrl("/login")
+				.defaultSuccessUrl("/", true)
+				.failureUrl("/login?error=true")
+				.permitAll()
+			)
+			.oauth2Login(oauth2 -> oauth2
+				.loginPage("/login")
+				.authorizationEndpoint(authorization ->
+					authorization
+						.authorizationRequestResolver(
+							customAuthorizationRequestResolver(clientRegistrationRepository)))
+				.userInfoEndpoint(userInfo ->
+					userInfo.userService(customOAuth2UserService))
+				.defaultSuccessUrl("/", true))
+			.rememberMe(remember -> remember
+				.rememberMeParameter("remember-me")
+				.tokenValiditySeconds(7 * 24 * 60 * 60)
+				.userDetailsService(userAuthDetailsService)
+			)
 			.logout(logout -> logout
-					.logoutUrl("/logout")
-					.logoutSuccessUrl("/login?logout=true")
-					)
+				.logoutUrl("/logout")
+				.logoutSuccessUrl("/login?logout=true")
+			)
 			.userDetailsService(userAuthDetailsService)
-			.csrf(csrf -> csrf.disable());
+			.csrf(csrf -> csrf
+				.ignoringRequestMatchers("/login", "/register", "/logout")
+				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+			);
 		return http.build();
-				
 	}
 	
 	

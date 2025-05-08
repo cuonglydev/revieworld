@@ -86,7 +86,7 @@ public class AuthController {
 					return "redirect:/register";
 				}else {
 					UserAffiliate userAffiliate = new UserAffiliate();
-					userAffiliate.setAmount(0.0);
+				
 					userAffiliate.setUser(userByInviteCode);
 					userAffiliateService.save(userAffiliate);
 					
@@ -112,7 +112,7 @@ public class AuthController {
 			DefaultRank defaultRank = defaultRankService.findById(1);
 			if(defaultRank.isStatus()) {
 				if(defaultRank.getRank() != null) {
-					user.setRank(defaultRank.getRank());
+					user.setRank(User.Rank.valueOf(defaultRank.getRank().getName()));
 				}
 			}
 			

@@ -1,7 +1,7 @@
 <div th:fragment="deposit-history">
 <div class="p-2">
                   <h5 class="fw-semibold">Lịch sử nạp tiền</h5>
-                  <table id="deposit-data" class="table table-striped   text-nowrap w-100">
+                  <table id="deposit-data" class="table table-striped text-nowrap w-100">
                     <thead>
                       <tr>
                         <th>Mã nạp</th>
@@ -12,12 +12,22 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>Herrod Chandler</td>
-                        <td>Sales Assistant</td>
-                        <td>59</td>
-                        <td></td>
-                        <td></td>
+                      <tr th:each="deposit : ${deposits}">
+                        <td th:text="${deposit.id}"></td>
+                        <td>
+                            <span th:switch="${deposit.paymentMethod}">
+                                <span th:case="'SEPAY'" class="badge bg-label-primary">SEPAY</span>
+                                <span th:case="'USDT'" class="badge bg-label-success">USDT</span>
+                                <span th:case="*" th:text="${deposit.paymentMethod}"></span>
+                            </span>
+                        </td>
+                        <td th:text="${#numbers.formatDecimal(deposit.amount, 1, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                        <td>
+                            <span th:class="${deposit.status == 'SUCCESS' ? 'badge bg-success' : (deposit.status == 'PENDING' ? 'badge bg-warning' : 'badge bg-danger')}"
+                                  th:text="${deposit.status == 'SUCCESS' ? 'Thành công' : (deposit.status == 'PENDING' ? 'Đang xử lý' : 'Thất bại')}">
+                            </span>
+                        </td>
+                        <td th:text="${#dates.format(deposit.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
                       </tr>
                     </tbody>
                   </table>

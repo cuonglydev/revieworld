@@ -1,0 +1,427 @@
+<!-- Add User Modal -->
+<div th:fragment="addUserModal" class="modal fade" id="addUserModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thêm người dùng mới</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form th:action="@{/admin/user/save}" method="post">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="rank">Mức rank</label>
+                        <select class="form-control" id="rank" name="rank" required>
+                            <option value="BRONZE">Đồng</option>
+                            <option value="SILVER">Bạc</option>
+                            <option value="GOLD">Vàng</option>
+                            <option value="PLATINUM">Bạch Kim</option>
+                            <option value="DIAMOND">Kim Cương</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select class="form-control" id="status" name="status" required>
+                            <option value="ACTIVE">ACTIVE</option>
+                            <option value="BLOCKED">BLOCKED</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary">Lưu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- User Detail Modal -->
+<div th:fragment="userDetailModal" class="modal fade" id="userDetailModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Chi tiết người dùng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Thông tin tổng quan -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">Số dư</h6>
+                                <h5 class="card-title" th:text="${#numbers.formatDecimal(user.amount, 1, 'COMMA', 0, 'POINT')} + ' đ'"></h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">Số dư thưởng</h6>
+                                <h5 class="card-title" th:text="${#numbers.formatDecimal(user.bonusAmount, 1, 'COMMA', 0, 'POINT')} + ' đ'"></h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">Tổng nạp</h6>
+                                <h5 class="card-title" th:text="${#numbers.formatDecimal(user.totalDeposited, 1, 'COMMA', 0, 'POINT')} + ' đ'"></h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">Trạng thái</h6>
+                                <span th:class="${user.status == 'ACTIVE' ? 'badge bg-success' : 'badge bg-danger'}"
+                                      th:text="${user.status == 'ACTIVE' ? 'Hoạt động' : 'Khóa'}">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <ul class="nav nav-tabs" id="userDetailTabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="deposit-tab" data-bs-toggle="tab" href="#deposit" role="tab">
+                            LS nạp
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="withdraw-tab" data-bs-toggle="tab" href="#withdraw" role="tab">
+                            LS rút
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="mission-history-tab" data-bs-toggle="tab" href="#mission-history" role="tab">
+                            LS Đơn
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="dispute-tab" data-bs-toggle="tab" href="#dispute" role="tab">
+                            Kháng đơn
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="affiliate-tab" data-bs-toggle="tab" href="#affiliate" role="tab">
+                            Người dùng đã mời
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="update-info-tab" data-bs-toggle="tab" href="#update-info" role="tab">
+                            Cập nhật thông tin
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Tab Content -->
+                <div class="tab-content pt-3" id="userDetailTabContent">
+                    <!-- LS nạp -->
+                    <div class="tab-pane fade show active" id="deposit" role="tabpanel">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Số tiền</th>
+                                        <th>Phương thức</th>
+                                        <th>Trạng thái</th>
+                                        <th>Thời gian</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="deposit : ${deposits}">
+                                        <td th:text="${deposit.id}"></td>
+                                        <td th:text="${#numbers.formatDecimal(deposit.amount, 1, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                                        <td>
+                                            <span th:switch="${deposit.method}">
+                                                <span th:case="'BANK'" class="badge bg-label-primary">Chuyển khoản</span>
+                                                <span th:case="'MOMO'" class="badge bg-label-danger">Ví Momo</span>
+                                                <span th:case="*" th:text="${deposit.method}"></span>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span th:class="${deposit.status == 'SUCCESS' ? 'badge bg-success' : (deposit.status == 'PENDING' ? 'badge bg-warning' : 'badge bg-danger')}"
+                                                  th:text="${deposit.status == 'SUCCESS' ? 'Thành công' : (deposit.status == 'PENDING' ? 'Đang xử lý' : 'Thất bại')}">
+                                            </span>
+                                        </td>
+                                        <td th:text="${#dates.format(deposit.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(deposits)}">
+                                        <td colspan="5" class="text-center">Không có dữ liệu</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- LS rút -->
+                    <div class="tab-pane fade" id="withdraw" role="tabpanel">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Số tiền</th>
+                                        <th>Phương thức</th>
+                                        <th>Trạng thái</th>
+                                        <th>Thời gian</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="withdraw : ${withdraws}">
+                                        <td th:text="${withdraw.id}"></td>
+                                        <td th:text="${#numbers.formatDecimal(withdraw.amount, 1, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                                        <td>
+                                            <span th:switch="${withdraw.method}">
+                                                <span th:case="'BANK'" class="badge bg-label-primary">Chuyển khoản</span>
+                                                <span th:case="'MOMO'" class="badge bg-label-danger">Ví Momo</span>
+                                                <span th:case="*" th:text="${withdraw.method}"></span>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span th:class="${withdraw.status == 'SUCCESS' ? 'badge bg-success' : (withdraw.status == 'PENDING' ? 'badge bg-warning' : 'badge bg-danger')}"
+                                                  th:text="${withdraw.status == 'SUCCESS' ? 'Thành công' : (withdraw.status == 'PENDING' ? 'Đang xử lý' : 'Từ chối')}">
+                                            </span>
+                                        </td>
+                                        <td th:text="${#dates.format(withdraw.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                                        <td>
+                                            <div th:if="${withdraw.status == 'PENDING'}" class="btn-group">
+                                                <button type="button" class="btn btn-sm btn-success" 
+                                                        th:onclick="'approveWithdraw(' + ${withdraw.id} + ')'">
+                                                    <i class="bx bx-check"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-danger" 
+                                                        th:onclick="'rejectWithdraw(' + ${withdraw.id} + ')'">
+                                                    <i class="bx bx-x"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(withdraws)}">
+                                        <td colspan="6" class="text-center">Không có dữ liệu</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Lịch sử nhiệm vụ -->
+                    <div class="tab-pane fade" id="mission-history" role="tabpanel">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Tên nhiệm vụ</th>
+                                        <th>Số tiền</th>
+                                        <th>Bằng chứng</th>
+                                        <th>Trạng thái</th>
+                                        <th>Thời gian</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="mission : ${missions}">
+                                        <td th:text="${mission.id}"></td>
+                                        <td th:text="${mission.name}"></td>
+                                        <td th:text="${#numbers.formatDecimal(mission.amount, 1, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info" 
+                                                    th:if="${mission.evidence != null}"
+                                                    th:onclick="'viewMissionEvidence(\'' + ${mission.evidence} + '\')'">
+                                                <i class="bx bx-image"></i> Xem
+                                            </button>
+                                            <span th:if="${mission.evidence == null}" class="text-muted">Không có</span>
+                                        </td>
+                                        <td>
+                                            <span th:class="${mission.status == 'COMPLETED' ? 'badge bg-success' : (mission.status == 'PENDING' ? 'badge bg-warning' : 'badge bg-danger')}"
+                                                  th:text="${mission.status == 'COMPLETED' ? 'Hoàn thành' : (mission.status == 'PENDING' ? 'Đang chờ' : 'Thất bại')}">
+                                            </span>
+                                            <i class="bx bx-info-circle ms-1 text-muted" 
+                                               th:if="${mission.status == 'FAILED' && mission.rejectReason != null}"
+                                               th:title="${mission.rejectReason}"></i>
+                                        </td>
+                                        <td th:text="${#dates.format(mission.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(missions)}">
+                                        <td colspan="6" class="text-center">Không có dữ liệu</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Kháng đơn -->
+                    <div class="tab-pane fade" id="dispute" role="tabpanel">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Tên nhiệm vụ</th>
+                                        <th>Lý do kháng đơn</th>
+                                        <th>Bằng chứng</th>
+                                        <th>Trạng thái</th>
+                                        <th>Thời gian</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="dispute : ${disputes}">
+                                        <td th:text="${dispute.id}"></td>
+                                        <td th:text="${dispute.mission.name}"></td>
+                                        <td th:text="${dispute.reason}"></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info" 
+                                                    th:onclick="'viewEvidence(\'' + ${dispute.evidence} + '\')'">
+                                                <i class="bx bx-image"></i> Xem
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <span th:class="${dispute.status == 'APPROVED' ? 'badge bg-success' : (dispute.status == 'PENDING' ? 'badge bg-warning' : 'badge bg-danger')}"
+                                                  th:text="${dispute.status == 'APPROVED' ? 'Đã duyệt' : (dispute.status == 'PENDING' ? 'Đang xử lý' : 'Từ chối')}">
+                                            </span>
+                                        </td>
+                                        <td th:text="${#dates.format(dispute.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                                        <td>
+                                            <div th:if="${dispute.status == 'PENDING'}" class="btn-group">
+                                                <button type="button" class="btn btn-sm btn-success" 
+                                                        th:onclick="'approveDispute(' + ${dispute.id} + ')'">
+                                                    <i class="bx bx-check"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-danger" 
+                                                        th:onclick="'rejectDispute(' + ${dispute.id} + ')'">
+                                                    <i class="bx bx-x"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(disputes)}">
+                                        <td colspan="7" class="text-center">Không có dữ liệu</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Người dùng đã mời -->
+                    <div class="tab-pane fade" id="affiliate" role="tabpanel">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Tên người dùng</th>
+                                        <th>Email</th>
+                                        <th>Trạng thái</th>
+                                        <th>Ngày tham gia</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="referral : ${referrals}">
+                                        <td th:text="${referral.id}"></td>
+                                        <td th:text="${referral.username}"></td>
+                                        <td th:text="${referral.email}"></td>
+                                        <td>
+                                            <span th:class="${referral.status == 'ACTIVE' ? 'badge bg-success' : 'badge bg-danger'}"
+                                                  th:text="${referral.status == 'ACTIVE' ? 'Hoạt động' : 'Khóa'}">
+                                            </span>
+                                        </td>
+                                        <td th:text="${#dates.format(referral.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(referrals)}">
+                                        <td colspan="5" class="text-center">Không có dữ liệu</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Cập nhật thông tin -->
+                    <div class="tab-pane fade" id="update-info" role="tabpanel">
+                        <form class="updateUserForm" method="post">
+                            <input type="hidden" name="userId" th:value="${user.id}">
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" name="email" th:value="${user.email}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Tên người dùng</label>
+                                <input type="text" class="form-control" name="username" th:value="${user.username}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Mật khẩu mới (để trống nếu không thay đổi)</label>
+                                <input type="password" class="form-control" name="newPassword">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Mức rank</label>
+                                <select name="rank" class="form-select" required>
+                                    <option value="BRONZE" th:selected="${user.rank == 'BRONZE'}">Đồng</option>
+                                    <option value="SILVER" th:selected="${user.rank == 'SILVER'}">Bạc</option>
+                                    <option value="GOLD" th:selected="${user.rank == 'GOLD'}">Vàng</option>
+                                    <option value="PLATINUM" th:selected="${user.rank == 'PLATINUM'}">Bạch Kim</option>
+                                    <option value="DIAMOND" th:selected="${user.rank == 'DIAMOND'}">Kim Cương</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Trạng thái</label>
+                                <select name="status" class="form-select" required>
+                                    <option value="ACTIVE" th:selected="${user.status == 'ACTIVE'}">Hoạt động</option>
+                                    <option value="BLOCKED" th:selected="${user.status == 'BLOCKED'}">Khóa</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Cập nhật</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- User Status Modal -->
+<div th:fragment="userStatusModal" class="modal fade" id="userStatusModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cập nhật trạng thái</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form th:action="@{/admin/user/update-status}" method="post">
+                <div class="modal-body">
+                    <input type="hidden" id="userId" name="userId">
+                    <div class="form-group">
+                        <label for="newStatus">Trạng thái mới</label>
+                        <select class="form-control" id="newStatus" name="status" required>
+                            <option value="ACTIVE">ACTIVE</option>
+                            <option value="BLOCKED">BLOCKED</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary">Cập nhật</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div> 

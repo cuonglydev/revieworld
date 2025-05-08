@@ -1,16 +1,18 @@
 package com.example.Entity;
 
-
 import java.util.Date;
-
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -25,6 +27,10 @@ import lombok.Setter;
 @Entity
 @Table(name = "users")
 public class User {
+
+	public enum Rank {
+		BRONZE, SILVER, GOLD, PLATINUM, DIAMOND
+	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,10 +55,10 @@ public class User {
 	private String picture;
 	
 	@Column(name = "amount")
-	private Double amount;
+	private Double amount = 0.0;
 	
 	@Column(name = "bonus_amount")
-	private Double bonusAmount;
+	private Double bonusAmount = 0.0;
 	
 	@Column(name = "total_deposited")
 	private Double totalDeposited;
@@ -63,17 +69,30 @@ public class User {
 	@Column(name = "created_at")
 	private Date createdAt;
 	
-	@Column(name = "status", nullable = false)
+	@Column(name = "status")
 	private String status;
 	
 	@Column(name = "token")
 	private String token;
 	
-	@ManyToOne
-	@JoinColumn(name = "rank_id")
+	@Enumerated(EnumType.STRING)
 	private Rank rank;
 	
-	@OneToOne
-	@JoinColumn(name = "user_affiliate_id")
+	@OneToOne(mappedBy = "user")
 	private UserAffiliate userAffiliate;
+	
+	@OneToMany(mappedBy = "user")
+	private List<Mission> missions;
+	
+	@OneToMany(mappedBy = "user")
+	private List<Withdraw> withdraws;
+	
+	@OneToMany(mappedBy = "user")
+	private List<Deposit> deposits;
+	
+	@OneToMany(mappedBy = "user")
+	private List<Order> orders;
+
+	@OneToMany(mappedBy = "user")
+	private List<UserBank> userBanks;
 }

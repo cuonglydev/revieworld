@@ -27,19 +27,19 @@ public class Deposit {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	@Column(name = "method")
-	private String method;
-	
 	@Column(name = "amount")
 	private Double amount;
 	
 	@Column(name = "status")
 	private String status;
 	
-	@Column(name = "note", nullable = true, length = 500)
-	private String note;
+	@Column(name = "payment_method")
+	private String paymentMethod;
 	
-	@Column(name = "create_at")
+	@Column(name = "transaction_id")
+	private String transactionId;
+	
+	@Column(name = "created_at")
 	private Date createdAt;
 	
 	@ManyToOne

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh toán USDT</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .qr-code {
+            max-width: 200px;
+            margin: 20px auto;
+        }
+        .copy-button {
+            cursor: pointer;
+        }
+        .copy-button:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="card shadow-sm p-4">
+            <h4 class="text-center mb-4">Thanh toán USDT (TRC20)</h4>
+            
+            <div th:if="${usdtAddress}" class="text-center">
+                <!-- QR Code -->
+                <div class="qr-code">
+                    <img th:src="@{'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + ${usdtAddress}}" 
+                         alt="QR Code" class="img-fluid">
+                </div>
+                
+                <!-- USDT Address -->
+                <div class="mb-4">
+                    <p class="mb-2">Địa chỉ ví USDT:</p>
+                    <div class="input-group">
+                        <input type="text" class="form-control" th:value="${usdtAddress}" readonly>
+                        <button class="btn btn-outline-secondary copy-button" type="button" 
+                                onclick="copyToClipboard(this)" data-copy-text="${usdtAddress}">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Amount -->
+                <div class="mb-4">
+                    <p class="mb-2">Số tiền cần chuyển:</p>
+                    <div class="input-group">
+                        <input type="text" class="form-control" th:value="${usdtAmount}" readonly>
+                        <button class="btn btn-outline-secondary copy-button" type="button" 
+                                onclick="copyToClipboard(this)" data-copy-text="${usdtAmount}">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Lưu ý:</strong>
+                    <ul class="mb-0 text-start">
+                        <li>Vui lòng chuyển đúng số USDT được yêu cầu</li>
+                        <li>Chỉ sử dụng mạng TRC20 để chuyển USDT</li>
+                        <li>Giao dịch sẽ được xử lý tự động sau khi nhận được tiền</li>
+                    </ul>
+                </div>
+                
+                <a href="/account/deposit-history" class="btn btn-primary">Xem lịch sử nạp tiền</a>
+            </div>
+            
+            <div th:if="${usdtAddress == null}" class="alert alert-danger">
+                <p>Không thể tạo địa chỉ USDT. Vui lòng thử lại!</p>
+                <a href="/account/deposit" class="btn btn-primary">Quay lại</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function copyToClipboard(button) {
+            const text = button.getAttribute('data-copy-text');
+            navigator.clipboard.writeText(text).then(() => {
+                const icon = button.querySelector('i');
+                icon.classList.remove('fa-copy');
+                icon.classList.add('fa-check');
+                setTimeout(() => {
+                    icon.classList.remove('fa-check');
+                    icon.classList.add('fa-copy');
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html> 

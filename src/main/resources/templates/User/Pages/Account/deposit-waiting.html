@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chờ thanh toán Sepay</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="card shadow-sm p-4">
+            <h4 class="mb-3">Vui lòng hoàn tất thanh toán</h4>
+            <div th:if="${paymentUrl}">
+                <a th:href="${paymentUrl}" target="_blank" class="btn btn-success btn-lg mb-3">Thanh toán Sepay</a>
+                <p class="text-muted">Sau khi thanh toán xong, bạn sẽ được chuyển về hệ thống.</p>
+            </div>
+            <div th:if="${paymentUrl == null}">
+                <div class="alert alert-danger">Không lấy được link thanh toán Sepay. Vui lòng thử lại!</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

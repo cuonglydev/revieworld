@@ -1,5 +1,6 @@
 package com.example.Service;
 
+import java.util.List;
 import com.example.Entity.Mission;
 import com.example.Entity.User;
 import com.example.Repository.MissionRepository;
@@ -9,11 +10,26 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
+
 @Service
 public class MissionService {
 
     @Autowired
     private MissionRepository missionRepository;
+
+    
+    public List<Mission> findByUserId(int userId) {
+        return missionRepository.findByUserId(userId);
+    }
+    
+    public void save(Mission mission) {
+        missionRepository.save(mission);
+    }
+
+    public void delete(int id) {
+        missionRepository.deleteById(id);
+    }
+} 
 
     @Autowired
     private UserRepository userRepository;
@@ -92,3 +108,4 @@ public class MissionService {
         }
     }
 }
+

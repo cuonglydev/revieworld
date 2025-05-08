@@ -199,3 +199,132 @@
   });
 </script>
 </div>
+
+<div th:fragment="popups">
+    <div id="popups-container">
+        <div th:each="popup : ${activePopups}" th:if="${popup != null}" class="popup-notification shadow-lg" th:classappend="${popup.position}" style="display: none;">
+            <div class="popup-header d-flex justify-content-between align-items-center">
+                <h5 class="popup-title mb-0" th:text="${popup.title}">Tiêu đề thông báo</h5>
+                <button type="button" class="btn-close" onclick="closePopup(this)"></button>
+            </div>
+            <div class="popup-body mt-2">
+                <p class="mb-0" th:text="${popup.content}">Nội dung thông báo</p>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .popup-notification {
+            position: fixed;
+            min-width: 300px;
+            max-width: 400px;
+            background: #fff;
+            border-radius: 8px;
+            padding: 15px;
+            z-index: 9999;
+            transition: all 0.3s ease;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .popup-notification.top-right {
+            top: 20px;
+            right: 20px;
+        }
+
+        .popup-notification.top-left {
+            top: 20px;
+            left: 20px;
+        }
+
+        .popup-notification.bottom-right {
+            bottom: 20px;
+            right: 20px;
+        }
+
+        .popup-notification.bottom-left {
+            bottom: 20px;
+            left: 20px;
+        }
+
+        .popup-notification.center {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .popup-title {
+            color: #333;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .popup-body {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Animation classes */
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.3s ease forwards;
+        }
+
+        .slide-in-right {
+            transform: translateX(100%);
+            animation: slideInRight 0.3s ease forwards;
+        }
+
+        .slide-in-left {
+            transform: translateX(-100%);
+            animation: slideInLeft 0.3s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInRight {
+            to { transform: translateX(0); }
+        }
+
+        @keyframes slideInLeft {
+            to { transform: translateX(0); }
+        }
+    </style>
+
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            const popups = document.querySelectorAll('.popup-notification');
+            
+            popups.forEach((popup, index) => {
+                setTimeout(() => {
+                    showPopup(popup);
+                }, index * 500); // Hiển thị lần lượt, cách nhau 500ms
+            });
+        });
+
+        function showPopup(popup) {
+            popup.style.display = 'block';
+            const position = popup.classList.contains('center') ? 'fade-in' :
+                           (popup.classList.contains('right') ? 'slide-in-right' : 'slide-in-left');
+            popup.classList.add(position);
+
+            // Tự động ẩn sau thời gian định sẵn (nếu có)
+            const duration = popup.getAttribute('data-duration');
+            if (duration) {
+                setTimeout(() => {
+                    closePopup(popup.querySelector('.btn-close'));
+                }, duration * 1000);
+            }
+        }
+
+        function closePopup(closeButton) {
+            const popup = closeButton.closest('.popup-notification');
+            popup.style.opacity = '0';
+            setTimeout(() => {
+                popup.style.display = 'none';
+            }, 300);
+        }
+    </script>
+</div>

@@ -26,7 +26,7 @@ public class UserAffiliateService {
 		userAffiliateRepository.save(userAffiliate);
 	}
 	
-	public void deleteById(int id) {
+	public void delete(int id) {
 		userAffiliateRepository.deleteById(id);
 	}
 
