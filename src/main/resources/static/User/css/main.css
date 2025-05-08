@@ -22,9 +22,8 @@ body{
 }
 
 .btn__orange__subtle__hover:hover{
-    background-color: var(--color-orange-subtle);
-    color: black;
-    color: #fff;
+    background-color: var(--color-orange-light-light);
+    color: black !important;
 }
 
 .btn__green__subtle__hover{
