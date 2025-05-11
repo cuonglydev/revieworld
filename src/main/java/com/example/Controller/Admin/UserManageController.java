@@ -304,7 +304,6 @@ public class UserManageController {
 			return "Có lỗi xảy ra: " + e.getMessage();
 		}
 	}
-=======
 
 	// @GetMapping("/rank")
 	// public String rankPage() {

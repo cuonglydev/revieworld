@@ -1,9 +1,10 @@
 body{
-    font-family: 'Roboto', sans-serif ;
+     font-family: 'Roboto', sans-serif;
     background-color: var(--color-bg);
     padding-top: 60px;
     font-size: 14px;
 }
+
 
 .btn__blue__subtle__hover{
     transition: all 0.15s ease-in-out;
@@ -59,7 +60,7 @@ body{
 }
 
 .btn__orange:hover {
-    background-color: var(--color-orange-subtle);
+    background-color: var(--color-orange-subtle) !important;
     text-decoration: none;
     color: #fff;
 }

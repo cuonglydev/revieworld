@@ -42,6 +42,12 @@ public class Deposit {
 	@Column(name = "created_at")
 	private Date createdAt;
 	
+	@Column(name = "QR")
+	private String QR;
+	
+	@Column(name = "note")
+	private String Note;
+	
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;

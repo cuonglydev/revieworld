@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.Entity.User;
 import com.example.Repository.UserRepository;
+import com.example.Security.SecurityUtils;
 
 
 @Service
@@ -60,6 +61,7 @@ public class UserService {
 		logger.error("No authenticated user found");
 		return null;
 	}
+	
 	
 	public void save(User user) {
 		userRepository.save(user);

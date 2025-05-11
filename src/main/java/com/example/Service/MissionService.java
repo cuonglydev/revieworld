@@ -29,7 +29,7 @@ public class MissionService {
     public void delete(int id) {
         missionRepository.deleteById(id);
     }
-} 
+
 
     @Autowired
     private UserRepository userRepository;

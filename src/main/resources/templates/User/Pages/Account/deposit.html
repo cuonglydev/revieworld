@@ -16,9 +16,9 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      min-width: 160px;
-      padding: 16px 24px;
-      border: 2px solid #ccc;
+      width: 100%;
+      padding : 18px 0 18px 0;
+      border: 0.2px solid #ccc;
       border-radius: 8px;
       background: #fff;
       font-weight: 600;
@@ -48,9 +48,7 @@
         <a href="#" id="goBack" class="text-secondary fs__12px"><i class="fa-solid fa-arrow-left"></i> Trở về</a>
         <span class="fw-semibold">Nạp tiền</span>
     </div>
-    <!-- Flash message -->
-    <div th:if="${success}" class="alert alert-success mt-3" th:text="${success}"></div>
-    <div th:if="${danger}" class="alert alert-danger mt-3" th:text="${danger}"></div>
+
 </div>
 
 <section class="mt-3">
@@ -64,14 +62,12 @@
                         <span class="input-group-text">$</span>
                         <div class="form-floating">
                           <input type="number" class="form-control" id="amount" name="amount" placeholder="Số tiền" 
-                                 th:min="${minDeposit}" th:max="${maxDeposit}" required step="0.01">
+                                 min="1" required step="0.01">
                           <label for="amount">Số tiền</label>
                         </div>
                       </div>
                     <div class="form-text">
-                      Số tiền nạp tối thiểu là $<span th:text="${minDeposit}">5</span><br>
-                      Số tiền nạp tối đa là $<span th:text="${maxDeposit}">10000</span><br>
-                      Tỉ giá: 1 USD = <span th:text="${usdToVndRate}">23000</span> VND
+                      Tỉ giá: 1 USD = <span class="fw-semibold" th:text="${#numbers.formatDecimal(rate.rate, 1 , 'COMMA', 0, 'POINT')} + 'VND'"></span>
                     </div>
                   </div>
                   

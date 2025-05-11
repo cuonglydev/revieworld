@@ -43,6 +43,7 @@ public class SecurityConfig {
     private CustomOAuth2UserService customOAuth2UserService;
 	
 	
+	
 
 	@Bean
 	@Order(1)
@@ -80,10 +81,23 @@ public class SecurityConfig {
 	public SecurityFilterChain userSecurityFilterChain(HttpSecurity http, ClientRegistrationRepository clientRegistrationRepository) throws Exception {
 		http
 			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/account/bank/**").authenticated()
+				.requestMatchers("/account/**").authenticated()
+			    .requestMatchers("/sepay/callback").permitAll()
 				.requestMatchers("/User/Pages/account/**").authenticated()
 				.anyRequest().permitAll()
 			)
+			
+			.csrf(csrf -> csrf
+				    .ignoringRequestMatchers(
+				        "/login",
+				        "/register",
+				        "/logout",
+				        "/forgot-password/change-password",
+				        "/confirm-forgot-password-token",
+				        "/sepay/callback"
+				    )
+				    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+				)
 
 			.formLogin(form -> form
 				.loginPage("/login")
@@ -155,5 +169,5 @@ public class SecurityConfig {
 	            }
 	        };
 	    }
-
+	   
 }
