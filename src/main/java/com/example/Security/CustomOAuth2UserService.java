@@ -58,7 +58,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 			newUser.setStatus("ACTIVE");
             userService.save(newUser);
         }
-
-        return user;
+        User finalUser = (existingUser != null) ? existingUser : userService.findByEmail(email);
+        return new CustomOAuth2UserDetails(finalUser, user.getAttributes());
     }
 }

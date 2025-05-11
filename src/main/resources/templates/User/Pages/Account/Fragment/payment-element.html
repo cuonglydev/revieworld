@@ -1,0 +1,95 @@
+<div th:fragment="payment">
+	<div class="rounded shadow-sm p-2 bg-light mb-2" th:if="${deposit.status == 'WAITING'}">
+				<div class="row">
+					<div class="col-12 col-md-4">
+						<div class=" m-1 p-2 rounded border d-block">
+							<span class="fw-semibold">Cách 1:</span> <span>Quét mã để
+								xác nhận thanh toán</span> <img class="w-100" th:src="${deposit.QR}">
+								
+							<div class="d-flex align-items-center justify-content-center">
+								<div class="spinner-border text-secondary me-2" style="height: 20px; width: 20px;" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>
+<span>Đang chờ thanh toán</span>
+							</div>
+						</div>
+
+					</div>
+
+					<div class="col-12 col-md-8">
+						<div class="m-1 p-2 rounded border d-block">
+							<span class="fw-semibold">Cách 2:</span> <span>Chuyển
+								khoản thủ công theo thông tin</span>
+								
+							<div class="w-100 py-2 text-center" style="height: 60px;">
+							<img class="h-100" th:src="${adminBank.bankUrl}">
+							</div>
+
+							<div class="d-flex justify-content-between py-1 border-bottom">
+								<span class="text-secondary">Tên ngân hàng:</span>
+								<span th:text="${adminBank.bank}" class="fw-semibold">TPBank</span>
+							</div>
+							<div class="d-flex justify-content-between py-1 border-bottom">
+								<span class="text-secondary">Số tài khoản:</span>
+								<span th:text="${adminBank.accountNumber}" class="fw-semibold"></span>
+							</div>
+							<div class="d-flex justify-content-between py-1 border-bottom">
+								<span class="text-secondary">Tên chủ tài khoản:</span>
+								<span th:text="${adminBank.accountName}" class="fw-semibold"></span>
+							</div>
+							<div class="d-flex justify-content-between py-1 border-bottom">
+								<span class="text-secondary">Số tiền:</span>
+								<span th:text="${#numbers.formatDecimal(deposit.amount * rate.rate, 1, 'COMMA', 0,'POINT')} + 'VND'" class="fw-semibold"></span>
+							</div>
+							<div class="d-flex justify-content-between py-1">
+								<span class="text-secondary">Nội dung chuyển khoản:</span>
+								<div>
+								<i id="copyIcon" class="fa-solid fa-copy text-primary" style="cursor: pointer;" onclick="copyTransactionId(this)"></i>
+								<span id="transactionId" th:text="${deposit.transactionId}" class="fw-semibold"></span>
+								
+								</div>
+							</div>
+							   <div class="form-text"><span class="text-warning fw-semibold"><i class="fa-solid fa-circle-exclamation "></i>Lưu ý:</span>
+							   	<span>Chuyển khoản đúng nội dung, chúng tôi sẽ không chịu trách nhiệm với lệnh chuyển sai nội dung!</span>
+							   </div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			
+			
+				<div class="rounded shadow-sm p-2 bg-light mb-2 py-5" th:if="${deposit.status == 'SUCCESS'}">
+				
+					<div class="text-center">
+						<i class="fa-solid fa-circle-check fa-fade text-success fs-1"></i>
+						<p class="mb-1">Thanh toán thành công!</p>
+						<span class="fs-1 text-success fw-semibold" th:text="'+ $' + ${#numbers.formatDecimal(deposit.amount,  1, 'COMMA', 2,'POINT')}"></span>
+						
+						<div>
+							<a class="btn btn-secondary me-1" href="/account">Trở về</a>
+							<a class="btn btn-success ms-1" href="/booking">Booking ngay</a>
+						</div>
+					</div>
+				</div>
+				
+				
+				<script>
+    const transactionId = document.getElementById('transactionId')?.textContent;
+
+    async function checkPaymentStatus() {
+        if (!transactionId) return;
+        try {
+            const response = await fetch(`/api/deposit/status/${transactionId}`);
+            const status = await response.text();
+
+            if (status === 'SUCCESS') {
+                window.location.reload();
+            }
+        } catch (error) {
+            console.error('Error checking status:', error);
+        }
+    }
+    setInterval(checkPaymentStatus, 5000);
+</script>
+</div>

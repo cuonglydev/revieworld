@@ -20,6 +20,10 @@ public class SecurityUtils {
 	        if (principal instanceof CustomUserDetails) {
 	            return ((CustomUserDetails) principal).getUser();
 	        }
+	        if (principal instanceof CustomOAuth2UserDetails) {
+	            return ((CustomOAuth2UserDetails) principal).getUser();
+	        }
+
 	        return null;
 	    }
 }

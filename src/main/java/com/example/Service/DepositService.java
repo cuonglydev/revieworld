@@ -25,6 +25,10 @@ public class DepositService {
     @Autowired
     private UserService userService;
     
+    public Deposit findById(int id) {
+    	return depositRepository.findById(id).orElse(null);
+    }
+    
     public List<Deposit> findByUserId(int userId) {
         return depositRepository.findByUserId(userId);
     }
@@ -80,5 +84,16 @@ public class DepositService {
     
     public Deposit findByTransactionId(String transactionId) {
         return depositRepository.findByTransactionId(transactionId);
+    }
+    
+    public Deposit updateStatusById(int id, String status) {
+    	Deposit deposit = depositRepository.findById(id).orElse(null);
+    	if(deposit != null) {
+    		deposit.setStatus(status);
+    		depositRepository.save(deposit);
+    	}else {
+    		return null;
+		}
+    	return deposit;
     }
 } 

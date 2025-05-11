@@ -249,6 +249,7 @@ public class AuthController {
 			redirectAttributes.addFlashAttribute("danger", "Lỗi không tìm thấy người dùng");
 			return "redirect:/login";
 		}
+		System.out.println(user);
 		try {
 			if(token.equals(user.getToken())) {
 				model.addAttribute("success", "Xác nhận thành công vui lòng nhập mật khẩu mới!");
