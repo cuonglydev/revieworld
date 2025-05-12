@@ -112,7 +112,7 @@ public class AuthController {
 			DefaultRank defaultRank = defaultRankService.findById(1);
 			if(defaultRank.isStatus()) {
 				if(defaultRank.getRank() != null) {
-					user.setRank(User.Rank.valueOf(defaultRank.getRank().getName()));
+					user.setRank(defaultRank.getRank());
 				}
 			}
 			
