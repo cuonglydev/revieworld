@@ -28,10 +28,6 @@ import lombok.Setter;
 @Table(name = "users")
 public class User {
 
-	public enum Rank {
-		BRONZE, SILVER, GOLD, PLATINUM, DIAMOND
-	}
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
@@ -75,24 +71,12 @@ public class User {
 	@Column(name = "token")
 	private String token;
 	
-	@Enumerated(EnumType.STRING)
+	@ManyToOne
+	@JoinColumn(name = "rank_id")
 	private Rank rank;
 	
-	@OneToOne(mappedBy = "user")
+	@OneToOne
+	@JoinColumn(name = "user_affiliate_id")
 	private UserAffiliate userAffiliate;
 	
-	@OneToMany(mappedBy = "user")
-	private List<Mission> missions;
-	
-	@OneToMany(mappedBy = "user")
-	private List<Withdraw> withdraws;
-	
-	@OneToMany(mappedBy = "user")
-	private List<Deposit> deposits;
-	
-	@OneToMany(mappedBy = "user")
-	private List<Order> orders;
-
-	@OneToMany(mappedBy = "user")
-	private List<UserBank> userBanks;
 }

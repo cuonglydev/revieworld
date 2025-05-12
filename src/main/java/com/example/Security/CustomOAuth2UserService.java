@@ -51,7 +51,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             DefaultRank defaultRank = defaultRankService.findById(1);
 			if(defaultRank.isStatus()) {
 				if(defaultRank.getRank() != null) {
-					newUser.setRank(User.Rank.valueOf(defaultRank.getRank().getName()));
+					newUser.setRank(defaultRank.getRank());
 				}
 			}
 			

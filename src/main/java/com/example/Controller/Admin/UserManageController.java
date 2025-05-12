@@ -23,13 +23,13 @@ import com.example.Entity.Deposit;
 import com.example.Entity.Withdraw;
 import com.example.Entity.Mission;
 import com.example.Entity.UserAffiliate;
-import com.example.Entity.Dispute;
+//import com.example.Entity.Dispute;
 import com.example.Service.UserService;
 import com.example.Service.DepositService;
 import com.example.Service.WithdrawService;
 import com.example.Service.MissionService;
 import com.example.Service.UserAffiliateService;
-import com.example.Service.DisputeService;
+//import com.example.Service.DisputeService;
 
 
 @Controller
@@ -54,8 +54,7 @@ public class UserManageController {
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 
-	@Autowired
-	private DisputeService disputeService;
+
 
 	@GetMapping("/user")
 	public String userPage(Model model) {
@@ -79,9 +78,7 @@ public class UserManageController {
 				List<Mission> missions = missionService.findByUserId(userId);
 				model.addAttribute("missions", missions);
 				
-				List<Dispute> disputes = disputeService.findByUserId(userId);
-				model.addAttribute("disputes", disputes);
-				
+			
 				List<User> referrals = new ArrayList<>();
 				List<UserAffiliate> affiliates = userAffiliateService.findAllByUserId(userId);
 				for (UserAffiliate affiliate : affiliates) {
@@ -111,7 +108,7 @@ public class UserManageController {
 			@RequestParam String email,
 			@RequestParam String username,
 			@RequestParam String password,
-			@RequestParam User.Rank rank,
+			/* @RequestParam User.Rank rank, */
 			@RequestParam String status,
 			RedirectAttributes redirectAttributes) {
 		try {
@@ -125,7 +122,7 @@ public class UserManageController {
 			user.setEmail(email);
 			user.setUsername(username);
 			user.setPassword(passwordEncoder.encode(password));
-			user.setRank(rank);
+			/* user.setRank(rank); */
 			user.setStatus(status);
 			user.setCreatedAt(new Date());
 			user.setAmount(0.0);
@@ -186,10 +183,10 @@ public class UserManageController {
 			}
 			
 			// Delete all related disputes
-			List<Dispute> disputes = disputeService.findByUserId(userId);
-			for (Dispute dispute : disputes) {
-				disputeService.delete(dispute.getId());
-			}
+//			List<Dispute> disputes = disputeService.findByUserId(userId);
+//			for (Dispute dispute : disputes) {
+//				disputeService.delete(dispute.getId());
+//			}
 			
 			// Delete all affiliate relationships
 			List<UserAffiliate> affiliates = userAffiliateService.findAllByUserId(userId);
@@ -212,7 +209,7 @@ public class UserManageController {
 			@RequestParam("email") String email,
 			@RequestParam("username") String username,
 			@RequestParam(value = "newPassword", required = false) String newPassword,
-			@RequestParam("rank") User.Rank rank,
+			/* @RequestParam("rank") User.Rank rank, */
 			@RequestParam("status") String status) {
 		try {
 			User user = userService.findById(id);
@@ -237,7 +234,7 @@ public class UserManageController {
 				user.setPassword(passwordEncoder.encode(newPassword));
 			}
 			
-			user.setRank(rank);
+//			user.setRank(rank);
 			user.setStatus(status);
 			userService.save(user);
 			
@@ -248,62 +245,62 @@ public class UserManageController {
 		}
 	}
 
-	@PostMapping("/dispute/approve/{id}")
-	@ResponseBody
-	public String approveDispute(@PathVariable("id") int disputeId) {
-		try {
-			Dispute dispute = disputeService.findById(disputeId);
-			if (dispute == null) {
-				return "Không tìm thấy kháng đơn";
-			}
-			
-			if (!dispute.getStatus().equals("PENDING")) {
-				return "Kháng đơn này đã được xử lý";
-			}
-			
-			dispute.setStatus("APPROVED");
-			dispute.setUpdatedAt(new Date());
-			disputeService.save(dispute);
-			
-			Mission mission = dispute.getMission();
-			mission.setStatus("COMPLETED");
-			missionService.save(mission);
-			
-			return "Duyệt kháng đơn thành công";
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "Có lỗi xảy ra: " + e.getMessage();
-		}
-	}
-
-	@PostMapping("/dispute/reject/{id}")
-	@ResponseBody
-	public String rejectDispute(@PathVariable("id") int disputeId, @RequestParam String reason) {
-		try {
-			Dispute dispute = disputeService.findById(disputeId);
-			if (dispute == null) {
-				return "Không tìm thấy kháng đơn";
-			}
-			
-			if (!dispute.getStatus().equals("PENDING")) {
-				return "Kháng đơn này đã được xử lý";
-			}
-			
-			dispute.setStatus("REJECTED");
-			dispute.setRejectReason(reason);
-			dispute.setUpdatedAt(new Date());
-			disputeService.save(dispute);
-			
-			Mission mission = dispute.getMission();
-			mission.setStatus("FAILED");
-			missionService.save(mission);
-			
-			return "Từ chối kháng đơn thành công";
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "Có lỗi xảy ra: " + e.getMessage();
-		}
-	}
+//	@PostMapping("/dispute/approve/{id}")
+//	@ResponseBody
+//	public String approveDispute(@PathVariable("id") int disputeId) {
+//		try {
+//			Dispute dispute = disputeService.findById(disputeId);
+//			if (dispute == null) {
+//				return "Không tìm thấy kháng đơn";
+//			}
+//			
+//			if (!dispute.getStatus().equals("PENDING")) {
+//				return "Kháng đơn này đã được xử lý";
+//			}
+//			
+//			dispute.setStatus("APPROVED");
+//			dispute.setUpdatedAt(new Date());
+//			disputeService.save(dispute);
+//			
+//			Mission mission = dispute.getMission();
+//			mission.setStatus("COMPLETED");
+//			missionService.save(mission);
+//			
+//			return "Duyệt kháng đơn thành công";
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return "Có lỗi xảy ra: " + e.getMessage();
+//		}
+//	}
+//
+//	@PostMapping("/dispute/reject/{id}")
+//	@ResponseBody
+//	public String rejectDispute(@PathVariable("id") int disputeId, @RequestParam String reason) {
+//		try {
+//			Dispute dispute = disputeService.findById(disputeId);
+//			if (dispute == null) {
+//				return "Không tìm thấy kháng đơn";
+//			}
+//			
+//			if (!dispute.getStatus().equals("PENDING")) {
+//				return "Kháng đơn này đã được xử lý";
+//			}
+//			
+//			dispute.setStatus("REJECTED");
+//			dispute.setRejectReason(reason);
+//			dispute.setUpdatedAt(new Date());
+//			disputeService.save(dispute);
+//			
+//			Mission mission = dispute.getMission();
+//			mission.setStatus("FAILED");
+//			missionService.save(mission);
+//			
+//			return "Từ chối kháng đơn thành công";
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return "Có lỗi xảy ra: " + e.getMessage();
+//		}
+//	}
 
 	// @GetMapping("/rank")
 	// public String rankPage() {

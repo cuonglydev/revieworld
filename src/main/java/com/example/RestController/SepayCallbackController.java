@@ -5,8 +5,11 @@ import com.example.Entity.Rate;
 import com.example.Entity.User;
 import com.example.Repository.DepositRepository;
 import com.example.Service.UserService;
+import com.example.Service.AffiliateService;
 import com.example.Service.DepositService;
 import com.example.Service.RateService;
+import com.example.Service.UserAffiliateItemService;
+import com.example.Service.UserAffiliateService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,6 +42,15 @@ public class SepayCallbackController {
     
     @Autowired
     RateService rateService;
+    
+    @Autowired
+    private UserAffiliateService userAffiliateService;
+    
+    @Autowired
+    private UserAffiliateItemService userAffiliateItemService;
+    
+    @Autowired
+    private AffiliateService affiliateService;
 	/*
 	 * @Value("${sepay.secret.key}") private String sepaySecretKey;
 	 */
