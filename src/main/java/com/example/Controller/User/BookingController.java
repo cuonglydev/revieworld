@@ -47,19 +47,16 @@ public class BookingController {
 		return "User/Pages/Booking/booking-detail";
 	}
 	
-	@PostMapping("/booking/create")
-	public String createBooking(@ModelAttribute Order order) {
-		User user = userService.getCurrentUser();
-		Date currentDate = new Date();
-		try {
-			
-			order
-		}
-		
-		return entity;
-	}
-	
-
+	/*
+	 * @PostMapping("/booking/create") public String createBooking(@ModelAttribute
+	 * Order order) { User user = userService.getCurrentUser(); Date currentDate =
+	 * new Date(); try {
+	 * 
+	 * order }
+	 * 
+	 * return entity; }
+	 * 
+	 */
 	
 
 }
