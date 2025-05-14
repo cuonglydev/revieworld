@@ -29,4 +29,8 @@ public class OrderTypeService {
     public void deleteOrderType(int id) {
         orderTypeRepository.deleteById(id);
     }
+    
+    public OrderType findBySlug(String slug) {
+    	return orderTypeRepository.findBySlug(slug);
+    }
 }

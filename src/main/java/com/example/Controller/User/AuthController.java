@@ -127,7 +127,7 @@ public class AuthController {
 			userService.save(user);
 			
 			String subject = "Xác thực tài khoản";
-			String text = "Mã token của bạn là:" + token;
+			String text = "Mã token của bạn là: " + token;
 			
 			try {
 				emailService.sendEmail(email, subject, text);
@@ -203,7 +203,7 @@ public class AuthController {
 				userService.save(user);
 				
 				String subject = "Xác thực tài khoản";
-				String text = "Mã token của bạn là:" + token;
+				String text = "Mã token của bạn là: " + token;
 
 				try {
 					emailService.sendEmail(email, subject, text);

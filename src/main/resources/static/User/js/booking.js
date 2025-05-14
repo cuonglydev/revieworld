@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const basePrice = 0.5;
+    const basePrice = document.getElementById("basePrice").value;
     const priceDisplays = document.querySelectorAll('[data-price-display]');
     const numberInput = document.getElementById('numberInput');
     const turnNumber = document.getElementById('turnNumber');
