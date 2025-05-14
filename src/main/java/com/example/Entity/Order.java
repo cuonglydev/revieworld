@@ -34,6 +34,9 @@ public class Order {
 	@Column(name = "url", nullable = false)
 	private String url;
 	
+	@Column(name = "photo", length = 500)
+	private String photo;
+	
 	@Column(name = "description", nullable = true)
 	private String description;
 	
