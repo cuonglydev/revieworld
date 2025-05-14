@@ -1,5 +1,6 @@
 package com.example.Entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,11 +26,11 @@ public class UserAffiliate {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
+	@Column(name = "amount")
+	private Double amount;
+	
 	@OneToOne
 	@JoinColumn(name = "user_id")
 	private User user;
-	
-	@ManyToOne
-	@JoinColumn(name = "referrer_id")
-	private User referrer;
+
 }

@@ -6,6 +6,7 @@ import com.example.Repository.OrderRepository;
 import com.example.Repository.UserRepository;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,18 @@ public class OrderService {
 
     @Autowired
     private UserRepository userRepository;
+    
+    public List<Order> findAllByUserId(int userId){
+    	return orderRepository.findAllByUserId(userId);
+    }
+    
+    public List<Order> findAllByUserAndStatus(int userId, String status){
+    	return orderRepository.findAllByUserIdAndStatus(userId, status);
+    }
+    
+    public void save(Order order) {
+    	orderRepository.save(order);
+    }
 
 //    public Order createOrder(int userId, String name, String url, String description, String language, String slug,
 //            Double totalAmount) {

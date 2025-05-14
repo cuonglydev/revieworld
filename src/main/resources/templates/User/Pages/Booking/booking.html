@@ -23,52 +23,35 @@
 
         <div class="p-2 rounded mt-2 bg-light">
             <div class="d-flex justify-content-between">
-                <span>user@gmail.com</span>
+                <span th:text="${user.email}">user@gmail.com</span>
                 <div>
                     <span class="text-secondary"><i class="fa-solid fa-wallet"></i></span>
-                    <span>$50</span>
+                    <span th:text="'$' + ${#numbers.formatDecimal(user.amount,1 , 'COMMA', 2, 'POINT')}">$50</span>
                 </div>
             </div>
         </div>
 
         <h6 class="fw-semibold mt-2">Booking dịch vụ</h6>
         <div class="row">
-            <div class="col-md-4  col-6 mb-2">
+            <div class="col-md-4  col-6 mb-2" th:each="item : ${orderTypes}">
                 <div class=" bg-light rounded shadow-sm  overflow-hidden">
                     <div class="w-100 booking__element" >
-                        <img class="w-100 h-100 object-fit-cover" src="User/assets/photo/reviews-map-service.jpg">
+                        <img class="w-100 h-100 object-fit-cover" th:src="${item.Photo}">
                     </div>
                     <div class="p-2">
-                        <a href="/booking-detail" class="mb-1 fw-semibold text-decoration-none text-dark" >Reviewmap service</a>
+                        <a href="/booking-detail" class="mb-1 fw-semibold text-decoration-none text-dark" th:text="${item.name}">Reviewmap service</a>
                         <div class="d-flex justify-content-between align-items-end">
                             <div>
                                
-                                <span class="text-decoration-line-through text-secondary">$1</span>
-                                <span class="text-danger fw-semibold">$0.5</span>
+                                <span class="text-decoration-line-through text-secondary" th:text="'$' + ${#numbers.formatDecimal(item.price, 1 , 'COMMA', 2, 'POINT')}">$1</span>
+                                <span class="text-danger fw-semibold" th:text="'$' + ${#numbers.formatDecimal(item.promotionalPrice, 1 , 'COMMA', 2, 'POINT')}">$0.5</span>
                             </div>
-                            <a class="btn btn-primary " href="/booking-detail"><i class="fa-solid fa-plus"></i></a>
+                            <a class="btn btn-primary " th:href="@{/booking/{slug} (slug=${item.slug})}"><i class="fa-solid fa-plus"></i></a>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4  col-6 mb-2">
-                <div class=" bg-light rounded shadow-sm  overflow-hidden">
-                    <div class="w-100 booking__element" >
-                        <img class="w-100 h-100 object-fit-cover" src="/User/assets/photo/reviews-fanpage-service.jpg">
-                    </div>
-                    <div class="p-2">
-                        <p class="mb-1 fw-semibold">Review fanpage service</p>
-                        <div class="d-flex justify-content-between align-items-end">
-                            <div>
-                               
-                                <span class="text-decoration-line-through text-secondary">$1</span>
-                                <span class="text-danger fw-semibold">$0.5</span>
-                            </div>
-                            <a class="btn btn-primary "><i class="fa-solid fa-plus"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
         </div>
 
         <h6 class="fw-semibold ">Dịch vụ bạn đang đặt</h6>

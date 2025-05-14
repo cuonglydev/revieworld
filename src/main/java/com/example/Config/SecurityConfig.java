@@ -81,7 +81,7 @@ public class SecurityConfig {
 	public SecurityFilterChain userSecurityFilterChain(HttpSecurity http, ClientRegistrationRepository clientRegistrationRepository) throws Exception {
 		http
 			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/account/**").authenticated()
+				.requestMatchers("/account/**", "/booking/**", "/mission/**").authenticated()
 			    .requestMatchers("/sepay/callback").permitAll()
 				.requestMatchers("/User/Pages/account/**").authenticated()
 				.anyRequest().permitAll()
