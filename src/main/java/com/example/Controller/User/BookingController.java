@@ -20,10 +20,10 @@ import com.example.Service.UserService;
 
 @Controller
 public class BookingController {
-	
+
 	@Autowired
 	OrderTypeService orderTypeService;
-	
+
 	@Autowired
 	UserService userService;
 
@@ -31,32 +31,34 @@ public class BookingController {
 	public String bookingPage(Model model) {
 		User user = userService.getCurrentUser();
 		model.addAttribute("user", user);
-		
+
 		List<OrderType> orderTypes = orderTypeService.getAllOrderTypes();
 		model.addAttribute("orderTypes", orderTypes);
 		return "User/Pages/Booking/booking";
 	}
-	
+
 	@GetMapping("/booking/{slug}")
 	public String bookingDetailPage(@PathVariable String slug, Model model) {
 		User user = userService.getCurrentUser();
 		model.addAttribute("user", user);
-		
+
 		OrderType orderType = orderTypeService.findBySlug(slug);
 		model.addAttribute("orderType", orderType);
 		return "User/Pages/Booking/booking-detail";
 	}
-	
-	/*
-	 * @PostMapping("/booking/create") public String createBooking(@ModelAttribute
-	 * Order order) { User user = userService.getCurrentUser(); Date currentDate =
-	 * new Date(); try {
-	 * 
-	 * order }
-	 * 
-	 * return entity; }
-	 * 
-	 */
-	
 
+	@PostMapping("/booking/create")
+	public String createBooking(@ModelAttribute Order order) {
+		User user = userService.getCurrentUser();
+		Date currentDate = new Date();
+		try {
+			
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		
+		return "";
+	}
+	
 }

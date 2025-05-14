@@ -39,14 +39,14 @@
 
             <div class=" mt-2">
                 <div class="bg-light p-2 rounded shadow-sm " >
-                    <form class="m-3" th:object="${order}" th:action="@{/create-order}" method="post" enctype="multipart/form-data">
+                    <form class="m-3" th:object="${order}" th:action="@{/booking/create}" method="post" enctype="multipart/form-data">
                         <!-- Bước 1: Nhập tên map hoặc fanpage -->
                         <div class="mb-3">
                             <label for="mapName" class="form-label">
                                 <b>Bước 1: </b>
                                 <span class="fs-14">Nhập tên map hoặc fanpage của bạn</span>
                             </label>
-                            <input type="text" class="form-control" id="mapName" required placeholder="Tên map, fanpage ...">
+                            <input type="text" class="form-control" name="name" required placeholder="Tên map, fanpage ...">
                         </div>
                     
                         <!-- Bước 2: Nhập link cần review -->
@@ -55,7 +55,7 @@
                                 <b>Bước 2: </b>
                                 <span class="fs-14">Nhập link cần review của bạn</span>
                             </label>
-                            <input type="url" class="form-control" id="reviewLink" aria-describedby="link" required placeholder="https://...">
+                            <input type="url" class="form-control" name="url" aria-describedby="link" required placeholder="https://...">
                         </div>
                     
                         <!-- Bước 3: Mô tả dịch vụ -->
