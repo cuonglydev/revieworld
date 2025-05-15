@@ -110,11 +110,11 @@ public class AuthController {
 			user.setProviderId(null);
 			
 			DefaultRank defaultRank = defaultRankService.findById(1);
-			if(defaultRank.isStatus()) {
+			
 				if(defaultRank.getRank() != null) {
 					user.setRank(defaultRank.getRank());
 				}
-			}
+			
 			
 			user.setStatus("NOT-CONFIRMED");
 	

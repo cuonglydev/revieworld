@@ -16,7 +16,7 @@
                         <td th:text="${deposit.id}"></td>
                         <td>
                             <span th:switch="${deposit.paymentMethod}">
-                                <span th:case="'SEPAY'" class="badge bg-label-primary">SEPAY</span>
+                                <span th:case="'SEPAY'" class="badge bg-label-primary">VN BANKING</span>
                                 <span th:case="'USDT'" class="badge bg-label-success">USDT</span>
                                 <span th:case="*" th:text="${deposit.paymentMethod}"></span>
                             </span>

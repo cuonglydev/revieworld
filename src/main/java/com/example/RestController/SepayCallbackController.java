@@ -109,25 +109,29 @@ public class SepayCallbackController {
         	
         	User user = userService.findById(deposit.getUser().getId());
         	
-        	Double userAmount = user.getAmount() + amount / rate.getRate();
+        	Double userAmount = user.getAmount() + (amount / rate.getRate());
         	user.setAmount(userAmount);
+        	
         	
         	
         	Affiliate affiliate = affiliateService.findByid(1);
         	if(affiliate != null && affiliate.getStatus()) {
-        		UserAffiliate userAffiliate = userAffiliateService.findById(user.getUserAffiliate().getId());
-        		if(userAffiliate != null) {
-        			User inviter = userService.findById(userAffiliate.getUser().getId());
-        			
-        			Double fee = deposit.getAmount() * (affiliate.getPercentage() / 100);
-        			UserAffiliateItem userAffiliateItem = new UserAffiliateItem();
-        			userAffiliateItem.setAmount(fee);
-        			userAffiliateItem.setCreatedAt(currentDate);
-        			userAffiliateItem.setUser(inviter);
-        			userAffiliateItem.setUserAffiliate(userAffiliate);
-        			userAffiliateItemService.save(userAffiliateItem);
-        			userAffiliate.setAmount(userAffiliate.getAmount() + fee);
-        			userAffiliateService.save(userAffiliate);
+        		if(user.getUserAffiliate() != null) {
+        			UserAffiliate userAffiliate = userAffiliateService.findById(user.getUserAffiliate().getId());
+        			if(userAffiliate != null) {
+            			User inviter = userService.findById(userAffiliate.getUser().getId());
+            			
+            			Double fee = deposit.getAmount() * (affiliate.getPercentage() / 100);
+            			UserAffiliateItem userAffiliateItem = new UserAffiliateItem();
+            			userAffiliateItem.setAmount(fee);
+            			userAffiliateItem.setCreatedAt(currentDate);
+            			userAffiliateItem.setUser(inviter);
+            			userAffiliateItem.setUserAffiliate(userAffiliate);
+            			userAffiliateItemService.save(userAffiliateItem);
+            			
+            			userAffiliate.setAmount(userAffiliate.getAmount() + fee);
+            			userAffiliateService.save(userAffiliate);
+            		}
         		}
         	}
         	
