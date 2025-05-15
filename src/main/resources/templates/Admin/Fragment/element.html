@@ -54,6 +54,8 @@
 <link rel="stylesheet"
 	href="https://cdn.ckeditor.com/ckeditor5/44.1.0/ckeditor5.css"
 	crossorigin>
+	
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 </head>
 
 <div th:fragment="menu">
@@ -183,6 +185,11 @@
               </ul>
             </li>
             
+              <li class="menu-item "><a href="/admin/content" class="menu-link">
+              <i class="menu-icon  bi bi-blockquote-left"></i> 
+					<div data-i18n="Analytics">Bài viết</div>
+			</a></li>
+			
               <li class="menu-item "><a href="/admin/popups" class="menu-link">
               <i class='menu-icon bx bxs-notification'></i>
 					<div data-i18n="Analytics">Thông báo</div>

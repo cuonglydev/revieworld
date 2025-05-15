@@ -124,7 +124,7 @@
                                 <td th:text="'$ ' + ${#numbers.formatDecimal(rank.threshold, 0, 'COMMA', 2, 'POINT')}"></td>
                                 <td th:text="${#numbers.formatDecimal(rank.percentage, 0, 'COMMA', rank.threshold % 1 == 0 ? 0 : 2, 'POINT')} + '%'"></td>
                                 <td>
-                                  <div class="modal fade" id="exampleModal-update" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                  <div class="modal fade" th:id="'exampleModal-update' + ${rank.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                       <div class="modal-content">
                                         <div class="modal-header">
@@ -163,11 +163,11 @@
                                       </div>
                                     </div>
                                   </div>
-                                  <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal-update">
+                                  <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" th:attr="data-bs-target='#exampleModal-update' + ${rank.id}" >
                                     Edit
                                   </button>
-                                  <div class="modal fade" id="exampleModal-delete" tabindex="-1" aria-labelledby="exampleModalLabel-delete" aria-hidden="true">
-                                    <div class="modal-dialog">
+                                  <div class="modal fade" th:id="'exampleModal-delete' + ${rank.id}" tabindex="-1" aria-labelledby="exampleModalLabel-delete" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
                                       <div class="modal-content">
                                         <div class="modal-header">
                                           <h1 class="modal-title fs-5" id="exampleModalLabel">Xóa</h1>
@@ -183,7 +183,7 @@
                                       </div>
                                     </div>
                                   </div>
-                                  <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal-delete">
+                                  <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" th:attr="data-bs-target='#exampleModal-delete' + ${rank.id}" >
                                     Xóa
                                   </button>
                                     <!-- <div href="/admin/ranks/edit/{id}" th:href="@{/admin/rank/edit/{id}(id=${rank.id})}" class="btn btn-warning btn-sm">Edit</div> -->

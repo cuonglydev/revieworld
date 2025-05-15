@@ -35,21 +35,16 @@ public class OrderType {
 	@Column(name = "photo")
 	private String photo;
 
-	@Column(name = "price", nullable = false)
-	private Double price;
-
-	@Column(name = "promotional_price")
-	private Double promotionalPrice;
-
+	
 	@Column(name = "slug", nullable = false, length = 500)
 	private String slug;
 
 	@Column(name = "url")
 	private String url;
 
-	@Column(name = "guide", columnDefinition = "TEXT", nullable = true)
-	@Lob
-	private String guide;
+	@Column(name = "link")
+	private String link;
+
 
 	@Column(name = "created_at")
 	private Date createdAt;
