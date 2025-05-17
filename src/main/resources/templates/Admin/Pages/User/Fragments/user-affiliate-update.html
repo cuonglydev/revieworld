@@ -1,0 +1,81 @@
+<!-- user-affiliate-update.html -->
+<div th:fragment="affiliateUpdate">
+    <ul class="nav nav-tabs" id="affiliateTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="affiliate-tab" data-bs-toggle="tab" href="#affiliate" role="tab">Người dùng đã mời</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="update-info-tab" data-bs-toggle="tab" href="#update-info" role="tab">Cập nhật thông tin</a>
+        </li>
+    </ul>
+    <div class="tab-content pt-3" id="affiliateTabContent">
+        <!-- Người dùng đã mời -->
+        <div class="tab-pane fade show active" id="affiliate" role="tabpanel">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên người dùng</th>
+                            <th>Email</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày tham gia</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="referral : ${referrals}">
+                            <td th:text="${referral.id}"></td>
+                            <td th:text="${referral.username}"></td>
+                            <td th:text="${referral.email}"></td>
+                            <td>
+                                <span th:class="${referral.status == 'ACTIVE' ? 'badge bg-success' : 'badge bg-danger'}"
+                                      th:text="${referral.status == 'ACTIVE' ? 'Hoạt động' : 'Khóa'}">
+                                </span>
+                            </td>
+                            <td th:text="${#dates.format(referral.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(referrals)}">
+                            <td colspan="5" class="text-center">Không có dữ liệu</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- Cập nhật thông tin -->
+        <div class="tab-pane fade" id="update-info" role="tabpanel">
+            <form class="updateUserForm" method="post">
+                <input type="hidden" name="userId" th:value="${user.id}">
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" name="email" th:value="${user.email}" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Tên người dùng</label>
+                    <input type="text" class="form-control" name="username" th:value="${user.username}" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Mật khẩu mới (để trống nếu không thay đổi)</label>
+                    <input type="password" class="form-control" name="newPassword">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Mức rank</label>
+                    <select name="rank" class="form-select" required>
+                        <option value="BRONZE" th:selected="${user.rank == 'BRONZE'}">Đồng</option>
+                        <option value="SILVER" th:selected="${user.rank == 'SILVER'}">Bạc</option>
+                        <option value="GOLD" th:selected="${user.rank == 'GOLD'}">Vàng</option>
+                        <option value="PLATINUM" th:selected="${user.rank == 'PLATINUM'}">Bạch Kim</option>
+                        <option value="DIAMOND" th:selected="${user.rank == 'DIAMOND'}">Kim Cương</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Trạng thái</label>
+                    <select name="status" class="form-select" required>
+                        <option value="ACTIVE" th:selected="${user.status == 'ACTIVE'}">Hoạt động</option>
+                        <option value="BLOCKED" th:selected="${user.status == 'BLOCKED'}">Khóa</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Cập nhật</button>
+            </form>
+        </div>
+    </div>
+</div> 

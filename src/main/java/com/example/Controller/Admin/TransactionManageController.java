@@ -24,7 +24,10 @@ public class TransactionManageController {
 	
 	@GetMapping("/withdraw")
 	public String withdrawPage(Model model) {
-		
+		model.addAttribute("pendingRequests", withdrawService.findByStatus("PENDING"));
+		model.addAttribute("allRequests", withdrawService.findAll());
+		model.addAttribute("approvedRequests", withdrawService.findByStatus("APPROVED"));
+		model.addAttribute("rejectedRequests", withdrawService.findByStatus("REJECTED"));
 		return "Admin/Pages/Transaction/withdraw";
 	}
 

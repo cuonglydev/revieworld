@@ -4,30 +4,27 @@
                   <table id="deposit-data" class="table table-striped text-nowrap w-100">
                     <thead>
                       <tr>
-                        <th>Mã nạp</th>
-                        <th>Phương thức</th>
-                        <th>Số tiền</th>
-                        <th>Trạng thái</th>
-                        <th>Ngày thực hiện</th>
+                        <th class="text-center">Mã nạp</th>
+                        <th class="text-center">Số tiền</th>
+                        <th class="text-center">Ngày thực hiện</th>
+                        <th class="text-center">Tên người dùng</th>
+                        <th class="text-center">Trạng thái</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr th:each="deposit : ${deposits}">
-                        <td th:text="${deposit.id}"></td>
-                        <td>
-                            <span th:switch="${deposit.paymentMethod}">
-                                <span th:case="'SEPAY'" class="badge bg-label-primary">SEPAY</span>
-                                <span th:case="'USDT'" class="badge bg-label-success">USDT</span>
-                                <span th:case="*" th:text="${deposit.paymentMethod}"></span>
-                            </span>
-                        </td>
-                        <td th:text="${#numbers.formatDecimal(deposit.amount, 1, 'COMMA', 0, 'POINT')} + ' đ'"></td>
-                        <td>
+                      <tr th:each="deposit : ${deposits}" th:if="${deposit.status == 'SUCCESS'}">
+                        <td class="text-center" th:text="${deposit.id}"></td>
+                        <td class="text-center" th:text="${#numbers.formatDecimal(deposit.amount, 1, 'COMMA', 0, 'POINT')} + ' $'"></td>
+                        <td class="text-center" th:text="${deposit.createdAt != null ? #dates.format(deposit.createdAt, 'dd/MM/yyyy HH:mm') : '-'}"></td>
+                        <td class="text-center" th:text="${deposit.user != null ? deposit.user.username : '-'}"></td>
+                        <td class="text-center">
                             <span th:class="${deposit.status == 'SUCCESS' ? 'badge bg-success' : (deposit.status == 'PENDING' ? 'badge bg-warning' : 'badge bg-danger')}"
                                   th:text="${deposit.status == 'SUCCESS' ? 'Thành công' : (deposit.status == 'PENDING' ? 'Đang xử lý' : 'Thất bại')}">
                             </span>
                         </td>
-                        <td th:text="${#dates.format(deposit.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                      </tr>
+                      <tr th:if="${#lists.isEmpty(deposits)}">
+                        <td class="text-center" colspan="5">Không có dữ liệu</td>
                       </tr>
                     </tbody>
                   </table>

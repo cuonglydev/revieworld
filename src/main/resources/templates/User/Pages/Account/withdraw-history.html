@@ -21,9 +21,9 @@
   <div class="container">
     <div class="border-bottom border-secondary-subtle d-flex justify-content-between p-2">
         <a href="#" id="goBack" class="text-secondary fs__12px"><i class="fa-solid fa-arrow-left"></i> Trở về</a>
-        <span class="fw-semibold">Lịch sử nạp tiền</span>
+        <span class="fw-semibold">Lịch sử rút tiền</span>
     </div>
-</div>
+  </div>
 
 
 
@@ -44,15 +44,12 @@
   <script src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.js"></script>
 
   <script>
-
-
-
     $(document).ready(function () {
       $('#withdraw-data').DataTable({
-        scrollX: true
+        scrollX: true,
+        dom: 'lfrtip'
       });
     });
-
   </script>
 
 <script src="/User/js/goBack.js"></script>

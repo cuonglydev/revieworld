@@ -34,6 +34,10 @@
     <!-- Favicon -->
    <div th:replace="~{Admin/Fragment/element :: head}"></div>
    
+    <!-- Thêm Summernote CSS vào phần <head> -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote.min.js"></script>
 
   </head>
 
@@ -74,7 +78,7 @@
                               <div class="d-flex justify-content-between align-items-start">
                                 <div>
                                   <h6 class="card-title" th:text="${popup.title}">Tiêu đề thông báo</h6>
-                                  <p class="card-text" th:text="${popup.content}">Nội dung thông báo</p>
+                                  <p class="card-text" th:utext="${popup.content}">Nội dung thông báo</p>
                                 </div>
                                 <div class="form-check form-switch">
                                   <input class="form-check-input" type="checkbox" 
@@ -137,48 +141,27 @@
                             <th>Tiêu đề</th>
                             <th>Nội dung</th>
                             <th>Trạng thái</th>
-                            <th>Ngày tạo</th>
-                            <th>Người tạo</th>
-                            <th>Chỉnh sửa lần cuối</th>
-                            <th>Người chỉnh sửa</th>
                             <th>Thao tác</th>
                           </tr>
                         </thead>
-                        <tbody class="table-border-bottom-0">
+                        <tbody>
                           <tr th:if="${#lists.isEmpty(popups)}">
-                            <td colspan="9" class="text-center">Chưa có thông báo nào</td>
+                            <td colspan="5" class="text-center">Chưa có thông báo nào</td>
                           </tr>
                           <tr th:each="popup : ${popups}">
                             <td th:text="${popup.id}"></td>
                             <td th:text="${popup.title}"></td>
-                            <td th:text="${popup.content}"></td>
+                            <td th:utext="${popup.content}"></td>
+                            <td th:text="${popup.status}"></td>
                             <td>
-                              <span th:class="${popup.active ? 'badge bg-label-success' : 'badge bg-label-secondary'}"
-                                    th:text="${popup.active ? 'Đang hiển thị' : 'Đã ẩn'}">
-                              </span>
-                            </td>
-                            <td th:text="${#temporals.format(popup.createdAt, 'dd-MM-yyyy HH:mm')}"></td>
-                            <td th:text="${popup.createdBy}"></td>
-                            <td th:text="${popup.lastModifiedAt != null ? #temporals.format(popup.lastModifiedAt, 'dd-MM-yyyy HH:mm') : '-'}"></td>
-                            <td th:text="${popup.lastModifiedBy != null ? popup.lastModifiedBy : '-'}"></td>
-                            <td>
-                              <div class="dropdown">
-                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                  <i class="bx bx-dots-vertical-rounded"></i>
-                                </button>
-                                <div class="dropdown-menu">
-                                  <a class="dropdown-item" href="javascript:void(0);" th:onclick="'togglePopup(' + ${popup.id} + ')'">
-                                    <i class="bx bx-toggle-left me-1"></i>
-                                    <span th:text="${popup.active ? 'Ẩn' : 'Hiển thị'}"></span>
-                                  </a>
-                                  <a class="dropdown-item" href="javascript:void(0);" th:onclick="'editPopup(' + ${popup.id} + ')'">
-                                    <i class="bx bx-edit-alt me-1"></i> Chỉnh sửa
-                                  </a>
-                                  <a class="dropdown-item" href="javascript:void(0);" th:onclick="'deletePopup(' + ${popup.id} + ')'">
-                                    <i class="bx bx-trash me-1"></i> Xóa
-                                  </a>
-                                </div>
-                              </div>
+                              <button type="button" class="btn btn-sm btn-primary" 
+                                      th:onclick="'openEditModal(' + ${popup.id} + ')'">
+                                <i class="bx bx-edit"></i>
+                              </button>
+                              <button type="button" class="btn btn-sm btn-danger" 
+                                      th:onclick="'deletePopup(' + ${popup.id} + ')'">
+                                <i class="bx bx-trash"></i>
+                              </button>
                             </td>
                           </tr>
                         </tbody>
@@ -208,7 +191,7 @@
                       <div class="row">
                         <div class="col mb-3">
                           <label for="content" class="form-label">Nội dung</label>
-                          <textarea id="content" name="content" class="form-control" rows="3" placeholder="Nhập nội dung" required></textarea>
+                          <textarea id="content" name="content" class="form-control summernote" placeholder="Nhập nội dung" required></textarea>
                         </div>
                       </div>
                       <div class="row">
@@ -229,6 +212,53 @@
                     <div class="modal-footer">
                       <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Hủy</button>
                       <button type="submit" class="btn btn-primary">Lưu</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <!-- Edit Popup Modal -->
+            <div class="modal fade" id="editPopupModal" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Cập nhật thông báo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <form id="editPopupForm">
+                    <div class="modal-body">
+                      <input type="hidden" id="edit-popup-id" name="id">
+                      <div class="row">
+                        <div class="col mb-3">
+                          <label for="edit-title" class="form-label">Tiêu đề</label>
+                          <input type="text" id="edit-title" name="title" class="form-control" required />
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col mb-3">
+                          <label for="edit-content" class="form-label">Nội dung</label>
+                          <textarea id="edit-content" name="content" class="form-control summernote" required></textarea>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6 mb-3">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="edit-active" name="active">
+                            <label class="form-check-label" for="edit-active">
+                              Hiển thị
+                            </label>
+                          </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <p class="mb-0"><strong>Cập nhật bởi:</strong> <span th:text="${#authentication.name}"></span></p>
+                          <p class="mb-0"><small class="text-muted" th:text="${#temporals.format(#temporals.createNow(), 'dd-MM-yyyy HH:mm')}"></small></p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Hủy</button>
+                      <button type="submit" class="btn btn-primary">Cập nhật</button>
                     </div>
                   </form>
                 </div>
@@ -371,6 +401,95 @@
                 .catch(error => {
                   console.error('Error:', error);
                   showToast('error', 'Có lỗi xảy ra khi xóa');
+                });
+              }
+
+              function openEditModal(popupId) {
+                // Fetch popup data
+                fetch(`/admin/popups/${popupId}`)
+                  .then(response => response.json())
+                  .then(popup => {
+                    document.getElementById('edit-popup-id').value = popup.id;
+                    document.getElementById('edit-title').value = popup.title;
+                    document.getElementById('edit-content').value = popup.content;
+                    document.getElementById('edit-active').checked = popup.active;
+                    
+                    // Show modal
+                    const editModal = new bootstrap.Modal(document.getElementById('editPopupModal'));
+                    editModal.show();
+                  })
+                  .catch(error => {
+                    console.error('Error:', error);
+                    showToast('error', 'Có lỗi xảy ra khi tải dữ liệu');
+                  });
+              }
+
+              // Handle edit form submission
+              document.getElementById('editPopupForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const popupId = document.getElementById('edit-popup-id').value;
+                const data = {
+                  title: document.getElementById('edit-title').value,
+                  content: document.getElementById('edit-content').value,
+                  active: document.getElementById('edit-active').checked,
+                  updatedBy: document.getElementById('currentUsername').value
+                };
+                
+                fetch(`/admin/popups/${popupId}/update`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(result => {
+                  if (result.success) {
+                    showToast('success', result.message);
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('editPopupModal'));
+                    modal.hide();
+                    setTimeout(() => location.reload(), 1000);
+                  } else {
+                    showToast('error', result.message);
+                  }
+                })
+                .catch(error => {
+                  console.error('Error:', error);
+                  showToast('error', 'Có lỗi xảy ra khi cập nhật');
+                });
+              });
+
+              // Khởi tạo Summernote cho các textarea
+              $(document).ready(function() {
+                $('.summernote').summernote({
+                  height: 200,
+                  placeholder: 'Nhập nội dung thông báo...',
+                  callbacks: {
+                    onImageUpload: function(files) {
+                      for (let i = 0; i < files.length; i++) {
+                        uploadImage(files[i], this);
+                      }
+                    }
+                  }
+                });
+              });
+
+              function uploadImage(file, editor) {
+                var data = new FormData();
+                data.append('file', file);
+                $.ajax({
+                  url: '/api/upload-image', // Đổi endpoint này nếu backend khác
+                  type: 'POST',
+                  data: data,
+                  contentType: false,
+                  processData: false,
+                  success: function(url) {
+                    $(editor).summernote('insertImage', url);
+                  },
+                  error: function() {
+                    alert('Upload ảnh thất bại!');
+                  }
                 });
               }
             </script>

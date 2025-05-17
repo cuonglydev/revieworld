@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 
 import com.example.Entity.User;
 import com.example.Service.UserService;
+import com.example.Service.WithdrawService;
+import com.example.Service.DepositService;
 import java.util.UUID;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,8 +30,20 @@ public class AccountController {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	@Autowired
+	private WithdrawService withdrawService;
+
+	@Autowired
+	private DepositService depositService;
+
 	@GetMapping("/account")
-	public String accountPage() {
+	public String accountPage(Model model) {
+		User currentUser = userService.getCurrentUser();
+		if (currentUser == null) {
+			return "redirect:/login";
+		}
+		model.addAttribute("withdraws", withdrawService.findByUserId(currentUser.getId()));
+		model.addAttribute("deposits", depositService.findByUserId(currentUser.getId()));
 		return "User/Pages/Account/account";
 	}
 	

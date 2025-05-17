@@ -132,6 +132,18 @@ public class SecurityConfig {
 		return http.build();
 	}
 	
+	@Bean
+	@Order(0)
+	public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
+		http
+			.securityMatcher("/api/**")
+			.authorizeHttpRequests(auth -> auth
+				.requestMatchers("/api/withdrawal-requests/**", "/api/deposit-requests/**").permitAll()
+				.anyRequest().permitAll()
+			)
+			.csrf(csrf -> csrf.disable());
+		return http.build();
+	}
 	
 	 @Bean
 	    public OAuth2UserService<OAuth2UserRequest, OAuth2User> oauth2UserService() {

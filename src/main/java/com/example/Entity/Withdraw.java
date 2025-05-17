@@ -51,6 +51,9 @@ public class Withdraw {
 	@Column(name = "created_at")
 	private Date createAt;
 	
+	@Column(name = "processed_at")
+	private Date processedAt;
+	
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;

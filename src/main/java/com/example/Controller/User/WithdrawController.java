@@ -14,6 +14,8 @@ import com.example.Entity.UserBank;
 import com.example.Service.UserService;
 import com.example.Service.WithdrawService;
 import com.example.Service.UserBankService;
+import java.util.List;
+import java.util.ArrayList;
 
 @Controller
 public class WithdrawController {
@@ -45,7 +47,12 @@ public class WithdrawController {
 	@GetMapping("/account/withdraw-history")
 	public String withdrawHistoryPage(Model model) {
 		User currentUser = userService.getCurrentUser();
-		model.addAttribute("withdraws", withdrawService.findByUserId(currentUser.getId()));
+		if (currentUser == null) {
+			return "redirect:/login";
+		}
+		List<Withdraw> withdraws = withdrawService.findApprovedByUserId(currentUser.getId());
+		if (withdraws == null) withdraws = new ArrayList<>();
+		model.addAttribute("withdraws", withdraws);
 		return "User/Pages/Account/withdraw-history";
 	}
 	

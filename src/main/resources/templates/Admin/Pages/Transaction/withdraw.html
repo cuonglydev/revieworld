@@ -106,20 +106,14 @@
                         <tbody>
                           <tr th:each="request : ${pendingRequests}">
                             <td th:text="${request.id}"></td>
-                            <td th:text="${request.userId}"></td>
-                            <td th:text="${#numbers.formatDecimal(request.amount, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></td>
+                            <td th:text="${request.accountName}"></td>
+                            <td th:text="${#numbers.formatDecimal(request.amount, 0, 'COMMA', 0, 'POINT')} + ' $'"></td>
                             <td th:text="${request.bankName}"></td>
-                            <td th:text="${request.bankAccount}"></td>
-                            <td th:text="${#temporals.format(request.createdAt, 'dd-MM-yyyy HH:mm')}"></td>
+                            <td th:text="${request.accountNumber}"></td>
+                            <td th:text="${#dates.format(request.createAt, 'dd-MM-yyyy HH:mm')}"></td>
                             <td>
-                              <button class="btn btn-success btn-sm" 
-                                      th:onclick="'approveRequest(' + ${request.id} + ')'">
-                                Duyệt
-                              </button>
-                              <button class="btn btn-danger btn-sm" 
-                                      th:onclick="'showRejectModal(' + ${request.id} + ')'">
-                                Từ chối
-                              </button>
+                              <button class="btn btn-success btn-sm" th:attr="onclick='approveRequest(' + ${request.id} + ')'">Duyệt</button>
+                              <button class="btn btn-danger btn-sm" th:attr="onclick='showRejectModal(' + ${request.id} + ')'">Từ chối</button>
                             </td>
                           </tr>
                         </tbody>
@@ -151,10 +145,10 @@
                         <tbody>
                           <tr th:each="request : ${allRequests}">
                             <td th:text="${request.id}"></td>
-                            <td th:text="${request.userId}"></td>
-                            <td th:text="${#numbers.formatDecimal(request.amount, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></td>
+                            <td th:text="${request.accountName}"></td>
+                            <td th:text="${#numbers.formatDecimal(request.amount, 0, 'COMMA', 0, 'POINT')} + ' $'"></td>
                             <td th:text="${request.bankName}"></td>
-                            <td th:text="${request.bankAccount}"></td>
+                            <td th:text="${request.accountNumber}"></td>
                             <td>
                               <span th:class="${'badge bg-' + 
                                 (request.status == 'PENDING' ? 'warning' : 
@@ -163,8 +157,8 @@
                                         (request.status == 'APPROVED' ? 'Đã duyệt' : 'Đã từ chối')}">
                               </span>
                             </td>
-                            <td th:text="${#temporals.format(request.createdAt, 'dd-MM-yyyy HH:mm')}"></td>
-                            <td th:text="${request.processedAt != null ? #temporals.format(request.processedAt, 'dd-MM-yyyy HH:mm') : '-'}"></td>
+                            <td th:text="${#dates.format(request.createAt, 'dd-MM-yyyy HH:mm')}"></td>
+                            <td th:text="${request.processedAt != null ? #dates.format(request.processedAt, 'dd-MM-yyyy HH:mm') : '-'}"></td>
                           </tr>
                         </tbody>
                       </table>
@@ -172,12 +166,76 @@
                   </div>
                 </div>
 
-                <!-- Similar tables for approved and rejected tabs -->
+                <!-- Approved Requests Tab -->
                 <div class="tab-pane fade" id="approved-requests" role="tabpanel">
-                  <!-- Similar table structure with approved requests -->
+                  <div class="card">
+                    <div class="card-header">
+                      <h5 class="mb-0">Đơn đã duyệt</h5>
+                    </div>
+                    <div class="table-responsive text-nowrap">
+                      <table class="table table-hover" id="approvedTable">
+                        <thead>
+                          <tr>
+                            <th>ID</th>
+                            <th>Người dùng</th>
+                            <th>Số tiền</th>
+                            <th>Ngân hàng</th>
+                            <th>Số tài khoản</th>
+                            <th>Ngày tạo</th>
+                            <th>Ngày xử lý</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr th:each="request : ${approvedRequests}">
+                            <td th:text="${request.id}"></td>
+                            <td th:text="${request.accountName}"></td>
+                            <td th:text="${#numbers.formatDecimal(request.amount, 0, 'COMMA', 0, 'POINT')} + ' $'"></td>
+                            <td th:text="${request.bankName}"></td>
+                            <td th:text="${request.accountNumber}"></td>
+                            <td th:text="${#dates.format(request.createAt, 'dd-MM-yyyy HH:mm')}"></td>
+                            <td th:text="${request.processedAt != null ? #dates.format(request.processedAt, 'dd-MM-yyyy HH:mm') : '-'}"></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
                 </div>
+
+                <!-- Rejected Requests Tab -->
                 <div class="tab-pane fade" id="rejected-requests" role="tabpanel">
-                  <!-- Similar table structure with rejected requests -->
+                  <div class="card">
+                    <div class="card-header">
+                      <h5 class="mb-0">Đơn đã từ chối</h5>
+                    </div>
+                    <div class="table-responsive text-nowrap">
+                      <table class="table table-hover" id="rejectedTable">
+                        <thead>
+                          <tr>
+                            <th>ID</th>
+                            <th>Người dùng</th>
+                            <th>Số tiền</th>
+                            <th>Ngân hàng</th>
+                            <th>Số tài khoản</th>
+                            <th>Ngày tạo</th>
+                            <th>Ngày xử lý</th>
+                            <th>Lý do từ chối</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr th:each="request : ${rejectedRequests}">
+                            <td th:text="${request.id}"></td>
+                            <td th:text="${request.accountName}"></td>
+                            <td th:text="${#numbers.formatDecimal(request.amount, 0, 'COMMA', 0, 'POINT')} + ' $'"></td>
+                            <td th:text="${request.bankName}"></td>
+                            <td th:text="${request.accountNumber}"></td>
+                            <td th:text="${#dates.format(request.createAt, 'dd-MM-yyyy HH:mm')}"></td>
+                            <td th:text="${request.processedAt != null ? #dates.format(request.processedAt, 'dd-MM-yyyy HH:mm') : '-'}"></td>
+                            <td th:text="${request.note}"></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -225,53 +283,22 @@
 
     <!-- Custom JavaScript -->
     <script>
-      // Load data when page loads
-      document.addEventListener('DOMContentLoaded', function() {
-        loadPendingRequests();
-        loadAllRequests();
-      });
-
-      // Load pending requests
-      function loadPendingRequests() {
-        fetch('/api/withdrawal-requests/pending')
-          .then(response => response.json())
-          .then(data => {
-            updatePendingTable(data);
-          });
-      }
-
-      // Load all requests
-      function loadAllRequests() {
-        fetch('/api/withdrawal-requests')
-          .then(response => response.json())
-          .then(data => {
-            updateAllTable(data);
-          });
-      }
-
-      // Approve request
       function approveRequest(requestId) {
-        if (confirm('Bạn có chắc chắn muốn duyệt yêu cầu này?')) {
-          fetch(`/api/withdrawal-requests/${requestId}/approve`, {
-            method: 'POST'
-          })
-          .then(response => {
-            if (response.ok) {
-              loadPendingRequests();
-              loadAllRequests();
-              showToast('Đã duyệt yêu cầu thành công!', 'success');
-            }
-          });
-        }
+        fetch(`/api/withdrawal-requests/${requestId}/approve`, {
+          method: 'POST'
+        })
+        .then(response => {
+          if (response.ok) {
+            location.reload();
+          }
+        });
       }
 
-      // Show reject modal
       function showRejectModal(requestId) {
         document.getElementById('rejectRequestId').value = requestId;
         new bootstrap.Modal(document.getElementById('rejectModal')).show();
       }
 
-      // Reject request
       function rejectRequest() {
         const requestId = document.getElementById('rejectRequestId').value;
         const reason = document.getElementById('rejectReason').value;
@@ -287,17 +314,14 @@
         .then(response => {
           if (response.ok) {
             bootstrap.Modal.getInstance(document.getElementById('rejectModal')).hide();
-            loadPendingRequests();
-            loadAllRequests();
+            location.reload();
             showToast('Đã từ chối yêu cầu thành công!', 'success');
           }
         });
       }
 
-      // Show toast notification
       function showToast(message, type) {
-        // Implement toast notification using your preferred library
-        alert(message); // Temporary implementation
+        alert(message);
       }
     </script>
   </body>
