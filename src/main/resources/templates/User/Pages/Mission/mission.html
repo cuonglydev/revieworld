@@ -2,112 +2,128 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reviewords</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reviewords</title>
 
-          <div th:replace="~{User/Fragment/element :: head}"></div>
-  <link rel="stylesheet" href="/User/css/mission.css">
+<div th:replace="~{User/Fragment/element :: head}"></div>
+<link rel="stylesheet" href="/User/css/mission.css">
 
 
 </head>
 
 <body>
 
-          <div th:replace="~{User/Fragment/element :: header}"></div>
+	<div th:replace="~{User/Fragment/element :: header}"></div>
 
 
-  <section class="mt-3">
-    <div class="container">
+	<section class="mt-3">
+		<div class="container">
 
-      <h6 class="fw-semibold mt-2">Làm nhiệm vụ</h6>
-      <div class="row">
-        <div class="col-6 col-md-4 mb-3">
-          <div class="bg-light rounded shadow-sm">
-            <a href="/mission-detail" class="booking_element_photo d-flex rounded-top overflow-hidden">
-              <img class="w-100 h-100 object-fit-cover hover__img" src="/User/assets/photo/order.png">
-            </a>
+			<div class="row">
 
-            <div class="p-2">
-              <a href="/mission-detail" class="text-decoration-none text-dark fw-semibold ">Dịch vụ reviewmap</a>
-              <p class="mb-0 fs__12px">10/100</p>
-              <p class="fs__12px mb-1 text-secondary text-truncate">title title title title  title titletitletitletitletitle</p>
-              <div class="d-flex justify-content-between align-items-end">
-                <span class="text-success">$0.5</span>
-                <a class="btn btn-primary" href="/mission-detail">Làm</a>
-              </div>
+				<div class="col-12 mb-3">
+					<div class="rounded shadow-sm bg-light p-2">
 
-            </div>
-          </div>
-        </div>
+						<div class="d-flex align-items-center justify-content-between">
+							<span class="text-secondary p-2"><i
+								class="fa-solid fa-sliders"></i></span>
+							<div class="d-flex">
+								<select class="form-select   me-2" style="width: 130px;" id="orderTypeSelect"
+									aria-label="Default select example">
+									<option selected value="">Tất cả sàn</option>
+									   <option th:each="item : ${orderTypes}" th:value="${item.name}" th:text="${item.name}"></option>
 
-        <div class="col-6 col-md-4 mb-3">
-          <div class="bg-light rounded shadow-sm">
-            <a class="booking_element_photo d-flex rounded-top overflow-hidden">
-              <img class="w-100 h-100 object-fit-cover hover__img" src="/User/assets/photo/order.png">
-            </a>
+								</select> <select id="statusSelect" class="form-select " style="width: 130px;"
+									aria-label="Default select example">
+									<option value="ACTIVE" selected="selected">Hoạt động</option>
+									<option value="PAUSING">Đang tạm dừng</option>
+									<option value="CLOSED">Đã hoàn tất</option>
+									<option value="">Tất cả</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
 
-            <div class="p-2">
-              <a href="#" class="text-decoration-none text-dark fw-semibold">Dịch vụ reviewmap</a>
-              <p class="mb-0 fs__12px">10/100</p>
-              <p class="fs__12px mb-1 text-secondary text-truncate">title title title title  title titletitletitletitletitle</p>
-              <div class="d-flex justify-content-between align-items-end">
-                <span class="text-success">$0.5</span>
-                <a class="btn btn-primary">Làm</a>
-              </div>
+				<div class="col-6 col-md-4 mb-3 order-item" th:each="item : ${orders}" th:attr="data-status=${item.status}, data-ordertype=${item.orderType.name}">
+					<div class="bg-light rounded shadow-sm position-private">
+						<span class="position-absolute badge bg-success m-1 z-5"
+							style="z-index: 1" th:if="${item.status == 'ACTIVE'}">Hoạt
+							động</span> <span class="position-absolute badge bg-dark m-1 z-5"
+							style="z-index: 1" th:if="${item.status == 'PAUSING'}">Tạm
+							dừng</span> <span class="position-absolute badge bg-secondary m-1 z-5"
+							style="z-index: 1" th:if="${item.status == 'CLOSED'}">Đã
+							hết</span> <a th:href="@{/mission/{slug} (slug=${item.slug})}"
+							class="booking_element_photo d-flex rounded-top overflow-hidden ">
+							<img class="w-100 h-100 object-fit-cover hover__img"
+							th:src="${item.photo}">
+						</a>
 
-            </div>
-          </div>
-        </div>
+						<div class="p-2">
+							<a th:href="@{/mission/{slug} (slug=${item.slug})}"
+								class="text-decoration-none text-dark fw-semibold "
+								th:text="${item.name}">Dịch vụ reviewmap</a>
+							<p class="mb-0 fs__12px"
+								th:text="${item.quantityDone} + '/' + ${item.quantity}">10/100</p>
+							<p class="fs__12px mb-1 text-secondary text-truncate"
+								th:text="${item.orderType.name}">title title title title
+								title titletitletitletitletitle</p>
+							<div class="d-flex justify-content-between align-items-end">
+								<span class="text-success"
+									th:text="'$' + ${#numbers.formatDecimal(item.itemAmount,1,'COMMA',2 , 'POINT')}">$0.5</span>
+								<a class="btn btn-primary"
+									th:href="@{/mission/{slug} (slug=${item.slug})}"
+									th:if="${item.status == 'ACTIVE'}">Làm</a> <a
+									class="btn btn-outline-primary disabled"
+									th:if="${item.status == 'PAUSING'}">Làm</a> <a
+									class="btn btn-outline-secondary disabled"
+									th:if="${item.status == 'CLOSED'}">Làm</a>
+							</div>
 
-        <div class="col-6 col-md-4 mb-3">
-          <div class="bg-light rounded shadow-sm">
-            <a class="booking_element_photo d-flex rounded-top overflow-hidden">
-              <img class="w-100 h-100 object-fit-cover" src="/User/assets/photo/order.png">
-            </a>
-
-            <div class="p-2">
-              <a href="#" class="text-decoration-none text-dark fw-semibold">Dịch vụ reviewmap</a>
-              <p class="mb-0 fs__12px">10/100</p>
-              <p class="fs__12px mb-1 text-secondary text-truncate">title title title title  title titletitletitletitletitle</p>
-              <div class="d-flex justify-content-between align-items-end">
-                <span class="text-success">$0.5</span>
-                <a class="btn btn-primary">Làm</a>
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-        <div class="col-6 col-md-4 mb-3">
-          <div class="bg-light rounded shadow-sm">
-            <a class="booking_element_photo d-flex rounded-top overflow-hidden">
-              <img class="w-100 h-100 object-fit-cover" src="/User/assets/photo/order.png">
-            </a>
-
-            <div class="p-2">
-              <a href="#" class="text-decoration-none text-dark fw-semibold">Dịch vụ reviewmap</a>
-              <p class="mb-0 fs__12px">10/100</p>
-              <p class="fs__12px mb-1 text-secondary text-truncate">title title title title  title titletitletitletitletitle</p>
-              <div class="d-flex justify-content-between align-items-end">
-                <span class="text-success">$0.5</span>
-                <a class="btn btn-primary">Làm</a>
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
+						</div>
+					</div>
+				</div>
 
 
+			</div>
+		</div>
+	</section>
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const orderItems = document.querySelectorAll(".order-item");
+    const orderTypeSelect = document.getElementById("orderTypeSelect");
+    const statusSelect = document.getElementById("statusSelect");
 
-        <div th:replace="~{User/Fragment/element :: footer}"></div>
-  <script src="/User/js/bootstrap.bundle.min.js"></script>
-  <script src="/User/js/menu.js"></script>
+    function filterOrders() {
+        const selectedType = orderTypeSelect.value;
+        const selectedStatus = statusSelect.value;
+
+        orderItems.forEach(item => {
+            const type = item.getAttribute("data-ordertype");
+            const status = item.getAttribute("data-status");
+
+            const matchType = !selectedType || selectedType === type;
+            const matchStatus = !selectedStatus || selectedStatus === status;
+
+            if (matchType && matchStatus) {
+                item.style.display = "";
+            } else {
+                item.style.display = "none";
+            }
+        });
+    }
+    
+    filterOrders();
+
+    orderTypeSelect.addEventListener("change", filterOrders);
+    statusSelect.addEventListener("change", filterOrders);
+});
+</script>
+	<div th:replace="~{User/Fragment/element :: footer}"></div>
+	<script src="/User/js/bootstrap.bundle.min.js"></script>
+	<script src="/User/js/menu.js"></script>
 </body>
 
 </html>

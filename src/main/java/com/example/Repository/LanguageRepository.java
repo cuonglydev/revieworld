@@ -11,7 +11,11 @@ import com.example.Entity.Language;
 
 @Repository
 public interface LanguageRepository extends JpaRepository<Language, Integer> {
+
     List<Language> findByOrderTypeId(int orderTypeId); // lấy danh sách ngôn ngữ theo id của ordertype
 
     boolean existsByName(String name);
+
+	List<Language> findAllByOrderTypeId(int orderTypeId);
 }
+

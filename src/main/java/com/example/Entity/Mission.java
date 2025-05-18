@@ -57,5 +57,5 @@ public class Mission {
 	
 	@ManyToOne
 	@JoinColumn(name = "order_id")
-	private Order Order;
+	private Order order;
 }

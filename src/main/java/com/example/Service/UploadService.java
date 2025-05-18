@@ -15,29 +15,33 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class UploadService {
+
     @Value("${upload.dir}")
     private String uploadDir;
 
     @Value("${static-folder}")
     private String staticFolder;
 
+
+
+    
     public String saveFile(MultipartFile file, String subFolder) throws IOException {
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        if (fileName.contains("..")) {
-            throw new IOException("Tên file không hợp lệ: " + fileName);
-        }
+	    String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+	    if (fileName.contains("..")) {
+	        throw new IOException("Tên file không hợp lệ: " + fileName);
+	    }
 
-        String fileExtension = fileName.substring(fileName.lastIndexOf("."));
-        String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
+	    String fileExtension = fileName.substring(fileName.lastIndexOf("."));
+	    String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
 
-        Path uploadPath = Paths.get(uploadDir + File.separator + subFolder);
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-        }
+	    Path uploadPath = Paths.get(uploadDir + File.separator + subFolder);
+	    if (!Files.exists(uploadPath)) {
+	        Files.createDirectories(uploadPath);
+	    }
 
-        Path copyLocation = Paths.get(uploadPath + File.separator + uniqueFileName);
-        Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
-
-        return uniqueFileName;
-    }
+	    Path copyLocation = Paths.get(uploadPath + File.separator + uniqueFileName);
+	    Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
+	    
+	    return uniqueFileName;
+	}
 }

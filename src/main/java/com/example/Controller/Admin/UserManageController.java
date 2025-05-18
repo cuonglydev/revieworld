@@ -75,7 +75,7 @@ public class UserManageController {
 				List<Withdraw> withdraws = withdrawService.findByUserId(userId);
 				model.addAttribute("withdraws", withdraws);
 				
-				List<Mission> missions = missionService.findByUserId(userId);
+				List<Mission> missions = missionService.findAllByUserId(userId);
 				model.addAttribute("missions", missions);
 				
 			
@@ -177,7 +177,7 @@ public class UserManageController {
 			}
 			
 			// Delete all related missions
-			List<Mission> missions = missionService.findByUserId(userId);
+			List<Mission> missions = missionService.findAllByUserId(userId);
 			for (Mission mission : missions) {
 				missionService.delete(mission.getId());
 			}

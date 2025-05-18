@@ -2,16 +2,20 @@ package com.example.Service;
 
 import java.util.List;
 
+
 import org.eclipse.angus.mail.imap.protocol.ID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.Entity.Language;
+
 import com.example.Entity.OrderType;
 import com.example.Repository.LanguageRepository;
 
 @Service
 public class LanguageService {
+
     @Autowired
     private final LanguageRepository languageRepository;
 
@@ -43,3 +47,21 @@ public class LanguageService {
         return languageRepository.existsByName(name);
     }
 }
+
+	
+	@Autowired
+	private LanguageRepository languageRepository;
+	
+	public List<Language> findAll() {
+		return languageRepository.findAll();
+	}
+	
+	public List<Language> findAllByOrderTypeId(int orderTypeId){
+		return languageRepository.findAllByOrderTypeId(orderTypeId);
+	}
+	
+	public Language findById(int id) {
+		return languageRepository.findById(id).orElse(null);
+	}
+}
+

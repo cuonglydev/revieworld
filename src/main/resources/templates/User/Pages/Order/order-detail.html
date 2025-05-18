@@ -2,201 +2,318 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reviewords</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reviewords</title>
 
-    <div th:replace="~{User/Fragment/element :: head}"></div>
-    <link rel="stylesheet" href="/User/css/order-detail.css">
+<div th:replace="~{User/Fragment/element :: head}"></div>
+<link rel="stylesheet" href="/User/css/order-detail.css">
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.bootstrap5.css">
+<link rel="stylesheet"
+	href="https://cdn.datatables.net/2.2.2/css/dataTables.bootstrap5.css">
 
 </head>
 
 <body>
 
-  <div th:replace="~{User/Fragment/element :: header}"></div>
+	<div th:replace="~{User/Fragment/element :: header}"></div>
 
-    <div class="container">
-        <div class="border-bottom border-secondary-subtle d-flex justify-content-between p-2">
-            <a href="#" id="goBack" class="text-secondary fs__12px"><i class="fa-solid fa-arrow-left"></i> Trở về</a>
-            <span class="fw-semibold d-inline-block text-truncate"  style="max-width: 150px;">service describe of user </span>
-        </div>
+	<div class="container">
+		<div
+			class="border-bottom border-secondary-subtle d-flex justify-content-between p-2">
+			<a href="#" id="goBack" class="text-secondary fs__12px"><i
+				class="fa-solid fa-arrow-left"></i> Trở về</a> <span
+				class="fw-semibold d-inline-block text-truncate"
+				style="max-width: 150px;">Chi tiết nhiệm vụ</span>
+		</div>
+	</div>
+
+
+	<section class="mt-3">
+		<div class="container">
+
+			<div class="p-2 rounded mt-2 bg-light shadow-sm">
+				<div class="d-flex justify-content-between">
+					<span th:text="${user.email}">user@gmail.com</span>
+					<div>
+						<span class="text-secondary"><i class="fa-solid fa-wallet"></i></span>
+						<span
+							th:text="'$' + ${#numbers.formatDecimal(user.amount, 1 , 'COMMA', 2, 'POINT')}">$50</span>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			<div class="mt-2">
+				<div class="rounded p-2 bg-light shadow-sm">
+					<div class="row">
+						<div class="col-12 ">
+							<div
+								class="d-flex justify-content-between align-items-center border-bottom pb-1 mb-1">
+								<h5 class="fw-semibold mb-0"
+									th:text="'$' + ${#numbers.formatDecimal(order.totalAmount, 1, 'COMMA', 2 , 'POINT')}">$20</h5>
+								<span class="badge bg-success "
+									th:if="${order.status == 'ACTIVE'}">Đang hoạt động</span>
+							</div>
+						</div>
+						<div class="col-12 col-md-4 mb-1">
+							<img th:src="${order.photo}" class="w-100 rounded">
+						</div>
+						<div class="col-12 col-md-8 ">
+							<div>
+								<span class="mb-0 fw-semibold fs-5" th:text="${order.name}">Dịch
+									vụ reviewmaps Dịch vụ reviewmaps</span>
+								<div class="fs__12px text__orange">
+									<i class="fa-solid fa-calendar-week"></i> <span class=""
+										th:text="${#dates.format(order.createdAt, 'HH:mm dd-MM-yyyy')}">10:00
+										15/04/2025</span>
+								</div>
+
+								<div>
+									<span>Ngôn ngữ:</span> <span class="fw-semibold"
+										th:text="${order.language}">Việt nam</span>
+								</div>
+								<div>
+									<span>Mô tả:</span> <span class="fw-semibold"
+										th:text="${order.description}"></span>
+								</div>
+								<span class="text-secondary">Yêu cầu của bạn:</span>
+								<p class="m-0" th:text="${order.detail}"></p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="mt-2">
+				<div class="row">
+					<div class="col-12 col-md-6 mb-1">
+						<div class="rounded shadow-sm p-2 bg-light">
+							<div class="d-flex justify-content-between">
+							<h6 class="fw-semibold">Tiến trình</h6>
+							<button type="button" class="btn btn-outline-secondary py-0 fs__12px px-2" data-bs-toggle="modal" data-bs-target="#exampleModal-pause">
+Tạm dừng
+</button>
+
+<div class="modal fade" id="exampleModal-pause" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Xác nhận tạm dừng nhận review</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Xác nhận dừng nhận nhiệm vụ sẽ không nhận thêm đơn review nữa cho đến khi bạn mở lại.
+      </div>
+      <div class="modal-footer border-0">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button>
+        <button type="button" class="btn btn-primary">Xác nhận dừng</button>
+      </div>
     </div>
+  </div>
+</div>
+
+							</div>
+							<div>
+								<span>Số lượng: <text class="fw-semibold"
+										th:text="${order.quantityDone} + '/' + ${order.quantity}">10/100</text></span>
+							</div>
+							<div class="progress-stacked">
+								<div class="progress" role="progressbar"
+									aria-label="Example with label"
+									  th:attr="aria-valuenow=${(order.quantityDone * 100) / order.quantity}"
+									aria-valuemin="0" aria-valuemax="100" th:style="'width:' + ${(order.quantityDone * 100) / order.quantity} + '%'">
+									  <div class="progress-bar  fs__10px"  th:text="${(order.quantityDone * 100) / order.quantity + '%'}"></div>
+								</div>
+								<div class="progress" role="progressbar"
+									aria-label="Segment three"  th:attr="aria-valuenow=${(numberWaitingMission * 100) / order.quantity}" aria-valuemin="0"
+									aria-valuemax="100" th:style="'width:' + ${(numberWaitingMission * 100) / order.quantity} + '%'">
+									<div class="progress-bar bg-secondary-subtle"></div>
+								</div>
+							</div>
+							
+							<div class="mt-2">
+								<span>Số lượng đã làm trong ngày: <text class="fw-semibold"
+										th:text="${order.turnQuantityDone} + '/' + ${order.turnQuantity}">10/100</text></span>
+							</div>
+							
+							  <div class="progress" role="progressbar" aria-label="Example with label"   th:attr="aria-valuenow=${(order.turnQuantityDone * 100) / order.turnQuantity}" aria-valuemin="0" aria-valuemax="100">
+  <div class="progress-bar  fs__10px"  th:style="'width:' + ${(order.turnQuantityDone * 100) / order.turnQuantity} + '%'"  th:text="${(order.turnQuantityDone * 100) / order.turnQuantity} + '%'"></div>
+</div>
+
+						</div>
+					</div>
+
+					<div class="col-12 col-md-6 mb-1">
+						<div class="rounded shadow-sm p-2 bg-light">
+						<h6 class="fw-semibold">Số review đã làm</h6>
+							<div class="row">
+								<div class="col-6 col-md-4 mb-1">
+									<div class="p-2  border-2 shadow-sm border-primary border-start ">
+										<span>Tổng:</span>
+										<span class="fw-semibold text-primary">10/100</span>
+									</div>
+								</div>
+								
+								<div class="col-6 col-md-4 mb-1">
+									<div class="p-2 border-start shadow-sm border-secondary border-2">
+										<span>Đang chờ:</span>
+										<span class="fw-semibold text-secondary">10/100</span>
+									</div>
+								</div>
+								
+								<div class="col-6 col-md-4 mb-1">
+									<div class="p-2 border-start shadow-sm border-success border-2">
+										<span>Đã xác nhận:</span>
+										<span class="fw-semibold text-success">10/100</span>
+									</div>
+								</div>
+								
+								<div class="col-6 col-md-4 mb-1">
+									<div class="p-2 border-start shadow-sm  border-info border-2">
+										<span>Đang chỉnh sửa:</span>
+										<span class="fw-semibold text-info">106</span>
+									</div>
+								</div>
+								<div class="col-6 col-md-4 mb-1">
+									<div class="p-2  border-start shadow-sm  border-danger border-2">
+										<span>Đã từ chối:</span>
+										<span class="fw-semibold text-danger">100</span>
+									</div>
+								</div>
+								
+								
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+
+			<div class="mt-2">
+				<div class="rounded shadow-sm p-2 bg-light">
+
+					<h6 class="fw-semibold">Member đã thực hiện</h6>
 
 
-    <section class="mt-3">
-        <div class="container">
 
-            <div class="p-2 rounded mt-2 bg-light shadow-sm">
-                <div class="d-flex justify-content-between">
-                    <span>user@gmail.com</span>
-                    <div>
-                        <span class="text-secondary"><i class="fa-solid fa-wallet"></i></span>
-                        <span>$50</span>
-                    </div>
-                </div>
-            </div>
+					<div class="wrapper py-2"
+						style="max-width: 100%; overflow-x: auto;">
+						<ul class="nav nav-pills d-flex overflow-x-auto tab__custom"
+							id="myTab" role="tablist" style="min-width: max-content;">
+							<li class="nav-item " role="presentation">
+								<button class="nav-link active w-100 " id="waiting-tab"
+									data-bs-toggle="tab" data-bs-target="#waiting-tab-pane"
+									type="button" role="tab" aria-controls="waiting-tab-pane"
+									aria-selected="true">Đang chờ xác nhận</button>
+							</li>
 
+							<li class="nav-item " role="presentation">
+								<button class="nav-link w-100 " id="requesting-tab"
+									data-bs-toggle="tab" data-bs-target="#requesting-tab-pane"
+									type="button" role="tab" aria-controls="requesting-tab-pane"
+									aria-selected="false">Đang yêu cầu chỉnh sửa</button>
+							</li>
 
-            
+							<li class="nav-item " role="presentation">
+								<button class="nav-link w-100 " id="confirmed-tab"
+									data-bs-toggle="tab" data-bs-target="#confirmed-tab-pane"
+									type="button" role="tab" aria-controls="confirmed-tab-pane"
+									aria-selected="false">Đã xác nhận</button>
+							</li>
 
-            <div class="mt-2">
-                <div class="rounded p-2 bg-light shadow-sm">
-                    <div class="row">
-                        <div class="col-12 ">
-                            <div class="d-flex justify-content-between align-items-center border-bottom pb-1 mb-1">
-                                <h5 class="fw-semibold mb-0">$20</h5>
-                                <span class="badge bg-success ">Đang hoạt động</span>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-4 mb-1">
-                            <img src="/User/assets/photo/order.png" class="w-100 rounded">                      
-                        </div>
-                        <div class="col-12 col-md-8 ">   
-                            <div >
-                                <span class="mb-0 fw-semibold fs-5">Dịch vụ reviewmaps Dịch vụ reviewmaps</span>                            
-                               <div class="fs__12px text__orange">
-                                <i class="fa-solid fa-calendar-week"></i> 
-                                <span class="">10:00 15/04/2025</span>
-                               </div>
-                                <div>
-                                    <span>Số lượng: 10/100</span>
-                                </div>
-                                <div>
-                                    <span>Ngôn ngữ:</span>
-                                    <span class="fw-semibold">Việt nam</span>
-                                </div>
-                                <span class="text-secondary">Yêu cầu của bạn:</span>
-                                <p class="m-0">${note}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+							<li class="nav-item " role="presentation">
+								<button class="nav-link w-100 " id="rejected-tab"
+									data-bs-toggle="tab" data-bs-target="#rejected-tab-pane"
+									type="button" role="tab" aria-controls="rejected-tab-pane"
+									aria-selected="false">Đã từ chối</button>
+							</li>
 
-            <div class="mt-2">
-                <div class="rounded shadow-sm p-2 bg-light">
+						</ul>
+					</div>
 
-                    <h6 class="fw-semibold">Member đã thực hiện</h6>
+					<div class="tab-content">
+						<div class="tab-pane fade show active" id="waiting-tab-pane"
+							role="tabpanel" aria-labelledby="waiting-tab" tabindex="0">
+							<div class="p-2">
+								<table id="example"
+									class="table table-striped   text-nowrap w-100">
+									<thead>
+										<tr>
+											<th>Email</th>
+											<th>Link</th>
+											<th>Ngày thực hiện</th>
+											<th>Thao tác</th>
+										</tr>
+									</thead>
+									<tbody>
 
 
-                   
-                    <div class="wrapper py-2" style="max-width: 100%; overflow-x: auto;">
-                    <ul class="nav nav-pills d-flex overflow-x-auto tab__custom" id="myTab" role="tablist" style="min-width: max-content;">
-                        <li class="nav-item " role="presentation">
-                          <button class="nav-link active w-100 " id="waiting-tab" data-bs-toggle="tab"
-                            data-bs-target="#waiting-tab-pane" type="button" role="tab" aria-controls="waiting-tab-pane"
-                            aria-selected="true">Đang chờ xác nhận</button>
-                        </li>
 
-                        <li class="nav-item " role="presentation">
-                            <button class="nav-link w-100 " id="requesting-tab" data-bs-toggle="tab"
-                              data-bs-target="#requesting-tab-pane" type="button" role="tab"
-                              aria-controls="requesting-tab-pane" aria-selected="false">Đang yêu cầu chỉnh sửa</button>
-                          </li>
-
-                        <li class="nav-item " role="presentation">
-                          <button class="nav-link w-100 " id="confirmed-tab" data-bs-toggle="tab"
-                            data-bs-target="#confirmed-tab-pane" type="button" role="tab"
-                            aria-controls="confirmed-tab-pane" aria-selected="false">Đã xác nhận</button>
-                        </li>
-
-                        <li class="nav-item " role="presentation">
-                            <button class="nav-link w-100 " id="rejected-tab" data-bs-toggle="tab"
-                              data-bs-target="#rejected-tab-pane" type="button" role="tab"
-                              aria-controls="rejected-tab-pane" aria-selected="false">Đã từ chối</button>
-                          </li>
-      
-                      </ul>
-                    </div>
-
-                      <div class="tab-content">
-                        <div class="tab-pane fade show active" id="waiting-tab-pane" role="tabpanel"
-                          aria-labelledby="waiting-tab" tabindex="0">
-                          <div class="p-2">
-                            <table id="example" class="table table-striped   text-nowrap w-100"  >
-                                <thead>
-                                    <tr>
-                                        <th>Email</th>
-                                        <th>Link</th>
-                                        <th>Ngày thực hiện</th>
-                                        <th>Thao tác</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    
-                                   
-                                   
-                                    <tr>
-                                        <td>Herrod Chandler</td>
-                                        <td>Sales Assistant</td>
-                                        <td>59</td>
-                                        <td>
-                                            <a class="btn btn-outline-primary">Chấp nhận</a>
-                                            <a class="btn btn-outline-danger">Từ chối</a>
-                                            <a class="btn btn-outline-secondary">Yêu cầu chỉnh sửa</a>
-                                        </td>
-                                    </tr>
-                                    
-                                   
-                                </tbody>
-                               
-                            </table>
-                          </div>
-                        </div>
-      
-                        <div class="tab-pane fade" id="requesting-tab-pane" role="tabpanel"
-                          aria-labelledby="requesting-tab" tabindex="0">
-                          <div class="p-2">
-                           
-                            requesting
-                          </div>
-                        </div>
-
-                        <div class="tab-pane fade" id="confirmed-tab-pane" role="tabpanel"
-                          aria-labelledby="confirmed-tab" tabindex="0">
-                          <div class="p-2">
-                            confirmed
-                          </div>
-                        </div>
-
-                        <div class="tab-pane fade" id="rejected-tab-pane" role="tabpanel"
-                          aria-labelledby="rejected-tab" tabindex="0">
-                          <div class="p-2">
-                            rejected
-                          </div>
-                        </div>
-                      </div>
-
-                   
-                </div>
-            </div>
+										<tr>
+											<td>Herrod Chandler</td>
+											<td>Sales Assistant</td>
+											<td>59</td>
+											<td><a class="btn btn-outline-primary">Chấp nhận</a> <a
+												class="btn btn-outline-danger">Từ chối</a> <a
+												class="btn btn-outline-secondary">Yêu cầu chỉnh sửa</a></td>
+										</tr>
 
 
-        </div>
-    </section>
+									</tbody>
 
-<div th:replace="~{User/Fragment/element :: footer}"></div>
+								</table>
+							</div>
+						</div>
 
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
-    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.js"></script>
+						<div class="tab-pane fade" id="requesting-tab-pane"
+							role="tabpanel" aria-labelledby="requesting-tab" tabindex="0">
+							<div class="p-2">requesting</div>
+						</div>
 
-    <script>
-        
-        $(document).ready(function() {
-    $('#example').DataTable({
-        scrollX: true
-    });
-});
-    </script>
+						<div class="tab-pane fade" id="confirmed-tab-pane" role="tabpanel"
+							aria-labelledby="confirmed-tab" tabindex="0">
+							<div class="p-2">confirmed</div>
+						</div>
 
-    <script src="/User/js/goBack.js"></script>
-    <script src="/User/js/bootstrap.bundle.min.js"></script>
-    <script src="/User/js/menu.js"></script>
-    <script src="/User/js/booking.js"></script>
+						<div class="tab-pane fade" id="rejected-tab-pane" role="tabpanel"
+							aria-labelledby="rejected-tab" tabindex="0">
+							<div class="p-2">rejected</div>
+						</div>
+					</div>
+
+
+				</div>
+			</div>
+
+
+		</div>
+	</section>
+
+	<div th:replace="~{User/Fragment/element :: footer}"></div>
+
+	<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
+	<script
+		src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.js"></script>
+
+	<script>
+		$(document).ready(function() {
+			$('#example').DataTable({
+				scrollX : true
+			});
+		});
+	</script>
+
+	<script src="/User/js/goBack.js"></script>
+	<script src="/User/js/bootstrap.bundle.min.js"></script>
+	<script src="/User/js/menu.js"></script>
+	<script src="/User/js/booking.js"></script>
 </body>
 
 </html>

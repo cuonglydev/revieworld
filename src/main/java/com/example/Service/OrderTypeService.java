@@ -66,4 +66,8 @@ public class OrderTypeService {
         existingOrderType.setCreatedAt(ordertype.getCreatedAt());
         saveOrderType(existingOrderType);
     }
+    
+    public OrderType findById(int id) {
+    	return orderTypeRepository.findById(id).orElse(null);
+    }
 }

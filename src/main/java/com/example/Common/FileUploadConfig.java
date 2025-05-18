@@ -20,16 +20,18 @@ import jakarta.annotation.PostConstruct;
 @Configuration
 public class FileUploadConfig implements WebMvcConfigurer {
 
-	@Value("${upload.dir}")
-	private String uploadDir;
+	 @Value("${upload.dir}")
+	    private String uploadDir;
+	 
+	 @Value("${static-folder}")
+	    private String staticFolder;
 
-	@Value("${static-folder}")
-	private String staticFolder;
 
-	@Override
-	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler(staticFolder + "**")
-				.addResourceLocations("file:" + uploadDir);
-	}
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler( staticFolder + "**")
+                .addResourceLocations("file:" + uploadDir);
+    }
+    
 
 }
