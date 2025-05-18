@@ -33,42 +33,59 @@
 
     <!-- Favicon -->
    <div th:replace="~{Admin/Fragment/element :: head}"></div>
-   
-
+ <style>
+      .card {
+        border-radius: 16px;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+        border: none;
+      }
+      .card-header {
+        background: #0d6efd;
+        color: #fff;
+        border-radius: 16px 16px 0 0;
+        font-weight: 600;
+        font-size: 1.2rem;
+      }
+      .form-label {
+        font-weight: 500;
+      }
+      .form-control, .form-select {
+        border-radius: 8px;
+        font-size: 1.05rem;
+      }
+      .btn-success {
+        border-radius: 8px;
+        min-width: 120px;
+      }
+      .invalid-feedback {
+        font-size: 0.95rem;
+      }
+    </style>
   </head>
 
   <body>
-    <!-- Layout wrapper -->
+     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
       <div class="layout-container">
         <!-- Menu -->
-<div th:replace="~{Admin/Fragment/element :: menu}"></div>
+        <div th:replace="~{Admin/Fragment/element :: menu}"></div>
         <!-- / Menu -->
 
         <!-- Layout container -->
         <div class="layout-page">
           <!-- Navbar -->
-
-         <div th:replace="~{Admin/Fragment/element :: header}"></div>
-
+          <div th:replace="~{Admin/Fragment/element :: header}"></div>
           <!-- / Navbar -->
 
           <!-- Content wrapper -->
           <div class="content-wrapper">
             <!-- Content -->
-
             <div class="container-xxl flex-grow-1 container-p-y">
               <div class="row">
-              
-              
-             
+                
               </div>
-              
             </div>
             <!-- / Content -->
-
-            <!-- Footer -->
-            <!-- / Footer -->
 
             <div class="content-backdrop fade"></div>
           </div>
@@ -82,10 +99,23 @@
     </div>
     <!-- / Layout wrapper -->
 
-    
-    <!-- Core JS -->
-    <!-- build:js assets/vendor/js/core.js -->
     <div th:replace="~{Admin/Fragment/element :: bag}"></div>
-<div th:replace="~{Admin/Fragment/element :: footer}"></div>
+    <div th:replace="~{Admin/Fragment/element :: footer}"></div>
+    <script>
+        // Bootstrap validation
+        (() => {
+            'use strict'
+            const forms = document.querySelectorAll('.needs-validation')
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+    </script>
   </body>
 </html>

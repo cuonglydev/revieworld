@@ -17,41 +17,19 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import jakarta.annotation.PostConstruct;
 
-
 @Configuration
 public class FileUploadConfig implements WebMvcConfigurer {
 
-	 @Value("${upload.dir}")
-	    private String uploadDir;
-	 
-	 @Value("${static-folder}")
-	    private String staticFolder;
+	@Value("${upload.dir}")
+	private String uploadDir;
 
+	@Value("${static-folder}")
+	private String staticFolder;
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler( staticFolder + "**")
-                .addResourceLocations("file:" + uploadDir);
-    }
-    
-    
-    private String saveFile(MultipartFile file, String subFolder) throws IOException {
-	    String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-	    if (fileName.contains("..")) {
-	        throw new IOException("Tên file không hợp lệ: " + fileName);
-	    }
-
-	    String fileExtension = fileName.substring(fileName.lastIndexOf("."));
-	    String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
-
-	    Path uploadPath = Paths.get(uploadDir + File.separator + subFolder);
-	    if (!Files.exists(uploadPath)) {
-	        Files.createDirectories(uploadPath);
-	    }
-
-	    Path copyLocation = Paths.get(uploadPath + File.separator + uniqueFileName);
-	    Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
-	    
-	    return uniqueFileName;
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler(staticFolder + "**")
+				.addResourceLocations("file:" + uploadDir);
 	}
+
 }
