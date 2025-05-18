@@ -38,6 +38,9 @@ public class AccountController {
 		if (currentUser == null) {
 			return "redirect:/login";
 		}
+		
+		model.addAttribute("user", currentUser);
+		
 		String inviteLink = myDomain + "/?ref=" + currentUser.getToken(); 
 		model.addAttribute("inviteLink", inviteLink);
 		

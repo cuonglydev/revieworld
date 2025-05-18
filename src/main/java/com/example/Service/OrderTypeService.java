@@ -33,4 +33,8 @@ public class OrderTypeService {
     public OrderType findBySlug(String slug) {
     	return orderTypeRepository.findBySlug(slug);
     }
+    
+    public OrderType findById(int id) {
+    	return orderTypeRepository.findById(id).orElse(null);
+    }
 }

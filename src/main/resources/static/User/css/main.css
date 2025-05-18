@@ -6,6 +6,7 @@ body{
 }
 
 
+
 .btn__blue__subtle__hover{
     transition: all 0.15s ease-in-out;
     border-radius: 4px;
@@ -36,6 +37,10 @@ body{
     background-color: rgba(4, 255, 0, 0.208);
     color: black;
 
+}
+
+.border__orange{
+	border-color: var(--color-orange) !important;
 }
 
 .text__orange{
@@ -157,8 +162,50 @@ body{
   }
 
 
+.seperator{
+	background-color: var(--color-orange);
+	height: 1px;
+	margin: 0 auto;
+	width: 10%;
+}
+
+.banner-content{
+	background-image: url('/User/assets/photo/banner-content.jpg');
+	 background-size: cover;
+   background-position: center;
+}
+
+.banner-content-white{
+	background-image: url('/User/assets/photo/bg-content-light.jpg');
+	 background-size: cover;
+   background-position: center;
+}
+
+.link__orange{
+	color: #000;
+	transition: 0.2s all ease-in-out;
+}
+
+.link__orange:hover{
+	color:  var(--color-orange);
+}
+
+.zoom__img__hover{
+	 transition: 0.2s all ease-in-out;
+}
+
+.zoom__img__hover:hover{
+	scale: 1.07; 
+}
 
 @media screen and (max-width: 768px) {
+	
+	 [data-aos] {
+        max-width: 100%;
+        box-sizing: border-box;
+        transform: none !important; 
+    }
+	
     .medium-content{
         display: block;
     }
