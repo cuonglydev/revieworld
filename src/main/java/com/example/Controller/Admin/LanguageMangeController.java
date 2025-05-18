@@ -26,10 +26,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class LanguageMangeController {
 
     @Autowired
-    private LanguageService languageService;
+    private LanguageService languageService; 
 
     @Autowired
-    private OrderTypeService orderTypeService;
+    private OrderTypeService orderTypeService; // Service xử lý logic liên quan đến OrderType
 
     // ===================== Hiển thị form thêm ngôn ngữ =====================
     @GetMapping("/language/add")
