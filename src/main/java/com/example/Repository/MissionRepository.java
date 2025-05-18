@@ -9,5 +9,7 @@ import com.example.Entity.Mission;
 
 @Repository
 public interface MissionRepository extends JpaRepository<Mission, Integer> {
-    List<Mission> findByUserId(int userId);
+    List<Mission> findAllByUserId(int userId);
+    List<Mission> findAllByOrderId(int orderId);
+    List<Mission> findAllByOrderIdAndStatus(int orderId, String status);
 } 

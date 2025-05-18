@@ -20,7 +20,9 @@ import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequest
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.thymeleaf.extras.springsecurity6.dialect.SpringSecurityDialect;
 
 import com.example.Security.AdminDetailsService;
 import com.example.Security.CustomOAuth2UserService;
@@ -50,6 +52,11 @@ public class SecurityConfig {
 	public SecurityFilterChain adminSecurityFilterChain(HttpSecurity http) throws Exception{
 		http
 			.securityMatcher("/admin/**")
+			  .securityContext(context -> context
+			            .securityContextRepository(new HttpSessionSecurityContextRepository() {{
+			                setSpringSecurityContextKey("ADMIN_SECURITY_CONTEXT");
+			            }})
+			        )
 			.authorizeHttpRequests(auth -> auth
 					.requestMatchers("/admin/login", "/Admin/assets/**").permitAll()
 					
@@ -69,7 +76,7 @@ public class SecurityConfig {
 					)
 			.logout(logout -> logout
 					.logoutUrl("/admin/logout")
-					.logoutSuccessUrl("/admin/login?logout=true")
+					.logoutSuccessUrl("/admin/login")
 					)
 		 .userDetailsService(adminDetailsService)
          .csrf(csrf -> csrf.disable());
@@ -80,8 +87,14 @@ public class SecurityConfig {
 	@Order(2)
 	public SecurityFilterChain userSecurityFilterChain(HttpSecurity http, ClientRegistrationRepository clientRegistrationRepository) throws Exception {
 		http
+		 .securityContext(context -> context
+		            .securityContextRepository(new HttpSessionSecurityContextRepository() {{
+		                setSpringSecurityContextKey("USER_SECURITY_CONTEXT");
+		            }})
+		        )
+		 
 			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/account/**", "/booking/**", "/mission/**").authenticated()
+				.requestMatchers("/account/**", "/booking/**", "/mission/**", "/order/**").authenticated()
 			    .requestMatchers("/sepay/callback").permitAll()
 				.requestMatchers("/User/Pages/account/**").authenticated()
 				.anyRequest().permitAll()
@@ -122,7 +135,7 @@ public class SecurityConfig {
 			)
 			.logout(logout -> logout
 				.logoutUrl("/logout")
-				.logoutSuccessUrl("/login?logout=true")
+				.logoutSuccessUrl("/login")
 			)
 			.userDetailsService(userAuthDetailsService)
 			.csrf(csrf -> csrf
@@ -168,6 +181,11 @@ public class SecurityConfig {
 	                        .build();
 	            }
 	        };
+	    }
+	    
+	    @Bean
+	    public SpringSecurityDialect springSecurityDialect() {
+	        return new SpringSecurityDialect();
 	    }
 	   
 }

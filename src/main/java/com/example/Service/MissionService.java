@@ -18,8 +18,8 @@ public class MissionService {
     private MissionRepository missionRepository;
 
     
-    public List<Mission> findByUserId(int userId) {
-        return missionRepository.findByUserId(userId);
+    public List<Mission> findAllByUserId(int userId) {
+        return missionRepository.findAllByUserId(userId);
     }
     
     public void save(Mission mission) {
@@ -29,7 +29,14 @@ public class MissionService {
     public void delete(int id) {
         missionRepository.deleteById(id);
     }
+    
+    public List<Mission> findAllByOrderId(int orderId){
+    	return missionRepository.findAllByOrderId(orderId);
+    }
 
+    public List<Mission> findAllByOrderIdAndStatus(int orderId, String status){ 
+    	return missionRepository.findAllByOrderIdAndStatus(orderId, status);
+    }
 
     @Autowired
     private UserRepository userRepository;

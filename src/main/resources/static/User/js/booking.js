@@ -1,20 +1,44 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const basePrice = document.getElementById("basePrice").value;
     const priceDisplays = document.querySelectorAll('[data-price-display]');
     const numberInput = document.getElementById('numberInput');
     const turnNumber = document.getElementById('turnNumber');
+    const languageSelect = document.getElementById('languageSelect');
+    const basePriceInput = document.getElementById('basePrice');
+	
+	const percentDiscount = document.getElementById('percentDiscount');
+	const discountAmounts = document.querySelectorAll('[data-discount-amount]');
+	const totalPayments = document.querySelectorAll('[data-total-payment]');
 
     function updatePrice() {
+        const basePrice = parseFloat(basePriceInput.value) || 0;
         const quantity = parseInt(numberInput.value, 10) || 1;
         const totalPrice = basePrice * quantity;
+		
         priceDisplays.forEach(display => {
             display.textContent = totalPrice.toLocaleString('en-US', {
                 style: 'currency',
                 currency: 'USD'
             });
-        })
+        });
+		
+		const percent = parseFloat(percentDiscount.value) || 0;
+		const discountAmount = (totalPrice / 100) * percent;
+		discountAmounts.forEach(display => {
+			display.textContent = discountAmount.toLocaleString('en-US', {
+				style: 'currency',
+				currency: 'USD'
+			});
+		})
+		
+		const totalPayment = totalPrice - discountAmount;
+		totalPayments.forEach(display => {
+			display.textContent = totalPayment.toLocaleString('en-US', {
+				style: 'currency',
+				currency: 'USD'
+			})
+		})
     }
-
+	
     function updateTurnNumberMax() {
         const max = parseInt(numberInput.value, 10) || 1;
         turnNumber.max = max;
@@ -36,10 +60,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Gọi hàm lúc load lần đầu
+    languageSelect.addEventListener('change', () => {
+        const selectedOption = languageSelect.options[languageSelect.selectedIndex];
+        const price = selectedOption.getAttribute('data-price');
+        basePriceInput.value = price || '';
+        updatePrice(); // cập nhật ngay khi chọn
+    });
+
+    // Gọi hàm lúc load ban đầu
     updatePrice();
     updateTurnNumberMax();
 });
+
 
 
 const form = document.querySelector('form');
