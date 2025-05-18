@@ -16,11 +16,13 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class UploadService {
 
-	@Value("${upload.dir}")
+    @Value("${upload.dir}")
     private String uploadDir;
- 
-	@Value("${static-folder}")
+
+    @Value("${static-folder}")
     private String staticFolder;
+
+
 
     
     public String saveFile(MultipartFile file, String subFolder) throws IOException {

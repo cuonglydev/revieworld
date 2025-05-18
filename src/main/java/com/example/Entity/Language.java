@@ -1,5 +1,7 @@
 package com.example.Entity;
 
+import java.util.Optional;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,17 +26,18 @@ public class Language {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
-	@Column(name = "name" , nullable = false)
+
+	@Column(name = "name", nullable = false)
 	private String name;
-	
+
 	@Column(name = "price", nullable = false)
 	private Double price;
-	
+
 	@Column(name = "promotional_price")
-	private Double promotionalPrice; 
-	
+	private Double promotionalPrice;
+
 	@ManyToOne
 	@JoinColumn(name = "order_type_id")
 	private OrderType orderType;
+
 }
