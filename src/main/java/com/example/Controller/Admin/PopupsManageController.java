@@ -29,6 +29,10 @@ public class PopupsManageController {
 	@GetMapping("/popups")
 	public String popupsPage(Model model) {
 		model.addAttribute("popups", popupsRepository.findAll());
+		
+		Popups popup = popupsService.findById(1);
+		model.addAttribute("popup", popup);
+		
 		return "Admin/Pages/Popups/popups";
 	}
 	

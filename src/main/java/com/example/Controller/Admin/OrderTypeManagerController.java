@@ -77,6 +77,11 @@ public class OrderTypeManagerController {
         		getOrder.setOrderType(null);
         		orderService.save(getOrder);
         	}
+        	List<Language> languages = languageService.findAllByOrderTypeId(id);
+        	for(Language language : languages) {
+        		languageService.deleteById(language.getId());
+        	}
+        	
             orderTypeService.deleteOrderType(id); // Gọi service để xóa
             redirectAttributes.addFlashAttribute("success", "Xóa thành công");
         } catch (Exception e) {

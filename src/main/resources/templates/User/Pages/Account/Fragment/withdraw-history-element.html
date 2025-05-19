@@ -13,8 +13,8 @@
             </thead>
             <tbody>
                 <tr th:each="withdraw : ${withdraws}">
-                    <td class="text-center" th:text="${withdraw.id}"></td>
-                    <td class="text-center" th:text="${#numbers.formatDecimal(withdraw.amount, 0, 'COMMA', 0, 'POINT') + ' $'}"></td>
+                    <td class="text-center" th:text="'#' + ${withdraw.id}"></td>
+                    <td class="text-center" th:text="' $' + ${#numbers.formatDecimal(withdraw.amount, 1, 'COMMA', 2, 'POINT')}"></td>
                     <td class="text-center">
                         <span th:text="${withdraw.accountNumber}"></span> - 
                         <span th:text="${withdraw.accountName}"></span> - 
@@ -23,10 +23,11 @@
                     <td class="text-center" th:text="${#dates.format(withdraw.createAt, 'dd/MM/yyyy HH:mm')}"></td>
                     <td class="text-center" th:text="${withdraw.processedAt != null ? #dates.format(withdraw.processedAt, 'dd/MM/yyyy HH:mm') : '-'}"></td>
                 </tr>
-                <tr th:if="${#lists.isEmpty(withdraws)}">
-                    <td class="text-center" colspan="5">Không có dữ liệu</td>
-                </tr>
+                
+              
             </tbody>
         </table>
     </div>
+    
+    	
 </div>

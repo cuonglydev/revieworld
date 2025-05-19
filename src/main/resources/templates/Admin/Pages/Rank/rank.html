@@ -62,17 +62,20 @@
                 <div class="col-xl ">
                   <div class="card mb-4 p-2">
 
-                    <h5 class="mb-0 py-3 ps-2">Ranks</h5>
+                  
     
                     <!-- <a href="/admin/ranks/new" class="btn btn-primary mb-3">Add New Rank</a> -->
-                    <button type="button" class="btn btn-primary my-2" data-bs-toggle="modal" data-bs-target="#exampleModal-new">
-                     Thêm Rank
+                  <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 py-3 ps-2">Mức hạng</h5>
+                    <button type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#exampleModal-new">
+                     Thêm mức hạng
                     </button>
+                  </div>
                     <div class="modal fade" id="exampleModal-new" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                       <div class="modal-dialog">
                         <div class="modal-content">
                           <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Thêm rank</h1>
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Thêm mức hạng</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                           </div>
                           <div class="modal-body">
@@ -109,7 +112,7 @@
                       </div>
                     </div>
                     
-                    <table class="table table-striped">
+                    <table class="table table-striped" id="example">
                         <thead>
                             <tr>
                                 <th scope="col">Tên</th>
@@ -124,6 +127,12 @@
                                 <td th:text="'$ ' + ${#numbers.formatDecimal(rank.threshold, 0, 'COMMA', 2, 'POINT')}"></td>
                                 <td th:text="${#numbers.formatDecimal(rank.percentage, 0, 'COMMA', rank.threshold % 1 == 0 ? 0 : 2, 'POINT')} + '%'"></td>
                                 <td>
+                                 <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" th:attr="data-bs-target='#exampleModal-update' + ${rank.id}" >
+                                    Edit
+                                  </button>
+                                  <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" th:attr="data-bs-target='#exampleModal-delete' + ${rank.id}" >
+                                    Xóa
+                                  </button>
                                   <div class="modal fade" th:id="'exampleModal-update' + ${rank.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                       <div class="modal-content">
@@ -163,9 +172,7 @@
                                       </div>
                                     </div>
                                   </div>
-                                  <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" th:attr="data-bs-target='#exampleModal-update' + ${rank.id}" >
-                                    Edit
-                                  </button>
+                                 
                                   <div class="modal fade" th:id="'exampleModal-delete' + ${rank.id}" tabindex="-1" aria-labelledby="exampleModalLabel-delete" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered">
                                       <div class="modal-content">
@@ -183,9 +190,7 @@
                                       </div>
                                     </div>
                                   </div>
-                                  <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" th:attr="data-bs-target='#exampleModal-delete' + ${rank.id}" >
-                                    Xóa
-                                  </button>
+                                
                                     <!-- <div href="/admin/ranks/edit/{id}" th:href="@{/admin/rank/edit/{id}(id=${rank.id})}" class="btn btn-warning btn-sm">Edit</div> -->
                                     
                                 </td>

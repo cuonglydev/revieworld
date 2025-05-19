@@ -161,7 +161,7 @@
       <div class="modal fade" id="addLanguageModal" tabindex="-1" aria-labelledby="addLanguageModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <form th:action="@{/admin/language/save}" method="post" class="needs-validation" novalidate>
+      <form th:action="@{/admin/language/save}" method="post" >
         <div class="modal-header">
           <h5 class="modal-title" id="addLanguageModalLabel">Thêm Ngôn Ngữ Cho Order Type</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
@@ -175,12 +175,19 @@
 </div>
           <div class="mb-3">
             <label for="price" class="form-label">Giá</label>
-            <input type="number" class="form-control" id="price" name="price" step="0.01" required>
+            <div class="input-group">
+            <span class="input-group-text" id="basic-addon1">$</span>
+            <input type="number" class="form-control" name="price" step="0.01" required min="0.01">
+            </div>
             <div class="invalid-feedback">Vui lòng nhập giá.</div>
           </div>
           <div class="mb-3">
+          
             <label for="promotionalPrice" class="form-label">Giá khuyến mãi</label>
-            <input type="number" class="form-control" id="promotionalPrice" name="promotionalPrice" step="0.01">
+            <div class="input-group">
+            <span class="input-group-text" id="basic-addon1">$</span>
+            <input type="number" class="form-control" id="promotionalPrice" name="promotionalPrice" step="0.01" min="0.01">
+            </div>
           </div>
         </div>
         <div class="modal-footer">
@@ -208,9 +215,11 @@
           <tr th:each="lang : ${languages}">
             <td th:text="${lang.id}">1</td>
             <td th:text="${lang.name}">Tiếng Anh</td>
-            <td th:text="${#numbers.formatDecimal(lang.price, 1, 'COMMA', 0, 'POINT')}">100</td>
-            <td th:text="${#numbers.formatDecimal(lang.promotionalPrice, 1, 'COMMA',0, 'POINT')}">80</td>
-            <td>
+            <td th:text="'$' + ${#numbers.formatDecimal(lang.price, 1, 'COMMA', 2, 'POINT')}">100</td>
+            <td >
+            	<span th:if="${lang.promotionalPrice != null}" th:text="'$' + ${#numbers.formatDecimal(lang.promotionalPrice, 1, 'COMMA',2, 'POINT')}"></span>
+            </td>
+            <td> 
                <button type="button"
                 class="btn  btn-success"
                 data-bs-toggle="modal"
@@ -239,7 +248,7 @@
        aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <form th:action="@{/admin/language/save}" method="post" class="needs-validation" novalidate>
+        <form th:action="@{/admin/language/save}" method="post" >
           <div class="modal-header">
             <h5 class="modal-title" th:id="'editModalLabel__' + ${lang.id}">Chỉnh sửa ngôn ngữ</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
