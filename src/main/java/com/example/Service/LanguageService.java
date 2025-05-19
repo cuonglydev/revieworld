@@ -39,18 +39,17 @@ public class LanguageService {
         return languageRepository.findById(id).orElse(null);
     }
 
-    public void deleteLanguageById(int id) {
+    public void deleteById(int id) {
         languageRepository.deleteById(id);
     }
 
     public boolean checkname(String name) {
         return languageRepository.existsByName(name);
     }
-}
+
 
 	
-	@Autowired
-	private LanguageRepository languageRepository;
+	
 	
 	public List<Language> findAll() {
 		return languageRepository.findAll();

@@ -7,93 +7,9 @@
   <meta name="viewport"
     content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-  <title>ADMIN - Order Types</title>
+  <title>Quản lý sàn - ADMIN</title>
   <meta name="description" content="" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body {
-      background: #f8fafc;
-    }
 
-    .card {
-      border-radius: 18px;
-      box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
-      border: none;
-    }
-
-    .table thead {
-      background: #f1f3f6;
-    }
-
-    .table th,
-    .table td {
-      vertical-align: middle;
-    }
-
-    .modal-content {
-      border-radius: 14px;
-    }
-
-    .modal-dialog.modal-lg {
-      max-width: 700px;
-    }
-
-    .btn-primary,
-    .btn-warning,
-    .btn-danger {
-      border-radius: 8px;
-      min-width: 90px;
-    }
-
-    .form-label {
-      font-weight: 500;
-      margin-bottom: 6px;
-    }
-
-    .modal-title {
-      font-weight: 600;
-    }
-
-    .table img {
-      border-radius: 8px;
-      border: 1px solid #e9ecef;
-      background: #fff;
-      padding: 2px;
-      max-width: 48px;
-      max-height: 48px;
-      object-fit: cover;
-    }
-
-    .action-btns .btn {
-      margin-right: 4px;
-    }
-
-    .table-striped>tbody>tr:nth-of-type(odd)>* {
-      --bs-table-accent-bg: #f8fafc;
-    }
-
-    .modal-body .row.g-3>.col-md-6 {
-      margin-bottom: 10px;
-    }
-
-    @media (max-width: 576px) {
-      .modal-dialog.modal-lg {
-        max-width: 98vw;
-      }
-    }
-
-    .btn-pink {
-      background: #ec4899;
-      color: #fff;
-      border: none;
-    }
-
-    .btn-pink:hover,
-    .btn-pink:focus {
-      background: #db2777;
-      color: #fff;
-    }
-  </style>
   <div th:replace="~{Admin/Fragment/element :: head}"></div>
 </head>
 
@@ -107,13 +23,13 @@
         <div class="content-wrapper">
           <div class="container-xxl flex-grow-1 container-p-y">
             <div class="row justify-content-center">
-              <div class="col-xl-11">
+              <div class="col-xl-12">
                 <div class="card mb-4 p-3">
                   <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h4 class="mb-0">Quản lý Order Types</h4>
+                    <h4 class="mb-0">Quản lý sàn</h4>
                     <button type="button" class="btn btn-primary px-4" data-bs-toggle="modal"
                       data-bs-target="#exampleModal-new">
-                      <i class="fa fa-plus me-1"></i> Thêm Order Type
+                      <i class="fa fa-plus me-1"></i> Thêm sàn
                     </button>
                   </div>
                   <!-- Modal Thêm -->
@@ -122,19 +38,16 @@
                     <div class="modal-dialog modal-lg">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <h1 class="modal-title fs-5" id="exampleModalLabel">Thêm Order Type</h1>
+                          <h1 class="modal-title fs-5" id="exampleModalLabel">Thêm sàn</h1>
                           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                          <form th:action="@{/admin/ordertype/update}" method="post" enctype="multipart/form-data"
-                            class="needs-validation" novalidate>
+                          <form th:action="@{/admin/ordertype/update}" method="post" enctype="multipart/form-data">
                             <div class="row g-3">
-                              <div class="col-md-6">
+                              <div class="col-12">
                                 <label for="name" class="form-label">Tên</label>
                                 <input type="text" class="form-control" name="name" required />
-                                <div class="invalid-feedback">
-                                  Vui lòng nhập tên Order Type.
-                                </div>
+                               
                               </div>
                               <div class="col-md-6">
                                 <label for="feePercentage" class="form-label">Phí phần trăm</label>
@@ -146,7 +59,7 @@
                               </div>
                               <div class="col-md-6">
                                 <label for="photo" class="form-label">Ảnh</label>
-                                <input type="file" class="form-control" name="photoFile" />
+                                <input type="file" class="form-control" name="photoFile" required="required"/>
                               </div>
                               <!-- <div class="col-md-6">
                                 <label for="slug" class="form-label">Slug</label>
@@ -156,12 +69,12 @@
                                 </div>
                               </div> -->
                               <div class="col-md-6">
-                                <label for="url" class="form-label">URL</label>
-                                <input type="text" class="form-control" id="url" name="url" />
+                                <label for="url" class="form-label">Đường dẫn truy cập</label>
+                                <input type="url" class="form-control" id="url" name="url" required="required" />
                               </div>
                               <div class="col-md-6">
-                                <label for="link" class="form-label">Link</label>
-                                <input type="text" class="form-control" id="link" name="link" />
+                                <label for="link" class="form-label">Link hướng dẫn</label>
+                                <input type="url" class="form-control" id="link" name="link" required="required" />
                               </div>
                               <!-- <div class="col-md-6">
                                 <label for="createdAt" class="form-label">Ngày tạo</label>
@@ -178,30 +91,28 @@
 
                   </div>
                   <!-- Bảng danh sách OrderType -->
-                  <div class="table-responsive mt-4">
-                    <table class="table table-striped align-middle">
+                  <div class="table-responsive ">
+                    <table class="table table-striped align-middle" id="example">
                       <thead>
                         <tr>
                           <th>ID</th>
                           <th>Tên</th>
                           <th>Phí (%)</th>
-                          <th>Ảnh</th>
-                          <th>Slug</th>
                           <th>URL</th>
                           <th>Link</th>
                           <th>Ngày tạo</th>
-                          <th class="text-center">Hành động</th>
+                          <th >Tùy chỉnh</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr th:each="orderType : ${orderTypes}">
                           <td th:text="${orderType.id}"></td>
-                          <td th:text="${orderType.name}"></td>
-                          <td th:text="${orderType.feePercentage} + '%'"></td>
-                          <td>
-                            <img th:src="${orderType.photo}" alt="photo" th:if="${orderType.photo != null}">
+                          <td >
+                          	<a th:href="@{/admin/order-type/{id}(id=${orderType.id})}" th:text="${orderType.name}" class="link-primary"></a>
                           </td>
-                          <td th:text="${orderType.slug}"></td>
+                          <td th:text="${orderType.feePercentage} + '%'"></td>
+                          
+                        
                           <td class="text-break url-cell">
                             <a th:href="${orderType.url}" th:text="${orderType.url}" target="_blank"
                               th:if="${orderType.url}"></a>
@@ -210,39 +121,45 @@
                             <a th:href="${orderType.link}" th:text="${orderType.link}" target="_blank"
                               th:if="${orderType.link}"></a>
                           </td>
-                          <td th:text="${#dates.format(orderType.createdAt, 'yyyy-MM-dd')}"></td>
-                          <td class="text-center action-btns">
+                          <td th:text="${#dates.format(orderType.createdAt, 'HH:mm yyyy-MM-dd')}"></td>
+                          <td >
+                          
+                          <div class="dropdown">
+  <button class="btn btn-light px-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+   <i class='bx  bx-dots-vertical-rounded'  ></i>
+  </button>
+  <ul class="dropdown-menu ">
+    <li><a class="dropdown-item" th:href="@{/admin/order-type/{id}(id=${orderType.id})}">Cập nhật</a></li>
+    <li><button class="dropdown-item" th:attr="data-bs-target='#exampleModal-delete-' + ${orderType.id}" data-bs-toggle="modal">Xóa sàn</button></li>
+  </ul>
+</div>
                             <!-- Modal sửa OrderType -->
-                            <a th:href="@{/admin/ordertype/edit/{id}(id=${orderType.id})}" class="btn btn-warning">
-                              Sửa
-                            </a>
+                          
 
                             <!-- Modal xóa OrderType -->
-                            <button type="button" class="btn btn-danger btn-sm"
-                              th:attr="data-bs-target='#exampleModal-delete-' + ${orderType.id}" data-bs-toggle="modal">
-                              <i class="fa fa-trash"></i> Xóa
-                            </button>
+                          
                             <div class="modal fade" th:id="'exampleModal-delete-' + ${orderType.id}" tabindex="-1"
                               aria-labelledby="exampleModalLabel-delete" aria-hidden="true">
-                              <div class="modal-dialog">
+                              <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                   <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Xóa</h1>
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Xóa sàn  <span th:text="${orderType.name}"></span></h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                       aria-label="Close"></button>
                                   </div>
                                   <div class="modal-body">
-                                    Bạn có chắc rằng muốn xóa?
+                                    Bạn có chắc rằng muốn xóa sàn này và tất cả ngôn ngữ thuộc sàn sẽ mất, tất cả đơn hàng đã đặt thuộc sàn vẫn giữ nguyên!
                                   </div>
                                   <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary"
                                       data-bs-dismiss="modal">Đóng</button>
                                     <a th:href="@{/admin/ordertype/delete/{id}(id=${orderType.id})}"
-                                      class="btn btn-danger btn-sm">Xóa</a>
+                                      class="btn btn-danger ">Xóa</a>
                                   </div>
                                 </div>
                               </div>
                             </div>
+                            
                           </td>
                         </tr>
                       </tbody>
@@ -252,6 +169,7 @@
               </div>
             </div>
           </div>
+          
           <div class="content-backdrop fade"></div>
         </div>
       </div>
@@ -260,8 +178,7 @@
   </div>
   <div th:replace="~{Admin/Fragment/element :: bag}"></div>
   <div th:replace="~{Admin/Fragment/element :: footer}"></div>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 
 </html>

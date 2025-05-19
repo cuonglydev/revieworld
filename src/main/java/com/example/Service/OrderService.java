@@ -36,6 +36,10 @@ public class OrderService {
     	return orderRepository.findAllByStatus(status);
     }
     
+    public List<Order> findAllByOrderTypeId(int orderTypeId){
+    	return orderRepository.findAllByOrderTypeId(orderTypeId);
+    }
+    
     public void save(Order order) {
     	orderRepository.save(order);
     }

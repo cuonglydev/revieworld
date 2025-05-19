@@ -59,7 +59,7 @@
         <div class="row">
             <div class="col-12 col-md-6 mb-3" th:each="item : ${orders}">
                 <div class=" bg__gray__subtle rounded  d-flex">
-                    <a class="w-50 overflow-hidden rounded-start order__element bg-light" th:href="@{/order/{orderTypeSlug}/{slug} (orderTypeSlug=${item.orderType.slug}, slug=${item.slug})}">
+                    <a class="w-50 overflow-hidden rounded-start order__element bg-light" th:href="@{/order/{slug} (slug=${item.slug})}">
                         <img class="h-100 w-100 object-fit-cover hover__img " th:src="${item.photo}" >
                     </a>
                     <div class="w-50 text-light p-2 position-relative d-flex flex-column justify-content-between">
@@ -71,14 +71,14 @@
                                     <i class="fa-solid fa-ellipsis-vertical"></i>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end fs__12px" >
-                                  <li><a class="dropdown-item" type="button" th:href="@{/order/{orderTypeSlug}/{slug} (orderTypeSlug=${item.orderType.slug}, slug=${item.slug})}">Chi tiết</a></li>
+                                  <li><a class="dropdown-item" type="button" th:href="@{/order/{slug} (slug=${item.slug})}">Chi tiết</a></li>
                                   <li><a class="dropdown-item" type="button">Tạm dừng</a></li>
                                 </ul>
                               </div>
                         </div>
 
                         <div class="pe-3">
-                            <a  href="/order-detail" class="text-decoration-none text-light " th:text="${item.orderType.name}"></a>
+                            <a  href="/order-detail" class="text-decoration-none text-light " th:text="${item.name}"></a>
                         </div>
 
                         <div>

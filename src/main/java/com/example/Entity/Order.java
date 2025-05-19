@@ -77,6 +77,15 @@ public class Order {
 	@Column(name = "created_at")
 	private Date createdAt;
 	
+	@Column(name = "order_type_name")
+	private String orderTypeName;
+	
+	@Column(name = "order_type_url")
+	private String orderTypeUrl;
+	
+	@Column(name = "order_type_link")
+	private String orderTypeLink;
+	
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
