@@ -183,10 +183,23 @@
       });
     });
 
-    $(document).ready(function () {
-      $('#deposit-data').DataTable({
-        scrollX: true
-      });
+    // Chỉ khởi tạo DataTables cho deposit-data khi tab được show
+    $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+      var target = $(e.target).attr("href");
+      if (target === '#v-pills-deposit-history') {
+        if (!$.fn.DataTable.isDataTable('#deposit-data')) {
+          $('#deposit-data').DataTable({
+            scrollX: true
+          });
+        }
+      }
+      if (target === '#v-pills-withdraw-history') {
+        if (!$.fn.DataTable.isDataTable('#withdraw-data')) {
+          $('#withdraw-data').DataTable({
+            scrollX: true
+          });
+        }
+      }
     });
 
     $(document).ready(function () {

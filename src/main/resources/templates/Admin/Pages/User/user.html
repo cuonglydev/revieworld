@@ -63,13 +63,15 @@
           <div class="content-wrapper">
             <!-- Content -->
             <div class="container-xxl flex-grow-1 container-p-y">
-              <!-- Thông báo -->
-              <div th:if="${success}" class="alert alert-success alert-dismissible" role="alert">
+              <!-- Thông báo dạng alert giống rank.html -->
+              <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bx bx-check-circle"></i>
                 <span th:text="${success}"></span>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
               </div>
-              <div th:if="${error}" class="alert alert-danger alert-dismissible" role="alert">
-                <span th:text="${error}"></span>
+              <div th:if="${danger}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bx bx-error-circle"></i>
+                <span th:text="${danger}"></span>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
               </div>
 
@@ -102,20 +104,20 @@
                                     <td th:text="${user.id}"></td>
                                     <td th:text="${user.email}"></td>
                                     <td th:text="${user.username}"></td>
-                                    <td th:text="${user.amount}"></td>
-                                    <td th:text="${user.bonusAmount}"></td>
+                                    <td th:text="${#numbers.formatDecimal(user.amount, 0, 'COMMA', 0, 'POINT') + ' $'}"></td>
+                                    <td th:text="${#numbers.formatDecimal(user.bonusAmount, 0, 'COMMA', 0, 'POINT') + ' $'}"></td>
                                     <td>
                                         <span class="rank-badge" th:class="'badge ' + 
                                             ${user.rank == 'BRONZE' ? 'bg-label-secondary' : 
                                             (user.rank == 'SILVER' ? 'bg-label-light' : 
                                             (user.rank == 'GOLD' ? 'bg-label-warning' : 
                                             (user.rank == 'PLATINUM' ? 'bg-label-info' : 
-                                            (user.rank == 'DIAMOND' ? 'bg-label-primary' : ''))))}"
+                                            (user.rank == 'DIAMOND' ? 'bg-label-primsary' : ''))))}"
                                             th:text="${user.rank == 'BRONZE' ? 'Đồng' : 
                                                     (user.rank == 'SILVER' ? 'Bạc' : 
                                                     (user.rank == 'GOLD' ? 'Vàng' : 
                                                     (user.rank == 'PLATINUM' ? 'Bạch Kim' : 
-                                                    (user.rank == 'DIAMOND' ? 'Kim Cương' : ''))))}">
+                                                    (user.rank == 'DIAMOND' ? 'Kim Cương' : ''))))}"> 
                                         </span>
                                     </td>
                                     <td>
@@ -525,7 +527,7 @@
                                     });
                                 } else {
                                     Swal.fire({
-                                        icon: 'error',
+                                        icon: 'danger',
                                         title: 'Lỗi',
                                         text: response
                                     });
@@ -533,7 +535,7 @@
                             },
                             error: function(xhr) {
                                 Swal.fire({
-                                    icon: 'error',
+                                    icon: 'danger',
                                     title: 'Lỗi',
                                     text: 'Có lỗi xảy ra khi từ chối kháng đơn'
                                 });

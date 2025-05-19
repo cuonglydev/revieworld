@@ -69,37 +69,67 @@ public class UserManageController {
 		try {
 			User user = userService.findById(userId);
 			if (user != null) {
-				List<Deposit> deposits = depositService.findByUserId(userId);
+				List<Deposit> deposits;
+				try {
+					deposits = Optional.ofNullable(depositService.findByUserId(userId)).orElse(new ArrayList<>()).stream().filter(d -> d != null).toList();
+				} catch (Exception e) {
+					deposits = new ArrayList<>();
+				}
 				model.addAttribute("deposits", deposits);
 				
-				List<Withdraw> withdraws = withdrawService.findByUserId(userId);
-				model.addAttribute("withdraws", withdraws);
+				List<Withdraw> withdraws;
+				try {
+					withdraws = Optional.ofNullable(withdrawService.findByUserId(userId)).orElse(new ArrayList<>()).stream().filter(w -> w != null).toList();
+				} catch (Exception e) {
+					withdraws = new ArrayList<>();
+				}
+				model.addAttribute("witdraws", withdraws);
 				
+
+// 				List<Mission> missions;
+// 				try {
+// 					missions = Optional.ofNullable(missionService.findByUserId(userId)).orElse(new ArrayList<>()).stream().filter(m -> m != null).toList();
+// 				} catch (Exception e) {
+// 					missions = new ArrayList<>();
+// 				}
+
 				List<Mission> missions = missionService.findAllByUserId(userId);
+
 				model.addAttribute("missions", missions);
 				
-			
 				List<User> referrals = new ArrayList<>();
-				List<UserAffiliate> affiliates = userAffiliateService.findAllByUserId(userId);
-				for (UserAffiliate affiliate : affiliates) {
-					User referredUser = affiliate.getUser();
-					referrals.add(referredUser);
+				try {
+					List<UserAffiliate> affiliates = Optional.ofNullable(userAffiliateService.findAllByUserId(userId)).orElse(new ArrayList<>());
+					for (UserAffiliate affiliate : affiliates) {
+						if (affiliate != null && affiliate.getUser() != null) {
+							referrals.add(affiliate.getUser());
+						}
+					}
+				} catch (Exception e) {
+					// referrals đã là list rỗng
 				}
 				model.addAttribute("referrals", referrals);
 				
-				double totalDeposited = deposits.stream()
-						.filter(d -> d.getStatus().equals("SUCCESS"))
-						.mapToDouble(Deposit::getAmount)
-						.sum();
-				user.setTotalDeposited(totalDeposited);
+				double totalDeposited = 0.0;
+				try {
+					totalDeposited = deposits.stream()
+							.filter(d -> d.getStatus() != null && d.getStatus().equals("SUCCESS"))
+							.mapToDouble(d -> d.getAmount() != null ? d.getAmount() : 0.0)
+							.sum();
+					user.setTotalDeposited(totalDeposited);
+				} catch (Exception e) {
+					// Bỏ qua nếu lỗi
+				}
 				
 				model.addAttribute("user", user);
 				return "Admin/Pages/User/Fragments/user-modals :: userDetailModal";
 			}
-			return "redirect:/admin/user";
+			model.addAttribute("error", "Không tìm thấy người dùng hoặc dữ liệu liên quan!");
+			return "Admin/Pages/User/Fragments/user-modals :: userDetailModal";
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "redirect:/admin/user";
+			model.addAttribute("error", "Có lỗi xảy ra khi tải thông tin chi tiết: " + e.getMessage());
+			return "Admin/Pages/User/Fragments/user-modals :: userDetailModal";
 		}
 	}
 

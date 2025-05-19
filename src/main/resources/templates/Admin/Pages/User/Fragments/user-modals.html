@@ -64,7 +64,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h6 class="card-subtitle mb-2 text-muted">Số dư</h6>
-                                <h5 class="card-title" th:text="${#numbers.formatDecimal(user.amount, 1, 'COMMA', 0, 'POINT')} + ' đ'"></h5>
+                                <h5 class="card-title" th:text="${#numbers.formatDecimal(user.amount, 0, 'COMMA', 0, 'POINT')} + ' $'"></h5>
                             </div>
                         </div>
                     </div>
@@ -72,7 +72,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h6 class="card-subtitle mb-2 text-muted">Số dư thưởng</h6>
-                                <h5 class="card-title" th:text="${#numbers.formatDecimal(user.bonusAmount, 1, 'COMMA', 0, 'POINT')} + ' đ'"></h5>
+                                <h5 class="card-title" th:text="${#numbers.formatDecimal(user.bonusAmount, 0, 'COMMA', 0, 'POINT')} + ' $'"></h5>
                             </div>
                         </div>
                     </div>
@@ -80,7 +80,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h6 class="card-subtitle mb-2 text-muted">Tổng nạp</h6>
-                                <h5 class="card-title" th:text="${#numbers.formatDecimal(user.totalDeposited, 1, 'COMMA', 0, 'POINT')} + ' đ'"></h5>
+                                <h5 class="card-title" th:text="${#numbers.formatDecimal(user.totalDeposited, 0, 'COMMA', 0, 'POINT')} + ' $'"></h5>
                             </div>
                         </div>
                     </div>
@@ -148,7 +148,7 @@
                                 <tbody>
                                     <tr th:each="deposit : ${deposits}">
                                         <td th:text="${deposit.id}"></td>
-                                        <td th:text="${#numbers.formatDecimal(deposit.amount, 1, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                                        <td th:text="${#numbers.formatDecimal(deposit.amount, 0, 'COMMA', 0, 'POINT')} + ' $'"></td>
                                         <td>
                                             <span th:switch="${deposit.method}">
                                                 <span th:case="'BANK'" class="badge bg-label-primary">Chuyển khoản</span>
@@ -188,7 +188,7 @@
                                 <tbody>
                                     <tr th:each="withdraw : ${withdraws}">
                                         <td th:text="${withdraw.id}"></td>
-                                        <td th:text="${#numbers.formatDecimal(withdraw.amount, 1, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                                        <td th:text="${#numbers.formatDecimal(withdraw.amount, 0, 'COMMA', 0, 'POINT')} + ' $'"></td>
                                         <td>
                                             <span th:switch="${withdraw.method}">
                                                 <span th:case="'BANK'" class="badge bg-label-primary">Chuyển khoản</span>
@@ -241,7 +241,7 @@
                                     <tr th:each="mission : ${missions}">
                                         <td th:text="${mission.id}"></td>
                                         <td th:text="${mission.name}"></td>
-                                        <td th:text="${#numbers.formatDecimal(mission.amount, 1, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                                        <td th:text="${#numbers.formatDecimal(mission.amount, 0, 'COMMA', 0, 'POINT')} + ' $'"></td>
                                         <td>
                                             <button class="btn btn-sm btn-info" 
                                                     th:if="${mission.evidence != null}"

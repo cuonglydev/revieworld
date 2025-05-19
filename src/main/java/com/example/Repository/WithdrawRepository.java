@@ -9,4 +9,7 @@ import com.example.Entity.Withdraw;
 @Repository
 public interface WithdrawRepository extends JpaRepository<Withdraw, Integer> {
     List<Withdraw> findByUserId(int userId);
+    List<Withdraw> findByStatus(String status);
+    List<Withdraw> findByUserIdAndStatus(int userId, String status);
+    List<Withdraw> findByUserIdAndStatusIn(int userId, List<String> statuses);
 } 

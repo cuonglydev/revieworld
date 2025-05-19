@@ -249,4 +249,11 @@ public class DepositController {
 		
 		return "User/Pages/Account/payment";
 	}
+
+	@GetMapping("/account/fragment/deposit-history")
+	public String getDepositHistoryFragment(Model model) {
+		User currentUser = userService.getCurrentUser();
+		model.addAttribute("deposits", depositService.findByUserId(currentUser.getId()));
+		return "User/Pages/Account/Fragment/deposit-history-element :: deposit-history";
+	}
 }

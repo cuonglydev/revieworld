@@ -1,0 +1,73 @@
+<!-- user-detail-modal.html -->
+<div th:fragment="userDetailModal" class="modal fade" id="userDetailModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Chi tiết người dùng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Thông tin tổng quan -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">Số dư</h6>
+                                <h5 class="card-title" th:text="${#numbers.formatDecimal(user.amount, 0, 'COMMA', 0, 'POINT')} + ' $'"></h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">Số dư thưởng</h6>
+                                <h5 class="card-title" th:text="${#numbers.formatDecimal(user.bonusAmount, 0, 'COMMA', 0, 'POINT')} + ' $'"></h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">Tổng nạp</h6>
+                                <h5 class="card-title" th:text="${#numbers.formatDecimal(user.totalDeposited, 0, 'COMMA', 0, 'POINT')} + ' $'"></h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">Trạng thái</h6>
+                                <span th:class="${user.status == 'ACTIVE' ? 'badge bg-success' : 'badge bg-danger'}"
+                                      th:text="${user.status == 'ACTIVE' ? 'Hoạt động' : 'Khóa'}">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tabs chính -->
+                <ul class="nav nav-tabs" id="userDetailTabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="transaction-tab" data-bs-toggle="tab" href="#transaction" role="tab">LS nạp / rút</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="mission-tab" data-bs-toggle="tab" href="#mission" role="tab">LS Đơn / Kháng đơn</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="affiliate-tab" data-bs-toggle="tab" href="#affiliate" role="tab">Người dùng đã mời / Cập nhật thông tin</a>
+                    </li>
+                </ul>
+                <div class="tab-content pt-3" id="userDetailTabContent">
+                    <div class="tab-pane fade show active" id="transaction" role="tabpanel">
+                        <div th:replace="~{Admin/Pages/User/Fragments/user-transaction-history :: transactionHistory}"></div>
+                    </div>
+                    <div class="tab-pane fade" id="mission" role="tabpanel">
+                        <div th:replace="~{Admin/Pages/User/Fragments/user-mission-history :: missionHistory}"></div>
+                    </div>
+                    <div class="tab-pane fade" id="affiliate" role="tabpanel">
+                        <div th:replace="~{Admin/Pages/User/Fragments/user-affiliate-update :: affiliateUpdate}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
