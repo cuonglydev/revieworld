@@ -1,6 +1,7 @@
 package com.example.Controller.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -29,6 +30,9 @@ public class AccountController {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Value("${my.domain}")
+	private String myDomain;
 
 	@Autowired
 	private WithdrawService withdrawService;
@@ -38,25 +42,35 @@ public class AccountController {
 
 	@GetMapping("/account")
 	public String accountPage(Model model) {
+
 		User currentUser = userService.getCurrentUser();
 		if (currentUser == null) {
 			return "redirect:/login";
 		}
+
 		model.addAttribute("withdraws", withdrawService.findByUserId(currentUser.getId()));
 		model.addAttribute("deposits", depositService.findByUserId(currentUser.getId()));
+
+		
+		model.addAttribute("user", currentUser);
+		
+		String inviteLink = myDomain + "/?ref=" + currentUser.getToken(); 
+		model.addAttribute("inviteLink", inviteLink);
+		
+
 		return "User/Pages/Account/account";
 	}
+	
 	
 	@GetMapping("/account/detail")
 	public String accountDetailPage(Model model) {
 		try {
 			User currentUser = userService.getCurrentUser();
 			if (currentUser == null) {
-				logger.error("Unauthorized access attempt to account detail page");
 				return "redirect:/login";
 			}
 			
-			logger.info("Loading account detail page for user ID: {}", currentUser.getId());
+			
 			model.addAttribute("currentUser", currentUser);
 			return "User/Pages/Account/account-detail";
 		} catch (Exception e) {

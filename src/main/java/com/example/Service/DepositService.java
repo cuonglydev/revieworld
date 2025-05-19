@@ -33,47 +33,41 @@ public class DepositService {
         return depositRepository.findByUserId(userId);
     }
     
-    @Transactional
-    public Deposit processDeposit(Deposit deposit) {
-        // Set deposit status and creation time
-        deposit.setStatus("PENDING");
-        deposit.setCreatedAt(new Date());
-        
-        // Save deposit record
-        Deposit savedDeposit = depositRepository.save(deposit);
-        
-        // If deposit is successful, update user balance and handle commission
-        if (savedDeposit.getStatus().equals("SUCCESS")) {
-            User user = deposit.getUser();
-            
-            // Update user's main wallet balance
-            user.setAmount(user.getAmount() + deposit.getAmount());
-            user.setTotalDeposited(user.getTotalDeposited() + deposit.getAmount());
-            userService.save(user);
-            
-            // Handle commission for referrer if exists
-            handleCommission(user, deposit.getAmount());
-        }
-        
-        return savedDeposit;
-    }
-    
-    private void handleCommission(User user, Double depositAmount) {
-        // Find referrer through UserAffiliate
-        List<UserAffiliate> userAffiliates = userAffiliateRepository.findAllByUserId(user.getId());
-        UserAffiliate userAffiliate = userAffiliates.isEmpty() ? null : userAffiliates.get(0);
-        if (userAffiliate != null && userAffiliate.getReferrer() != null) {
-            User referrer = userAffiliate.getReferrer();
-            
-            // Calculate commission (5% of deposit amount)
-            Double commission = depositAmount * 0.05;
-            
-            // Update referrer's bonus wallet
-            referrer.setBonusAmount(referrer.getBonusAmount() + commission);
-            userService.save(referrer);
-        }
-    }
-    
+	/*
+	 * @Transactional public Deposit processDeposit(Deposit deposit) { // Set
+	 * deposit status and creation time deposit.setStatus("PENDING");
+	 * deposit.setCreatedAt(new Date());
+	 * 
+	 * // Save deposit record Deposit savedDeposit =
+	 * depositRepository.save(deposit);
+	 * 
+	 * // If deposit is successful, update user balance and handle commission if
+	 * (savedDeposit.getStatus().equals("SUCCESS")) { User user = deposit.getUser();
+	 * 
+	 * // Update user's main wallet balance user.setAmount(user.getAmount() +
+	 * deposit.getAmount()); user.setTotalDeposited(user.getTotalDeposited() +
+	 * deposit.getAmount()); userService.save(user);
+	 * 
+	 * // Handle commission for referrer if exists handleCommission(user,
+	 * deposit.getAmount()); }
+	 * 
+	 * return savedDeposit; }
+	 */
+	/*
+	 * private void handleCommission(User user, Double depositAmount) { // Find
+	 * referrer through UserAffiliate List<UserAffiliate> userAffiliates =
+	 * userAffiliateRepository.findAllByUserId(user.getId()); UserAffiliate
+	 * userAffiliate = userAffiliates.isEmpty() ? null : userAffiliates.get(0); if
+	 * (userAffiliate != null && userAffiliate.getReferrer() != null) { User
+	 * referrer = userAffiliate.getReferrer();
+	 * 
+	 * // Calculate commission (5% of deposit amount) Double commission =
+	 * depositAmount * 0.05;
+	 * 
+	 * // Update referrer's bonus wallet
+	 * referrer.setBonusAmount(referrer.getBonusAmount() + commission);
+	 * userService.save(referrer); } }
+	 */
     public void save(Deposit deposit) {
         depositRepository.save(deposit);
     }

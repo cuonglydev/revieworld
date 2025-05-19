@@ -23,61 +23,44 @@
 
         <div class="p-2 rounded mt-2 bg-light">
             <div class="d-flex justify-content-between">
-                <span>user@gmail.com</span>
+                <span th:text="${user.email}">user@gmail.com</span>
                 <div>
                     <span class="text-secondary"><i class="fa-solid fa-wallet"></i></span>
-                    <span>$50</span>
+                    <span th:text="'$' + ${#numbers.formatDecimal(user.amount,1 , 'COMMA', 2, 'POINT')}">$50</span>
                 </div>
             </div>
         </div>
 
-        <h6 class="fw-semibold mt-2">Booking dịch vụ</h6>
+        <h6 class="fw-semibold mt-2 border-start border-3 border__orange ps-1">Booking dịch vụ</h6>
         <div class="row">
-            <div class="col-md-4  col-6 mb-2">
+            <div class="col-md-4  col-6 mb-2" th:each="item : ${orderTypes}">
                 <div class=" bg-light rounded shadow-sm  overflow-hidden">
                     <div class="w-100 booking__element" >
-                        <img class="w-100 h-100 object-fit-cover" src="User/assets/photo/reviews-map-service.jpg">
+                        <img class="w-100 h-100 object-fit-cover" th:src="${item.Photo}">
                     </div>
                     <div class="p-2">
-                        <a href="/booking-detail" class="mb-1 fw-semibold text-decoration-none text-dark" >Reviewmap service</a>
+                        <a href="/booking-detail" class="mb-1 fw-semibold text-decoration-none text-dark" th:text="${item.name}">Reviewmap service</a>
                         <div class="d-flex justify-content-between align-items-end">
                             <div>
                                
-                                <span class="text-decoration-line-through text-secondary">$1</span>
-                                <span class="text-danger fw-semibold">$0.5</span>
+                              <!--   <span class="text-decoration-line-through text-secondary" th:text="'$' + ${#numbers.formatDecimal(item.price, 1 , 'COMMA', 2, 'POINT')}">$1</span>
+                                <span class="text-danger fw-semibold" th:text="'$' + ${#numbers.formatDecimal(item.promotionalPrice, 1 , 'COMMA', 2, 'POINT')}">$0.5</span> -->
                             </div>
-                            <a class="btn btn-primary " href="/booking-detail"><i class="fa-solid fa-plus"></i></a>
+                            <a class="btn btn-primary w-100 mt-1" th:href="@{/booking/{slug} (slug=${item.slug})}"><i class="fa-solid fa-plus"></i></a>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4  col-6 mb-2">
-                <div class=" bg-light rounded shadow-sm  overflow-hidden">
-                    <div class="w-100 booking__element" >
-                        <img class="w-100 h-100 object-fit-cover" src="/User/assets/photo/reviews-fanpage-service.jpg">
-                    </div>
-                    <div class="p-2">
-                        <p class="mb-1 fw-semibold">Review fanpage service</p>
-                        <div class="d-flex justify-content-between align-items-end">
-                            <div>
-                               
-                                <span class="text-decoration-line-through text-secondary">$1</span>
-                                <span class="text-danger fw-semibold">$0.5</span>
-                            </div>
-                            <a class="btn btn-primary "><i class="fa-solid fa-plus"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
         </div>
 
-        <h6 class="fw-semibold ">Dịch vụ bạn đang đặt</h6>
+        <h6 class="fw-semibold border-start border-3 border__orange ps-1">Dịch vụ bạn đang đặt</h6>
 
         <div class="row">
-            <div class="col-12 col-md-6 mb-3">
+            <div class="col-12 col-md-6 mb-3" th:each="item : ${orders}">
                 <div class=" bg__gray__subtle rounded  d-flex">
-                    <a class="w-50 overflow-hidden rounded-start order__element bg-light" href="/order-detail">
-                        <img class="h-100 w-100 object-fit-cover hover__img " src="/User/assets/photo/order.png" >
+                    <a class="w-50 overflow-hidden rounded-start order__element bg-light" th:href="@{/order/{slug} (slug=${item.slug})}">
+                        <img class="h-100 w-100 object-fit-cover hover__img " th:src="${item.photo}" >
                     </a>
                     <div class="w-50 text-light p-2 position-relative d-flex flex-column justify-content-between">
 
@@ -88,108 +71,44 @@
                                     <i class="fa-solid fa-ellipsis-vertical"></i>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end fs__12px" >
-                                  <li><a  href="/order-detail" class="dropdown-item" type="button">Chi tiết</a></li>
+                                  <li><a class="dropdown-item" type="button" th:href="@{/order/{slug} (slug=${item.slug})}">Chi tiết</a></li>
                                   <li><a class="dropdown-item" type="button">Tạm dừng</a></li>
                                 </ul>
                               </div>
                         </div>
 
                         <div class="pe-3">
-                            <a  href="/order-detail" class="text-decoration-none text-light ">Dịch vụ reviewmap </a>
+                            <a  href="/order-detail" class="text-decoration-none text-light " th:text="${item.name}"></a>
                         </div>
 
                         <div>
-                            <span class=" d-inline-block fs__12px text__gray text-truncate" style="max-width: 150px;" >Nội dung hay content là những thông tin chứa đựng bên trong các phương tiện truyền thông bao gồm Internet, điện ảnh, truyền hình, truyền thanh radio, đĩa CD/VCD, DVD, sách báo, tạp chí, nghệ thuật tạo hình cũng như các sự kiện trực tiếp.</span>
+                            <span class=" d-inline-block fs__12px text__gray text-truncate" style="max-width: 150px;" th:text="${item.name}">Nội dung hay content là những thông tin chứa đựng bên trong các phương tiện truyền thông bao gồm Internet, điện ảnh, truyền hình, truyền thanh radio, đĩa CD/VCD, DVD, sách báo, tạp chí, nghệ thuật tạo hình cũng như các sự kiện trực tiếp.</span>
                         </div>
                       </div>
 
+                       <div>
                         <div class=" d-flex justify-content-between align-items-center">
-                            <span>100/100</span>    
-                            <span class="fs__12px text__gray">00:00 15/05/2025</span>
+                            <span th:text="${item.quantityDone} + '/' + ${item.quantity}"></span>    
+                            <span class="fs__12px text__gray" th:text="${#dates.format(item.createdAt, 'HH:mm dd-MM-yyyy')}">00:00 15/05/2025</span>
                         </div>
+                        
+                        <div>
+                        <div class="progress" role="progressbar" aria-label="Example with label"   th:attr="aria-valuenow=${(item.quantityDone * 100) / item.quantity}" aria-valuemin="0" aria-valuemax="100" style="height: 10px;">
+  <div class="progress-bar  fs__10px"  th:style="'width:' + ${(item.quantityDone * 100) / item.quantity} + '%'"  th:text="${(item.quantityDone * 100) / item.quantity + '%'}">25%</div>
+</div>
+                        </div>
+                       </div>
 
                     </div>
                 </div>
             </div>
 
-            <div class="col-12 col-md-6 mb-3">
-                <div class=" bg__gray__subtle rounded  d-flex">
-                    <a class="w-50 overflow-hidden rounded-start order__element bg-light" href="#">
-                        <img class="h-100 w-100 object-fit-cover hover__img " src="/User/assets/photo/order.png" >
-                    </a>
-                    <div class="w-50 text-light p-2 position-relative d-flex flex-column justify-content-between">
+            
 
-                      <div>
-                        <div class="position-absolute end-0">
-                            <div class="btn-group">
-                                <a type="button" class="px-2 text-light " data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa-solid fa-ellipsis-vertical"></i>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end fs__12px" >
-                                  <li><a class="dropdown-item" type="button">Chi tiết</a></li>
-                                  <li><a class="dropdown-item" type="button">Tạm dừng</a></li>
-                                </ul>
-                              </div>
-                        </div>
-
-                        <div class="pe-3">
-                            <a class="text-decoration-none text-light " href="#">Dịch vụ reviewmap </a>
-                        </div>
-
-                        <div>
-                            <span class=" d-inline-block fs__12px text__gray text-truncate" style="max-width: 150px;" >Nội dung hay content là những thông tin chứa đựng bên trong các phương tiện truyền thông bao gồm Internet, điện ảnh, truyền hình, truyền thanh radio, đĩa CD/VCD, DVD, sách báo, tạp chí, nghệ thuật tạo hình cũng như các sự kiện trực tiếp.</span>
-                        </div>
-                      </div>
-
-                        <div class=" d-flex justify-content-between align-items-center">
-                            <span>100/100</span>    
-                            <span class="fs__12px text__gray">00:00 15/05/2025</span>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12 col-md-6 mb-3">
-                <div class=" bg__gray__subtle rounded  d-flex">
-                    <a class="w-50 overflow-hidden rounded-start order__element bg-light" href="#">
-                        <img class="h-100 w-100 object-fit-cover hover__img " src="/User/assets/photo/order.png" >
-                    </a>
-                    <div class="w-50 text-light p-2 position-relative d-flex flex-column justify-content-between">
-
-                      <div>
-                        <div class="position-absolute end-0">
-                            <div class="btn-group">
-                                <a type="button" class="px-2 text-light " data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa-solid fa-ellipsis-vertical"></i>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end fs__12px" >
-                                  <li><a class="dropdown-item" type="button">Chi tiết</a></li>
-                                  <li><a class="dropdown-item" type="button">Tạm dừng</a></li>
-                                </ul>
-                              </div>
-                        </div>
-
-                        <div class="pe-3">
-                            <a class="text-decoration-none text-light " href="#">Dịch vụ reviewmap </a>
-                        </div>
-
-                        <div>
-                            <span class=" d-inline-block fs__12px text__gray text-truncate" style="max-width: 150px;" >Nội dung hay content là những thông tin chứa đựng bên trong các phương tiện truyền thông bao gồm Internet, điện ảnh, truyền hình, truyền thanh radio, đĩa CD/VCD, DVD, sách báo, tạp chí, nghệ thuật tạo hình cũng như các sự kiện trực tiếp.</span>
-                        </div>
-                      </div>
-
-                        <div class=" d-flex justify-content-between align-items-center">
-                            <span>100/100</span>    
-                            <span class="fs__12px text__gray">00:00 15/05/2025</span>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
+           
 
             <div class="text-center">
-              <a href="/all-order" class="text-dark">Tất cả dịch vụ bạn đã đặt <i class="fa-solid fa-arrow-right"></i></a>
+              <a href="/all-order" class="link__orange ">Tất cả dịch vụ bạn đã đặt <i class="fa-solid fa-arrow-right"></i></a>
             </div>
 
         </div>
@@ -198,6 +117,7 @@
   </section>
 
   <div th:replace="~{User/Fragment/element :: footer}"></div>
+  <div th:replace="~{User/Fragment/element :: toast}"></div>
 
   <script src="/User/js/bootstrap.bundle.min.js"></script>
   <script src="/User/js/menu.js"></script>

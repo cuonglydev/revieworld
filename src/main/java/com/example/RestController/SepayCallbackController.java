@@ -1,8 +1,11 @@
 package com.example.RestController;
 
+import com.example.Entity.Affiliate;
 import com.example.Entity.Deposit;
 import com.example.Entity.Rate;
 import com.example.Entity.User;
+import com.example.Entity.UserAffiliate;
+import com.example.Entity.UserAffiliateItem;
 import com.example.Repository.DepositRepository;
 import com.example.Service.UserService;
 import com.example.Service.AffiliateService;
@@ -106,8 +109,32 @@ public class SepayCallbackController {
         	
         	User user = userService.findById(deposit.getUser().getId());
         	
-        	Double userAmount = user.getAmount() + amount / rate.getRate();
+        	Double userAmount = user.getAmount() + (amount / rate.getRate());
         	user.setAmount(userAmount);
+        	
+        	
+        	
+        	Affiliate affiliate = affiliateService.findByid(1);
+        	if(affiliate != null && affiliate.getStatus()) {
+        		if(user.getUserAffiliate() != null) {
+        			UserAffiliate userAffiliate = userAffiliateService.findById(user.getUserAffiliate().getId());
+        			if(userAffiliate != null) {
+            			User inviter = userService.findById(userAffiliate.getUser().getId());
+            			
+            			Double fee = deposit.getAmount() * (affiliate.getPercentage() / 100);
+            			UserAffiliateItem userAffiliateItem = new UserAffiliateItem();
+            			userAffiliateItem.setAmount(fee);
+            			userAffiliateItem.setCreatedAt(currentDate);
+            			userAffiliateItem.setUser(inviter);
+            			userAffiliateItem.setUserAffiliate(userAffiliate);
+            			userAffiliateItemService.save(userAffiliateItem);
+            			
+            			userAffiliate.setAmount(userAffiliate.getAmount() + fee);
+            			userAffiliateService.save(userAffiliate);
+            		}
+        		}
+        	}
+        	
         	userService.save(user);
         }
         

@@ -83,14 +83,18 @@ public class UserManageController {
 				} catch (Exception e) {
 					withdraws = new ArrayList<>();
 				}
-				model.addAttribute("withdraws", withdraws);
+				model.addAttribute("witdraws", withdraws);
 				
-				List<Mission> missions;
-				try {
-					missions = Optional.ofNullable(missionService.findByUserId(userId)).orElse(new ArrayList<>()).stream().filter(m -> m != null).toList();
-				} catch (Exception e) {
-					missions = new ArrayList<>();
-				}
+
+// 				List<Mission> missions;
+// 				try {
+// 					missions = Optional.ofNullable(missionService.findByUserId(userId)).orElse(new ArrayList<>()).stream().filter(m -> m != null).toList();
+// 				} catch (Exception e) {
+// 					missions = new ArrayList<>();
+// 				}
+
+				List<Mission> missions = missionService.findAllByUserId(userId);
+
 				model.addAttribute("missions", missions);
 				
 				List<User> referrals = new ArrayList<>();
@@ -203,7 +207,7 @@ public class UserManageController {
 			}
 			
 			// Delete all related missions
-			List<Mission> missions = missionService.findByUserId(userId);
+			List<Mission> missions = missionService.findAllByUserId(userId);
 			for (Mission mission : missions) {
 				missionService.delete(mission.getId());
 			}

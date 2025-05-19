@@ -6,23 +6,34 @@
                       <tr>
                         <th class="text-center">Mã nạp</th>
                         <th class="text-center">Số tiền</th>
+                        <th>Phương thức</th>
                         <th class="text-center">Ngày thực hiện</th>
-                        <th class="text-center">Tên người dùng</th>
                         <th class="text-center">Trạng thái</th>
                       </tr>
                     </thead>
                     <tbody>
+
                       <tr th:each="deposit : ${deposits}" th:if="${deposit.status == 'SUCCESS'}">
-                        <td class="text-center" th:text="${deposit.id}"></td>
-                        <td class="text-center" th:text="${#numbers.formatDecimal(deposit.amount, 1, 'COMMA', 0, 'POINT')} + ' $'"></td>
-                        <td class="text-center" th:text="${deposit.createdAt != null ? #dates.format(deposit.createdAt, 'dd/MM/yyyy HH:mm') : '-'}"></td>
-                        <td class="text-center" th:text="${deposit.user != null ? deposit.user.username : '-'}"></td>
-                        <td class="text-center">
+                        <td class="text-center" th:text="'#' + ${deposit.id}"></td>
+                        <td class="text-center" th:text="'$' + ${#numbers.formatDecimal(deposit.amount, 1, 'COMMA', 2, 'POINT')}"></td>
+                         <td>
+                            <span th:switch="${deposit.paymentMethod}">
+                                <span th:case="'SEPAY'" class="badge bg-label-primary">VN BANKING</span>
+                                <span th:case="'USDT'" class="badge bg-label-success">USDT</span>
+                                <span th:case="*" th:text="${deposit.paymentMethod}"></span>
+                            </span>
+                        </td>
+                        <td class="text-center" th:text="${deposit.createdAt != null ? #dates.format(deposit.createdAt, 'HH:mm dd/MM/yyyy') : '-'}"></td>
+                       
+                        <td>
                             <span th:class="${deposit.status == 'SUCCESS' ? 'badge bg-success' : (deposit.status == 'PENDING' ? 'badge bg-warning' : 'badge bg-danger')}"
                                   th:text="${deposit.status == 'SUCCESS' ? 'Thành công' : (deposit.status == 'PENDING' ? 'Đang xử lý' : 'Thất bại')}">
                             </span>
                         </td>
+
+                    
                       </tr>
+                          
                       <tr th:if="${#lists.isEmpty(deposits)}">
                         <td class="text-center" colspan="5">Không có dữ liệu</td>
                       </tr>

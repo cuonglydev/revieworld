@@ -49,11 +49,11 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             newUser.setCreatedAt(currentDate);
             
             DefaultRank defaultRank = defaultRankService.findById(1);
-			if(defaultRank.isStatus()) {
+
 				if(defaultRank.getRank() != null) {
 					newUser.setRank(defaultRank.getRank());
 				}
-			}
+			
 			
 			newUser.setStatus("ACTIVE");
             userService.save(newUser);

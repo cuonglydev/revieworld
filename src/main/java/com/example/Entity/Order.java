@@ -34,6 +34,9 @@ public class Order {
 	@Column(name = "url", nullable = false)
 	private String url;
 	
+	@Column(name = "photo", length = 500)
+	private String photo;
+	
 	@Column(name = "description", nullable = true)
 	private String description;
 	
@@ -73,6 +76,15 @@ public class Order {
 	
 	@Column(name = "created_at")
 	private Date createdAt;
+	
+	@Column(name = "order_type_name")
+	private String orderTypeName;
+	
+	@Column(name = "order_type_url")
+	private String orderTypeUrl;
+	
+	@Column(name = "order_type_link")
+	private String orderTypeLink;
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id")

@@ -11,9 +11,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.Entity.Affiliate;
 import com.example.Entity.Deposit;
 import com.example.Entity.User;
+import com.example.Entity.UserAffiliate;
+import com.example.Entity.UserAffiliateItem;
+import com.example.Service.AffiliateService;
 import com.example.Service.DepositService;
+import com.example.Service.UserAffiliateItemService;
+import com.example.Service.UserAffiliateService;
 import com.example.Service.UserService;
 
 import java.util.Date;
@@ -25,7 +31,15 @@ public class UsdtCallbackController {
 	/*
 	 * @Autowired private UsdtService usdtService;
 	 */
+	
+	@Autowired
+	private AffiliateService affiliateService;
     
+	@Autowired
+	private UserAffiliateItemService userAffiliateItemService;
+	
+	@Autowired
+	private UserAffiliateService userAffiliateService;
     
     @Autowired
     private DepositService depositService;
@@ -61,9 +75,7 @@ public class UsdtCallbackController {
             return ResponseEntity.badRequest().body(Map.of("status", "error", "message", "Không tìm thấy giao dịch."));
         }
 
-        // Log trạng thái
-        System.out.println("Processing status: " + status);
-
+        
         // Xử lý theo trạng thái
         switch (status.toLowerCase()) {
             case "waiting":
@@ -81,6 +93,27 @@ public class UsdtCallbackController {
                     user.setAmount(user.getAmount() + receivedAmount);
                     userService.save(user);
                     deposit.setAmount(receivedAmount);
+                    
+                    Date currentDate = new Date();
+                  
+                		if(user.getUserAffiliate() != null) {
+                			UserAffiliate userAffiliate = userAffiliateService.findById(user.getUserAffiliate().getId());
+                			if(userAffiliate != null) {
+                    			User inviter = userService.findById(userAffiliate.getUser().getId());
+                    			
+                    			Double fee = deposit.getAmount();
+                    			UserAffiliateItem userAffiliateItem = new UserAffiliateItem();
+                    			userAffiliateItem.setAmount(fee);
+                    			userAffiliateItem.setCreatedAt(currentDate);
+                    			userAffiliateItem.setUser(inviter);
+                    			userAffiliateItem.setUserAffiliate(userAffiliate);
+                    			userAffiliateItemService.save(userAffiliateItem);
+                    			
+                    			userAffiliate.setAmount(userAffiliate.getAmount() + fee);
+                    			userAffiliateService.save(userAffiliate);
+                    		}
+                		}
+                	
                 } catch (NumberFormatException e) {
                     return ResponseEntity.badRequest().body(Map.of("status", "error", "message", "Số tiền không hợp lệ."));
                 }

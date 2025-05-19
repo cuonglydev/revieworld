@@ -30,5 +30,5 @@ public class Affiliate {
 	private Double percentage;
 	
 	@Column(name = "status")
-	private String status;
+	private Boolean status;
 }
