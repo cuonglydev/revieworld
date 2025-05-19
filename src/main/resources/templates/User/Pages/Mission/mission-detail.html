@@ -23,7 +23,7 @@
 			class="border-bottom border-secondary-subtle d-flex justify-content-between p-2">
 			<a href="#" id="goBack" class="text-secondary fs__12px"><i
 				class="fa-solid fa-arrow-left"></i> Trở về</a> <span class="fw-semibold"
-				th:text="${order.orderType.name}">Dịch vụ reviews map</span>
+				th:text="${order.orderTypeName}">Dịch vụ reviews map</span>
 		</div>
 	</div>
 
@@ -113,7 +113,7 @@
 
 			<div class="rounded shadow-sm p-2 bg-light mt-2">
 
-				<a class="btn btn-outline-primary mb-3 w-100">Xem hướng dẫn</a>
+				<a class="btn btn-outline-primary mb-3 w-100" th:href="${order.orderTypeLink}" target="_blank">Xem hướng dẫn</a>
 
 
 				<div class="mb-3">
@@ -137,7 +137,7 @@
 							<span class=" bg__orange__subtle rounded p-1">Bước 2:</span> <span>Dán
 								tên được copy ở trên vào thanh tìm kiếm ở trang dưới đây</span>
 						</div>
-					</label> <a class="btn w-100 btn__orange" th:href="${order.orderType.url}" target="_blink">Mở trang web</a>
+					</label> <a class="btn w-100 btn__orange" th:href="${order.orderTypeUrl}" target="_blank">Mở trang web</a>
 				</div>
 
 				<div class="mb-3">

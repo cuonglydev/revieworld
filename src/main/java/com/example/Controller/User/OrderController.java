@@ -34,12 +34,11 @@ public class OrderController {
 	@Autowired
 	private MissionService missionService;
 	
-	@GetMapping("/order/{orderTypeSlug}/{slug}")
-	public String orderPage(@PathVariable String orderTypeSlug, @PathVariable String slug, Model model) {
+	@GetMapping("/order/{slug}")
+	public String orderPage( @PathVariable String slug, Model model) {
 		User user = userService.getCurrentUser();
 		Order order = orderService.findBySlug(slug);
-		OrderType orderType = orderTypeService.findBySlug(orderTypeSlug);
-		if(orderType == null || order == null) {
+		if(order == null) {
 			return "redirect:/404";
 		}
 		model.addAttribute("user", user);

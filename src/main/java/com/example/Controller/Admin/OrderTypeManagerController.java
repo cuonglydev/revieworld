@@ -11,7 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.Common.Slugify;
+import com.example.Entity.Language;
+import com.example.Entity.Order;
 import com.example.Entity.OrderType;
+import com.example.Service.LanguageService;
+import com.example.Service.OrderService;
 import com.example.Service.OrderTypeService;
 import com.example.Service.UploadService;
 
@@ -24,6 +29,15 @@ public class OrderTypeManagerController {
 
     @Autowired
     private UploadService uploadService; // Service dùng để upload file ảnh
+    
+    @Autowired
+    private LanguageService languageService;
+    
+    @Autowired
+    private OrderService orderService;
+    
+    private Slugify slugify;
+    
 
     @Value("${upload.dir}")
     private String uploadDir; // Đường dẫn thư mục upload từ application.properties
@@ -31,13 +45,13 @@ public class OrderTypeManagerController {
     @Value("${static-folder}")
     private String staticFolder; // Thư mục tĩnh để lưu đường dẫn hình ảnh hiển thị trên web
 
-    // ========================= Hiển thị form tạo mới OrderType
-    // =========================
-    @GetMapping("/ordertype/new")
-    public String showCreateForm(Model model) {
-        model.addAttribute("orderType", new OrderType()); // Tạo đối tượng mới để binding form
-        return "Admin/Pages/OrderType/create"; // Trả về view form tạo mới
-    }
+//    // ========================= Hiển thị form tạo mới OrderType
+//    // =========================
+//    @GetMapping("/ordertype/new")
+//    public String showCreateForm(Model model) {
+//        model.addAttribute("orderType", new OrderType()); // Tạo đối tượng mới để binding form
+//        return "Admin/Pages/OrderType/create"; // Trả về view form tạo mới
+//    }
 
     // ========================= Hiển thị danh sách OrderType
     // =========================
@@ -56,7 +70,13 @@ public class OrderTypeManagerController {
     // ========================= Xóa một OrderType theo ID =========================
     @GetMapping("/ordertype/delete/{id}")
     public String deleteOrderType(@PathVariable int id, RedirectAttributes redirectAttributes) {
+    	List<Order> orders = orderService.findAllByOrderTypeId(id);
         try {
+        	for(Order order : orders) {
+        		Order getOrder = orderService.findById(order.getId());
+        		getOrder.setOrderType(null);
+        		orderService.save(getOrder);
+        	}
             orderTypeService.deleteOrderType(id); // Gọi service để xóa
             redirectAttributes.addFlashAttribute("success", "Xóa thành công");
         } catch (Exception e) {
@@ -67,12 +87,15 @@ public class OrderTypeManagerController {
 
     // ========================= Hiển thị form chỉnh sửa OrderType
     // =========================
-    @GetMapping("/ordertype/edit/{id}")
+    @GetMapping("/order-type/{id}")
     public String showEditForm(@PathVariable int id, Model model) {
-        OrderType orderType = orderTypeService.getOrderTypeById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid order type Id: " + id));
+        OrderType orderType = orderTypeService.getOrderTypeById(id).orElse(null);
         model.addAttribute("orderType", orderType); // Đưa dữ liệu orderType vào model để binding lên form
-        return "Admin/Pages/Order/edit-ordertype";
+        
+        List<Language> languages = languageService.findAllByOrderTypeId(id);
+        model.addAttribute("languages", languages);
+        
+        return "Admin/Pages/Order/order-type-detail";
     }
 
     // ========================= Tạo mới hoặc cập nhật OrderType
@@ -83,7 +106,7 @@ public class OrderTypeManagerController {
             RedirectAttributes redirectAttributes) {
         try {
             // Chuyển tên sang định dạng slug
-            String slug = orderTypeService.convertToSlugFormat(orderType.getName());
+            String slug = slugify.toSlug(orderType.getName());
             orderType.setSlug(slug);
 
             // =========== THÊM MỚI ===========
@@ -109,19 +132,19 @@ public class OrderTypeManagerController {
 
                 // =========== CẬP NHẬT ===========
             } else {
-                // Lấy dữ liệu orderType hiện tại
-                OrderType existing = orderTypeService.getOrderTypeById(orderType.getId())
-                        .orElseThrow(() -> new IllegalArgumentException("Invalid order type Id: " + orderType.getId()));
-
+               
+            	OrderType existing = orderTypeService.getOrderTypeById(orderType.getId()).orElse(null);
                 // Nếu có file ảnh mới => cập nhật
                 if (!photoFile.isEmpty()) {
                     String filePhoto = uploadService.saveFile(photoFile, "images");
                     orderType.setPhoto(staticFolder + "images/" + filePhoto);
                 } else {
-                    // Nếu không có file mới => giữ nguyên ảnh cũ
+                	 
                     orderType.setPhoto(existing.getPhoto());
                 }
 
+                orderType.setCreatedAt(existing.getCreatedAt());
+                
                 orderTypeService.saveOrderType(orderType); // Lưu lại thông tin đã cập nhật
                 redirectAttributes.addFlashAttribute("success", "Cập nhật thành công");
             }
@@ -129,6 +152,6 @@ public class OrderTypeManagerController {
             redirectAttributes.addFlashAttribute("danger", "Lỗi: " + e.getMessage()); // Xử lý lỗi
         }
 
-        return "redirect:/admin/order-type"; // Quay lại trang danh sách OrderType
+        return "redirect:/admin/order-type/" + orderType.getId(); // Quay lại trang danh sách OrderType
     }
 }

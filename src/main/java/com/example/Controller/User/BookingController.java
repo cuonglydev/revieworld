@@ -78,12 +78,13 @@ public class BookingController {
 	public String bookingDetailPage(@PathVariable String slug, Model model) {
 		User user = userService.getCurrentUser();
 		model.addAttribute("user", user);
-		
-		List<Language> languages = languageService.findAll();
-		model.addAttribute("languages", languages);
-		
 		OrderType orderType = orderTypeService.findBySlug(slug);
 		model.addAttribute("orderType", orderType);
+		
+		List<Language> languages = languageService.findAllByOrderTypeId(orderType.getId());
+		model.addAttribute("languages", languages);
+		
+		
 		return "User/Pages/Booking/booking-detail";
 	}
 
@@ -146,6 +147,10 @@ public class BookingController {
 
 			order.setLanguage(language.getName());
 			
+			order.setOrderTypeName(orderType.getName());
+			order.setOrderTypeLink(orderType.getLink());
+			order.setOrderTypeUrl(orderType.getUrl());
+			
 			order.setUser(user);
 			order.setOrderType(orderType);
 			orderService.save(order);
@@ -154,7 +159,7 @@ public class BookingController {
 			userService.save(user);
 			
 			redirectAttributes.addFlashAttribute("success", "Tạo đơn thành công!");
-			return "redirect:/order	/" + orderType.getSlug() + "/" + order.getSlug();
+			return "redirect:/order/" + order.getSlug();
 		}catch (Exception e) {
 			// TODO: handle exception
 			redirectAttributes.addFlashAttribute("danger", "Tạo đơn thất bại!");
