@@ -50,27 +50,27 @@ public class WithdrawController {
 		if (currentUser == null) {
 			return "redirect:/login";
 		}
-		List<Withdraw> withdraws = withdrawService.findApprovedByUserId(currentUser.getId());
-		if (withdraws == null) withdraws = new ArrayList<>();
+		List<Withdraw> withdraws = withdrawService.findByUserId(currentUser.getId());
 		model.addAttribute("withdraws", withdraws);
+		
 		return "User/Pages/Account/withdraw-history";
 	}
 	
 	@PostMapping("/account/withdraw")
 	public String processWithdraw(@RequestParam("amount") Double amount,
-								@RequestParam("bankId") Integer bankId,
+								@RequestParam("bankId") int bankId,
 								RedirectAttributes redirectAttributes) {
 		User currentUser = userService.getCurrentUser();
 		
 		// Validate amount
 		if (amount == null || amount < 5 || amount > 500) {
-			redirectAttributes.addFlashAttribute("error", "Số tiền rút phải từ $5 đến $500");
+			redirectAttributes.addFlashAttribute("danger", "Số tiền rút phải từ $5 đến $500");
 			return "redirect:/account/withdraw";
 		}
 		
 		// Check if user has enough bonus balance
 		if (currentUser.getBonusAmount() < amount) {
-			redirectAttributes.addFlashAttribute("error", "Số dư không đủ");
+			redirectAttributes.addFlashAttribute("danger", "Số dư không đủ");
 			return "redirect:/account/withdraw";
 		}
 		

@@ -21,4 +21,12 @@ public class PopupsService {
         List<Popups> list = popupsRepository.findByStatusTrue();
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
+    
+    public Popups findById(int id) {
+    	return popupsRepository.findById(id).orElse(null);
+    }
+    
+    public void save(Popups popups) {
+    	popupsRepository.save(popups);
+    }
 } 
