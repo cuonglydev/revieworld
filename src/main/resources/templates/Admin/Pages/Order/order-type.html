@@ -47,7 +47,7 @@
                               <div class="col-12">
                                 <label for="name" class="form-label">Tên</label>
                                 <input type="text" class="form-control" name="name" required />
-                               
+
                               </div>
                               <div class="col-md-6">
                                 <label for="feePercentage" class="form-label">Phí phần trăm</label>
@@ -59,7 +59,7 @@
                               </div>
                               <div class="col-md-6">
                                 <label for="photo" class="form-label">Ảnh</label>
-                                <input type="file" class="form-control" name="photoFile" required="required"/>
+                                <input type="file" class="form-control" name="photoFile" required="required" />
                               </div>
                               <!-- <div class="col-md-6">
                                 <label for="slug" class="form-label">Slug</label>
@@ -90,8 +90,8 @@
                     </div>
 
                   </div>
-                  
-               
+
+
                   <!-- Bảng danh sách OrderType -->
                   <div class="table-responsive ">
                     <table class="table table-striped align-middle" id="example">
@@ -103,18 +103,19 @@
                           <th>URL</th>
                           <th>Link</th>
                           <th>Ngày tạo</th>
-                          <th >Tùy chỉnh</th>
+                          <th>Tùy chỉnh</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr th:each="orderType : ${orderTypes}">
                           <td th:text="${orderType.id}"></td>
-                          <td >
-                          	<a th:href="@{/admin/order-type/{id}(id=${orderType.id})}" th:text="${orderType.name}" class="link-primary"></a>
+                          <td>
+                            <a th:href="@{/admin/order-type/{id}(id=${orderType.id})}" th:text="${orderType.name}"
+                              class="link-primary"></a>
                           </td>
                           <td th:text="${orderType.feePercentage} + '%'"></td>
-                          
-                        
+
+
                           <td class="text-break url-cell">
                             <a th:href="${orderType.url}" th:text="${orderType.url}" target="_blank"
                               th:if="${orderType.url}"></a>
@@ -124,33 +125,39 @@
                               th:if="${orderType.link}"></a>
                           </td>
                           <td th:text="${#dates.format(orderType.createdAt, 'HH:mm yyyy-MM-dd')}"></td>
-                          <td >
-                          
-                          <div class="dropdown">
-  <button class="btn btn-light px-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-   <i class='bx  bx-dots-vertical-rounded'  ></i>
-  </button>
-  <ul class="dropdown-menu ">
-    <li><a class="dropdown-item" th:href="@{/admin/order-type/{id}(id=${orderType.id})}">Cập nhật</a></li>
-    <li><button class="dropdown-item" th:attr="data-bs-target='#exampleModal-delete-' + ${orderType.id}" data-bs-toggle="modal">Xóa sàn</button></li>
-  </ul>
-</div>
+                          <td>
+
+                            <div class="dropdown">
+                              <button class="btn btn-light px-2" type="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                <i class='bx  bx-dots-vertical-rounded'></i>
+                              </button>
+                              <ul class="dropdown-menu ">
+                                <li><a class="dropdown-item" th:href="@{/admin/order-type/{id}(id=${orderType.id})}">Cập
+                                    nhật</a></li>
+                                <li><button class="dropdown-item"
+                                    th:attr="data-bs-target='#exampleModal-delete-' + ${orderType.id}"
+                                    data-bs-toggle="modal">Xóa sàn</button></li>
+                              </ul>
+                            </div>
                             <!-- Modal sửa OrderType -->
-                          
+
 
                             <!-- Modal xóa OrderType -->
-                          
+
                             <div class="modal fade" th:id="'exampleModal-delete-' + ${orderType.id}" tabindex="-1"
                               aria-labelledby="exampleModalLabel-delete" aria-hidden="true">
                               <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                   <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Xóa sàn  <span th:text="${orderType.name}"></span></h1>
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Xóa sàn <span
+                                        th:text="${orderType.name}"></span></h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                       aria-label="Close"></button>
                                   </div>
                                   <div class="modal-body">
-                                    Bạn có chắc rằng muốn xóa sàn này và tất cả ngôn ngữ thuộc sàn sẽ mất, tất cả đơn hàng đã đặt thuộc sàn vẫn giữ nguyên!
+                                    Bạn có chắc rằng muốn xóa sàn này và tất cả ngôn ngữ thuộc sàn sẽ mất, tất cả đơn
+                                    hàng đã đặt thuộc sàn vẫn giữ nguyên!
                                   </div>
                                   <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary"
@@ -161,7 +168,7 @@
                                 </div>
                               </div>
                             </div>
-                            
+
                           </td>
                         </tr>
                       </tbody>
@@ -171,7 +178,7 @@
               </div>
             </div>
           </div>
-          
+
           <div class="content-backdrop fade"></div>
         </div>
       </div>
