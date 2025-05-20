@@ -45,14 +45,17 @@ public class WithdrawService {
         return withdrawRepository.findAll();
     }
 
+    public Withdraw findById(int id) {
+    	return withdrawRepository.findById(id).orElse(null);
+    }
+    
     @Transactional
     public void approveWithdrawal(int id) {
         try {
-            Withdraw withdraw = withdrawRepository.findById(id)
-                .orElseThrow(() -> new WithdrawException("Không tìm thấy yêu cầu rút tiền"));
+            Withdraw withdraw = withdrawRepository.findById(id).orElse(null);
             
-            if (!"PENDING".equals(withdraw.getStatus())) {
-                throw new WithdrawException("Trạng thái yêu cầu không hợp lệ");
+            if (!"WAITING".equals(withdraw.getStatus())) {
+               return 0;
             }
 
             User user = withdraw.getUser();
@@ -85,8 +88,7 @@ public class WithdrawService {
     @Transactional
     public void rejectWithdrawal(int id, String reason) {
         try {
-            Withdraw withdraw = withdrawRepository.findById(id)
-                .orElseThrow(() -> new WithdrawException("Không tìm thấy yêu cầu rút tiền"));
+            Withdraw withdraw = withdrawRepository.findById(id).orElse(null);
             
             if (!"PENDING".equals(withdraw.getStatus())) {
                 throw new WithdrawException("Trạng thái yêu cầu không hợp lệ");

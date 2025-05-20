@@ -25,9 +25,9 @@
                     <td class="text-start" th:text="${#dates.format(withdraw.createAt, 'dd/MM/yyyy HH:mm')}"></td>
                     <td class="text-start" th:text="${withdraw.processedAt != null ? #dates.format(withdraw.processedAt, 'dd/MM/yyyy HH:mm') : '-'}"></td>
                     <td class="text-start">
-                        <span th:if="${withdraw.status} == 'PENDING'" class="badge rounded-pill" style="background-color: #ffc107; color: #fff; font-weight: 600; font-size: 15px; padding: 6px 16px;">ĐANG CHỜ</span>
-                        <span th:if="${withdraw.status} == 'APPROVED'" class="badge rounded-pill" style="background-color: #7ed957; color: #fff; font-weight: 600; font-size: 15px; padding: 6px 16px;">ĐÃ DUYỆT</span>
-                        <span th:if="${withdraw.status} == 'REJECTED'" class="badge rounded-pill" style="background-color: #ff4c2b; color: #fff; font-weight: 600; font-size: 15px; padding: 6px 16px;">ĐÃ TỪ CHỐI</span>
+                        <span th:if="${withdraw.status} == 'PENDING'" class="badge bg-secondary" >ĐANG CHỜ</span>
+                        <span th:if="${withdraw.status} == 'APPROVED'" class="badge bg-success">ĐÃ DUYỆT</span>
+                        <span th:if="${withdraw.status} == 'REJECTED'" class="badge bg-danger" >ĐÃ TỪ CHỐI</span>
                         <span th:if="${withdraw.status} == null" class="badge rounded-pill bg-secondary">Không xác định</span>
                     </td>
                     <td class="text-start" th:text="${withdraw.status == 'REJECTED' ? withdraw.note : ''}"></td>
