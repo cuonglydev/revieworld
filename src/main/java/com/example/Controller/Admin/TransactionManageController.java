@@ -28,6 +28,7 @@ public class TransactionManageController {
 		model.addAttribute("allRequests", withdrawService.findAll());
 		model.addAttribute("approvedRequests", withdrawService.findByStatus("APPROVED"));
 		model.addAttribute("rejectedRequests", withdrawService.findByStatus("REJECTED"));
+		model.addAttribute("withdraws", withdrawService.findAll());
 		return "Admin/Pages/Transaction/withdraw";
 	}
 
