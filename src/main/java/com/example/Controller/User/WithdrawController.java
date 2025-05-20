@@ -37,7 +37,7 @@ public class WithdrawController {
 		}
 		
 		// Add user's bank accounts to model
-		model.addAttribute("userBanks", userBankService.findByUserId(currentUser.getId()));
+		model.addAttribute("userBanks", userBankService.findAllByUserId(currentUser.getId()));
 		model.addAttribute("bonusBalance", currentUser.getBonusAmount());
 		
 		return "User/Pages/Account/withdraw";
@@ -75,8 +75,7 @@ public class WithdrawController {
 		}
 		
 		// Get selected bank account
-		UserBank userBank = userBankService.findById(bankId)
-			.orElseThrow(() -> new IllegalArgumentException("Tài khoản không tồn tại"));
+		UserBank userBank = userBankService.findById(bankId);
 		
 		// Verify ownership
 		if (userBank.getUser().getId() != currentUser.getId()) {

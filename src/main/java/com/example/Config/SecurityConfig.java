@@ -137,11 +137,8 @@ public class SecurityConfig {
 				.logoutUrl("/logout")
 				.logoutSuccessUrl("/login")
 			)
-			.userDetailsService(userAuthDetailsService)
-			.csrf(csrf -> csrf
-				.ignoringRequestMatchers("/login", "/register", "/logout")
-				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-			);
+			.userDetailsService(userAuthDetailsService);
+			
 		return http.build();
 	}
 	

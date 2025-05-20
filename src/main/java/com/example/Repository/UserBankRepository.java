@@ -10,12 +10,15 @@ import java.util.List;
 
 @Repository
 public interface UserBankRepository extends JpaRepository<UserBank, Integer> {
-    @Query("SELECT b FROM UserBank b WHERE b.user.id = :userId")
-    List<UserBank> findByUserId(@Param("userId") int userId);
-
-    @Query("SELECT CASE WHEN COUNT(b) > 0 THEN true ELSE false END FROM UserBank b WHERE b.user.id = :userId AND b.accountNumber = :accountNumber")
-    boolean existsByUserIdAndAccountNumber(@Param("userId") int userId, @Param("accountNumber") String accountNumber);
-
-    @Query("SELECT b FROM UserBank b WHERE b.user.id = :userId ORDER BY b.createdAt DESC")
-    List<UserBank> findByUserIdOrderByCreatedAtDesc(@Param("userId") int userId);
+	 List<UserBank> findAllByUserId(int userId);
+//    @Query("SELECT b FROM UserBank b WHERE b.user.id = :userId")
+//    List<UserBank> findByUserId(@Param("userId") int userId);
+//
+//    @Query("SELECT CASE WHEN COUNT(b) > 0 THEN true ELSE false END FROM UserBank b WHERE b.user.id = :userId AND b.accountNumber = :accountNumber")
+//    boolean existsByUserIdAndAccountNumber(@Param("userId") int userId, @Param("accountNumber") String accountNumber);
+//
+//    @Query("SELECT b FROM UserBank b WHERE b.user.id = :userId ORDER BY b.createdAt DESC")
+//    List<UserBank> findByUserIdOrderByCreatedAtDesc(@Param("userId") int userId);
+    
+   
 } 
