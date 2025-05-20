@@ -4,24 +4,33 @@
         <table id="withdraw-data" class="table table-striped text-nowrap w-100">
             <thead>
                 <tr>
-                    <th class="text-center">Mã rút</th>
-                    <th class="text-center">Số tiền</th>
-                    <th class="text-center">Thông tin tài khoản</th>
-                    <th class="text-center">Ngày tạo</th>
-                    <th class="text-center">Ngày xử lý</th>
+                    <th class="text-start">Mã rút</th>
+                    <th class="text-start">Số tiền</th>
+                    <th class="text-start">Thông tin tài khoản</th>
+                    <th class="text-start">Ngày tạo</th>
+                    <th class="text-start">Ngày xử lý</th>
+                    <th class="text-start">Trạng thái</th>
+                    <th class="text-start">Lý do từ chối</th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="withdraw : ${withdraws}">
-                    <td class="text-center" th:text="'#' + ${withdraw.id}"></td>
-                    <td class="text-center" th:text="' $' + ${#numbers.formatDecimal(withdraw.amount, 1, 'COMMA', 2, 'POINT')}"></td>
-                    <td class="text-center">
-                        <span th:text="${withdraw.accountNumber}"></span> - 
-                        <span th:text="${withdraw.accountName}"></span> - 
-                        <span th:text="${withdraw.bankName}"></span>
+                    <td class="text-start" th:text="'#' + ${withdraw.id}"></td>
+                    <td class="text-start" th:text="' $' + ${#numbers.formatDecimal(withdraw.amount, 1, 'COMMA', 2, 'POINT')}"></td>
+                    <td class="text-start">
+                        <div th:text="${withdraw.accountNumber}"></div>
+                        <div th:text="${withdraw.accountName}"></div>
+                        <div th:text="${withdraw.bankName}"></div>
                     </td>
-                    <td class="text-center" th:text="${#dates.format(withdraw.createAt, 'dd/MM/yyyy HH:mm')}"></td>
-                    <td class="text-center" th:text="${withdraw.processedAt != null ? #dates.format(withdraw.processedAt, 'dd/MM/yyyy HH:mm') : '-'}"></td>
+                    <td class="text-start" th:text="${#dates.format(withdraw.createAt, 'dd/MM/yyyy HH:mm')}"></td>
+                    <td class="text-start" th:text="${withdraw.processedAt != null ? #dates.format(withdraw.processedAt, 'dd/MM/yyyy HH:mm') : '-'}"></td>
+                    <td class="text-start">
+                        <span th:if="${withdraw.status} == 'PENDING'" class="badge rounded-pill" style="background-color: #ffc107; color: #fff; font-weight: 600; font-size: 15px; padding: 6px 16px;">ĐANG CHỜ</span>
+                        <span th:if="${withdraw.status} == 'APPROVED'" class="badge rounded-pill" style="background-color: #7ed957; color: #fff; font-weight: 600; font-size: 15px; padding: 6px 16px;">ĐÃ DUYỆT</span>
+                        <span th:if="${withdraw.status} == 'REJECTED'" class="badge rounded-pill" style="background-color: #ff4c2b; color: #fff; font-weight: 600; font-size: 15px; padding: 6px 16px;">ĐÃ TỪ CHỐI</span>
+                        <span th:if="${withdraw.status} == null" class="badge rounded-pill bg-secondary">Không xác định</span>
+                    </td>
+                    <td class="text-start" th:text="${withdraw.status == 'REJECTED' ? withdraw.note : ''}"></td>
                 </tr>
                 
               
