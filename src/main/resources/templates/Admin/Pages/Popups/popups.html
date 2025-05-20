@@ -69,7 +69,41 @@
                 <!-- Active Notifications Display -->
                 <div class="col-12">
                   <div class="card mb-4">
-                    <h5 class="card-header">Thông báo đang hiển thị</h5>
+                    <h5 class="card-header" id="popup-form-title">Thông báo đang hiển thị</h5>
+                    <form id="createPopupForm" th:action="@{/admin/popups/add}" method="POST">
+                      <div class="modal-body">
+                        <div class="row">
+                          <div class="col mb-3">
+                            <label for="title" class="form-label">Tiêu đề</label>
+                            <input type="text" id="title" name="title" class="form-control" placeholder="Nhập tiêu đề" required />
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col mb-3">
+                            <label for="content" class="form-label">Nội dung</label>
+                            <textarea id="content" name="content" class="form-control summernote" placeholder="Nhập nội dung" required></textarea>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6 mb-3">
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" id="active" name="active">
+                              <label class="form-check-label" for="active">
+                                Hiển thị ngay
+                              </label>
+                            </div>
+                          </div>
+                          <div class="col-md-6 mb-3">
+                            <p class="mb-0"><strong>Người tạo:</strong> <span th:text="${#authentication.name}"></span></p>
+                            <p class="mb-0"><small class="text-muted" th:text="${#temporals.format(#temporals.createNow(), 'dd-MM-yyyy HH:mm')}"></small></p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" id="popup-form-cancel" style="display:none">Hủy</button>
+                        <button type="submit" class="btn btn-primary" id="popup-form-submit" style="display:none">Cập nhật</button>
+                      </div>
+                    </form>
                     <div class="card-body">
                       <div class="row" th:each="popup : ${activePopups}">
                         <div class="col-12 mb-4">
@@ -154,14 +188,13 @@
                             <td th:utext="${popup.content}"></td>
                             <td th:text="${popup.status}"></td>
                             <td>
-                              <button type="button" class="btn btn-sm btn-primary" 
-                                      th:onclick="'openEditModal(' + ${popup.id} + ')'">
+                              <button type="button" class="btn btn-sm btn-primary" th:onclick="'openEditModal(' + ${popup.id} + ')'">
                                 <i class="bx bx-edit"></i>
                               </button>
-                              <button type="button" class="btn btn-sm btn-danger" 
-                                      th:onclick="'deletePopup(' + ${popup.id} + ')'">
+                              <button type="button" class="btn btn-sm btn-danger" th:onclick="'deletePopup(' + ${popup.id} + ')'">
                                 <i class="bx bx-trash"></i>
                               </button>
+                              
                             </td>
                           </tr>
                         </tbody>
@@ -265,8 +298,39 @@
               </div>
             </div>
 
+            <!-- Popup History Modal -->
+            <div class="modal fade" id="popupHistoryModal" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Lịch sử chỉnh sửa thông báo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Thời gian</th>
+                          <th>Tiêu đề</th>
+                          <th>Nội dung</th>
+                          <th>Người sửa</th>
+                          <th>Phục hồi</th>
+                        </tr>
+                      </thead>
+                      <tbody id="popup-history-body">
+                        <!-- Dữ liệu sẽ được render bằng JS -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <!-- JavaScript for handling actions -->
             <script>
+              let isEditMode = false;
+              let editingPopupId = null;
+
               function updatePopupStatus(checkbox) {
                 const popupId = checkbox.id.split('-')[2];
                 updatePopup(popupId, { active: checkbox.checked });
@@ -343,23 +407,41 @@
                 });
               }
 
-              // Xử lý form thêm mới popup
+              // Sửa hàm openEditModal để đổ dữ liệu lên form phía trên và hiện nút
+              function openEditModal(popupId) {
+                fetch(`/admin/popups/${popupId}`)
+                  .then(response => response.json())
+                  .then(popup => {
+                    document.getElementById('title').value = popup.title;
+                    $('#content').summernote('code', popup.content);
+                    document.getElementById('active').checked = popup.active;
+                    document.getElementById('popup-form-title').innerText = 'Cập nhật thông báo';
+                    document.getElementById('popup-form-submit').innerText = 'Cập nhật';
+                    document.getElementById('popup-form-submit').style.display = '';
+                    document.getElementById('popup-form-cancel').style.display = '';
+                    isEditMode = true;
+                    editingPopupId = popup.id;
+                  })
+                  .catch(error => {
+                    showToast('error', 'Có lỗi xảy ra khi tải dữ liệu');
+                  });
+              }
+
+              // Sửa sự kiện submit form "Thông báo đang hiển thị"
               document.getElementById('createPopupForm').addEventListener('submit', function(e) {
                 e.preventDefault();
-                
-                const formData = new FormData(this);
+                if (!(isEditMode && editingPopupId)) return; // Chỉ cho phép cập nhật khi ở chế độ chỉnh sửa
                 const data = {
-                  title: formData.get('title'),
-                  content: formData.get('content'),
-                  active: formData.get('active') === 'on',
+                  title: document.getElementById('title').value,
+                  content: $('#content').summernote('code'),
+                  active: document.getElementById('active').checked,
                   position: 'top-right',
                   duration: 5,
                   animation: 'fade',
                   createdBy: document.getElementById('currentUsername').value,
                   updatedBy: document.getElementById('currentUsername').value
                 };
-                
-                fetch('/admin/popups/add', {
+                fetch(`/admin/popups/${editingPopupId}/update`, {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',
@@ -370,18 +452,34 @@
                 .then(result => {
                   if (result.success) {
                     showToast('success', result.message);
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('createPopupModal'));
-                    modal.hide();
+                    resetPopupForm();
                     setTimeout(() => location.reload(), 1000);
                   } else {
                     showToast('error', result.message);
                   }
                 })
                 .catch(error => {
-                  console.error('Error:', error);
-                  showToast('error', 'Có lỗi xảy ra khi thêm mới');
+                  showToast('error', 'Có lỗi xảy ra khi cập nhật');
                 });
               });
+
+              // Nút Hủy
+              document.getElementById('popup-form-cancel').addEventListener('click', function() {
+                resetPopupForm();
+              });
+
+              // Hàm reset form về chế độ chỉ xem
+              function resetPopupForm() {
+                document.getElementById('title').value = '';
+                $('#content').summernote('code', '');
+                document.getElementById('active').checked = false;
+                document.getElementById('popup-form-title').innerText = 'Thông báo đang hiển thị';
+                document.getElementById('popup-form-submit').innerText = 'Cập nhật';
+                document.getElementById('popup-form-submit').style.display = 'none';
+                document.getElementById('popup-form-cancel').style.display = 'none';
+                isEditMode = false;
+                editingPopupId = null;
+              }
 
               function deletePopup(id) {
                 if (!confirm('Bạn có chắc chắn muốn xóa thông báo này?')) return;
@@ -404,61 +502,59 @@
                 });
               }
 
-              function openEditModal(popupId) {
-                // Fetch popup data
-                fetch(`/admin/popups/${popupId}`)
+              function openHistoryModal(popupId) {
+                fetch(`/admin/popups/${popupId}/history`)
                   .then(response => response.json())
-                  .then(popup => {
-                    document.getElementById('edit-popup-id').value = popup.id;
-                    document.getElementById('edit-title').value = popup.title;
-                    document.getElementById('edit-content').value = popup.content;
-                    document.getElementById('edit-active').checked = popup.active;
-                    
-                    // Show modal
-                    const editModal = new bootstrap.Modal(document.getElementById('editPopupModal'));
-                    editModal.show();
+                  .then(historyList => {
+                    const tbody = document.getElementById('popup-history-body');
+                    tbody.innerHTML = '';
+                    if (historyList.length === 0) {
+                      tbody.innerHTML = '<tr><td colspan="5" class="text-center">Chưa có lịch sử</td></tr>';
+                    } else {
+                      historyList.forEach(h => {
+                        tbody.innerHTML += `
+                          <tr>
+                            <td>${h.updatedAt ? h.updatedAt.replace('T', ' ').substring(0, 16) : ''}</td>
+                            <td>${h.title}</td>
+                            <td>${h.content}</td>
+                            <td>${h.updatedBy || ''}</td>
+                            <td>
+                              <button class="btn btn-sm btn-warning" onclick="restoreHistory(${popupId}, ${h.id})">Phục hồi</button>
+                            </td>
+                          </tr>
+                        `;
+                      });
+                    }
+                    const modal = new bootstrap.Modal(document.getElementById('popupHistoryModal'));
+                    modal.show();
                   })
-                  .catch(error => {
-                    console.error('Error:', error);
-                    showToast('error', 'Có lỗi xảy ra khi tải dữ liệu');
+                  .catch(() => {
+                    showToast('error', 'Không lấy được lịch sử');
                   });
               }
 
-              // Handle edit form submission
-              document.getElementById('editPopupForm').addEventListener('submit', function(e) {
-                e.preventDefault();
+              function restoreHistory(popupId, historyId) {
+                if (!confirm('Bạn có muốn mở phiên bản này để chỉnh sửa?')) return;
                 
-                const popupId = document.getElementById('edit-popup-id').value;
-                const data = {
-                  title: document.getElementById('edit-title').value,
-                  content: document.getElementById('edit-content').value,
-                  active: document.getElementById('edit-active').checked,
-                  updatedBy: document.getElementById('currentUsername').value
-                };
-                
-                fetch(`/admin/popups/${popupId}/update`, {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify(data)
-                })
-                .then(response => response.json())
-                .then(result => {
-                  if (result.success) {
-                    showToast('success', result.message);
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('editPopupModal'));
-                    modal.hide();
-                    setTimeout(() => location.reload(), 1000);
-                  } else {
-                    showToast('error', result.message);
-                  }
-                })
-                .catch(error => {
-                  console.error('Error:', error);
-                  showToast('error', 'Có lỗi xảy ra khi cập nhật');
-                });
-              });
+                fetch(`/admin/popups/${popupId}/history/${historyId}`)
+                  .then(response => response.json())
+                  .then(historyData => {
+                    // Fill the edit form with historical data
+                    document.getElementById('edit-popup-id').value = popupId;
+                    document.getElementById('edit-title').value = historyData.title;
+                    $('#edit-content').summernote('code', historyData.content);
+                    document.getElementById('edit-active').checked = historyData.active;
+                    
+                    // Show edit modal
+                    const editModal = new bootstrap.Modal(document.getElementById('editPopupModal'));
+                    editModal.show();
+                    
+                    // Close history modal
+                    const historyModal = bootstrap.Modal.getInstance(document.getElementById('popupHistoryModal'));
+                    historyModal.hide();
+                  })
+                  .catch(() => showToast('error', 'Có lỗi khi tải dữ liệu phiên bản cũ'));
+              }
 
               // Khởi tạo Summernote cho các textarea
               $(document).ready(function() {
