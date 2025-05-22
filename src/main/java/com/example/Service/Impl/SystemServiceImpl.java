@@ -206,10 +206,7 @@ public class SystemServiceImpl implements SystemService {
 
         // Validate support information
         if (settings.getSupportEmail() != null && !settings.getSupportEmail().isEmpty()) {
-            String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
-            if (!settings.getSupportEmail().matches(emailRegex)) {
-                throw new IllegalArgumentException("Địa chỉ email hỗ trợ không hợp lệ");
-            }
+            // Không kiểm tra định dạng, chỉ cần không rỗng là được
         }
     }
 } 
