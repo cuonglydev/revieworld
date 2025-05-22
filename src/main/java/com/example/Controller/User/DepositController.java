@@ -87,8 +87,8 @@ public class DepositController {
 		model.addAttribute("exchangeRate", usdToVndRate);
 		
 		// Get deposit limits from system settings
-		Double minDeposit = systemService.getMinDepositAmount();
-		Double maxDeposit = systemService.getMaxDepositAmount();
+		Double minDeposit = 1.0;
+		Double maxDeposit = 10000.0;
 		model.addAttribute("minDeposit", minDeposit);
 		model.addAttribute("maxDeposit", maxDeposit);
 		
@@ -122,8 +122,8 @@ public class DepositController {
 		}
 		
 		// Validate deposit amount against system limits
-		Double minDeposit = systemService.getMinDepositAmount();
-		Double maxDeposit = systemService.getMaxDepositAmount();
+		Double minDeposit = 1.0;
+		Double maxDeposit = 10000.0;
 		
 		if (amount < minDeposit || amount > maxDeposit) {
 			redirectAttributes.addFlashAttribute("danger", 

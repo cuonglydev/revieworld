@@ -55,6 +55,12 @@ public class SystemSetting {
     @Column(name = "currency_exchange_rate")
     private Double currencyExchangeRate;
 
+    @Column(name = "min_withdraw_amount")
+    private Double minWithdrawAmount;
+
+    @Column(name = "max_withdraw_amount")
+    private Double maxWithdrawAmount;
+
     @Column(name = "created_by")
     private String createdBy;
 

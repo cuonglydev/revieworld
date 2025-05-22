@@ -64,7 +64,7 @@
                   <div class="col-12">
                     <div class="card mb-4">
                       <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Cài đặt nạp tiền</h5>
+                        <h5 class="mb-0">Cài đặt tỉ giá</h5>
                       </div>
                       <div class="card-body">
                         <div class="table-responsive">
@@ -72,30 +72,6 @@
                             <tbody>
                               <tr>
                                 <td style="width: 40%">
-                                  <label for="minDeposit" class="form-label mb-0">Số tiền nạp tối thiểu</label>
-                                </td>
-                                <td>
-                                  <div class="input-group">
-                                    <span class="input-group-text">$</span>
-                                    <input type="number" class="form-control" id="minDeposit" name="minDeposit" 
-                                           th:value="${settings.minDepositAmount}" required step="0.01">
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <label for="maxDeposit" class="form-label mb-0">Số tiền nạp tối đa</label>
-                                </td>
-                                <td>
-                                  <div class="input-group">
-                                    <span class="input-group-text">$</span>
-                                    <input type="number" class="form-control" id="maxDeposit" name="maxDeposit" 
-                                           th:value="${settings.maxDepositAmount}" required step="0.01">
-                                  </div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td>
                                   <label for="usdToVndRate" class="form-label mb-0">Tỉ giá USD/VND</label>
                                 </td>
                                 <td>
@@ -104,6 +80,47 @@
                                     <input type="number" class="form-control" id="usdToVndRate" name="usdToVndRate" 
                                            th:value="${settings.usdToVndRate}" required step="0.01">
                                     <span class="input-group-text">VND</span>
+                                  </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Withdraw Settings Card -->
+                  <div class="col-12">
+                    <div class="card mb-4">
+                      <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Cài đặt rút tiền</h5>
+                      </div>
+                      <div class="card-body">
+                        <div class="table-responsive">
+                          <table class="table table-bordered">
+                            <tbody>
+                              <tr>
+                                <td style="width: 40%">
+                                  <label for="minWithdraw" class="form-label mb-0">Số tiền rút tối thiểu</label>
+                                </td>
+                                <td>
+                                  <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="minWithdraw" name="minWithdraw" 
+                                           th:value="${settings.minWithdrawAmount}" required step="0.01">
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label for="maxWithdraw" class="form-label mb-0">Số tiền rút tối đa</label>
+                                </td>
+                                <td>
+                                  <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="maxWithdraw" name="maxWithdraw" 
+                                           th:value="${settings.maxWithdrawAmount}" required step="0.01">
                                   </div>
                                 </td>
                               </tr>
@@ -258,9 +275,9 @@ document.getElementById('depositSettingsForm').addEventListener('submit', functi
     
     const formData = new FormData(this);
     const data = {
-        minDepositAmount: parseFloat(formData.get('minDeposit')),
-        maxDepositAmount: parseFloat(formData.get('maxDeposit')),
         usdToVndRate: parseFloat(formData.get('usdToVndRate')),
+        minWithdrawAmount: parseFloat(formData.get('minWithdraw')),
+        maxWithdrawAmount: parseFloat(formData.get('maxWithdraw')),
         commissionRate: parseFloat(formData.get('commissionRate')),
         newUserCommissionRate: parseFloat(formData.get('newUserCommission')),
         affiliateCommissionPercentage: parseFloat(formData.get('affiliateCommission')),

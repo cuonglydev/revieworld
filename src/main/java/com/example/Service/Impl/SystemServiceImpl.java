@@ -166,18 +166,8 @@ public class SystemServiceImpl implements SystemService {
         if (settings == null) {
             throw new IllegalArgumentException("Cài đặt không thể để trống");
         }
-
-        // Validate deposit amounts
-        if (settings.getMinDepositAmount() == null || settings.getMaxDepositAmount() == null) {
-            throw new IllegalArgumentException("Số tiền nạp tối thiểu và tối đa không thể để trống");
-        }
-        if (settings.getMinDepositAmount() < 0 || settings.getMaxDepositAmount() < 0) {
-            throw new IllegalArgumentException("Số tiền nạp không thể âm");
-        }
-        if (settings.getMinDepositAmount() > settings.getMaxDepositAmount()) {
-            throw new IllegalArgumentException("Số tiền nạp tối thiểu không thể lớn hơn số tiền nạp tối đa");
-        }
-
+        // Bỏ validate minDepositAmount và maxDepositAmount
+        // Chỉ validate các trường khác như tỉ giá, hoa hồng, liên hệ...
         // Validate exchange rates
         if (settings.getUsdToVndRate() == null) {
             throw new IllegalArgumentException("Tỉ giá USD/VND không thể để trống");
@@ -185,7 +175,6 @@ public class SystemServiceImpl implements SystemService {
         if (settings.getUsdToVndRate() <= 0) {
             throw new IllegalArgumentException("Tỉ giá USD/VND phải lớn hơn 0");
         }
-
         // Validate commission rates
         if (settings.getCommissionRate() == null || settings.getNewUserCommissionRate() == null || 
             settings.getAffiliateCommissionPercentage() == null || settings.getReferralCommissionRate() == null) {
@@ -203,10 +192,21 @@ public class SystemServiceImpl implements SystemService {
         if (settings.getReferralCommissionRate() < 0 || settings.getReferralCommissionRate() > 100) {
             throw new IllegalArgumentException("Tỉ lệ hoa hồng người được giới thiệu phải từ 0-100%");
         }
-
         // Validate support information
         if (settings.getSupportEmail() != null && !settings.getSupportEmail().isEmpty()) {
             // Không kiểm tra định dạng, chỉ cần không rỗng là được
         }
+    }
+
+    @Override
+    public Double getMinWithdrawAmount() {
+        SystemSetting settings = getLatestSettings();
+        return settings != null && settings.getMinWithdrawAmount() != null ? settings.getMinWithdrawAmount() : 5.0;
+    }
+
+    @Override
+    public Double getMaxWithdrawAmount() {
+        SystemSetting settings = getLatestSettings();
+        return settings != null && settings.getMaxWithdrawAmount() != null ? settings.getMaxWithdrawAmount() : 500.0;
     }
 } 

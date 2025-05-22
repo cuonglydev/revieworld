@@ -29,4 +29,7 @@ public interface SystemService {
     SystemSetting getLatestSettings();
     SystemSetting saveSettings(SystemSetting settings);
     void validateSettings(SystemSetting settings);
+
+    Double getMinWithdrawAmount();
+    Double getMaxWithdrawAmount();
 } 

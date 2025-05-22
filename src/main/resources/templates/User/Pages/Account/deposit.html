@@ -66,9 +66,9 @@
                                    id="amount" 
                                    name="amount" 
                                    placeholder="Số tiền"
-                                   th:min="${minDeposit}"
+                                   min="1"
                                    th:max="${maxDeposit}"
-                                   th:attr="data-min=${minDeposit},data-max=${maxDeposit}"
+                                   th:attr="data-min=1,data-max=${maxDeposit}"
                                    required 
                                    step="0.01">
                             <label for="amount">Số tiền</label>
@@ -78,7 +78,7 @@
                         <div class="exchange-rate">
                             <p>Tỉ giá: 1 USD = <span th:text="${exchangeRate}">0</span> VND</p>
                           
-                            <p class="text-muted">Giới hạn nạp: $<span th:text="${minDeposit}">0</span> - $<span th:text="${maxDeposit}">0</span></p>
+                            <p class="text-muted">Giới hạn nạp: $1 - $<span th:text="${maxDeposit}">0</span></p>
                         </div>
                     </div>
                   </div>
@@ -112,7 +112,7 @@
   <script src="/User/js/menu.js"></script>
   <script th:inline="javascript">
     const exchangeRate = /*[[${exchangeRate}]]*/ 0;
-    const minDeposit = /*[[${minDeposit}]]*/ 0;
+    const minDeposit = 1;
     const maxDeposit = /*[[${maxDeposit}]]*/ 0;
     
     function updateVNDAmount() {
