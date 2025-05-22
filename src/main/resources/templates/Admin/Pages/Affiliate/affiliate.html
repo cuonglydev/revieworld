@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  class="light-style layout-menu-fixed"
+  dir="ltr"
+  data-theme="theme-default"
+  data-assets-path="/Admin/assets/"
+  data-template="vertical-menu-template-free"
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+    />
+
+    <title>ADMIN - Cài đặt hoa hồng</title>
+
+    <meta name="description" content="" />
+
+    <div th:replace="~{Admin/Fragment/element :: head}"></div>
+  </head>
+
+  <body>
+    <div class="layout-wrapper layout-content-navbar">
+      <div class="layout-container">
+        <!-- Menu -->
+        <div th:replace="~{Admin/Fragment/element :: menu}"></div>
+        <!-- / Menu -->
+
+        <!-- Layout container -->
+        <div class="layout-page">
+          <!-- Navbar -->
+          <div th:replace="~{Admin/Fragment/element :: header}"></div>
+          <!-- / Navbar -->
+
+          <!-- Content wrapper -->
+          <div class="content-wrapper">
+            <!-- Content -->
+            <div class="container-xxl flex-grow-1 container-p-y">
+              <form id="affiliateSettingsForm" method="POST" onsubmit="return false;">
+                <!-- Status Card -->
+                <div class="row">
+                  <div class="col-12">
+                    <div class="card mb-4">
+                      <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Trạng thái chương trình</h5>
+                      </div>
+                      <div class="card-body">
+                        <div class="form-check form-switch">
+                          <input class="form-check-input" type="checkbox" id="programStatus" th:checked="${affiliate.status}">
+                          <label class="form-check-label" for="programStatus">Kích hoạt chương trình hoa hồng</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Commission Settings Card -->
+                <div class="row">
+                  <div class="col-12">
+                    <div class="card mb-4">
+                      <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Cài đặt tỷ lệ hoa hồng</h5>
+                      </div>
+                      <div class="card-body">
+                        <div class="table-responsive">
+                          <table class="table table-bordered">
+                            <tbody>
+                              <tr>
+                                <td style="width: 40%">
+                                  <label for="baseCommission" class="form-label mb-0">Tỷ lệ hoa hồng cơ bản</label>
+                                  <small class="text-muted d-block">Áp dụng cho tất cả người giới thiệu</small>
+                                </td>
+                                <td>
+                                  <div class="input-group">
+                                    <input type="number" class="form-control" id="baseCommission" name="baseCommissionPercentage" 
+                                           th:value="${affiliate.baseCommissionPercentage}" required step="0.01" min="0" max="100">
+                                    <span class="input-group-text">%</span>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label for="newUserCommission" class="form-label mb-0">Tỷ lệ hoa hồng người dùng mới</label>
+                                  <small class="text-muted d-block">Áp dụng cho người dùng mới đăng ký</small>
+                                </td>
+                                <td>
+                                  <div class="input-group">
+                                    <input type="number" class="form-control" id="newUserCommission" name="newUserCommissionPercentage" 
+                                           th:value="${affiliate.newUserCommissionPercentage}" required step="0.01" min="0" max="100">
+                                    <span class="input-group-text">%</span>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label for="referralCommission" class="form-label mb-0">Tỷ lệ hoa hồng người được giới thiệu</label>
+                                  <small class="text-muted d-block">Áp dụng cho người được giới thiệu</small>
+                                </td>
+                                <td>
+                                  <div class="input-group">
+                                    <input type="number" class="form-control" id="referralCommission" name="referralCommissionPercentage" 
+                                           th:value="${affiliate.referralCommissionPercentage}" required step="0.01" min="0" max="100">
+                                    <span class="input-group-text">%</span>
+                                  </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Limits Card -->
+                <div class="row">
+                  <div class="col-12">
+                    <div class="card mb-4">
+                      <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Giới hạn hoa hồng</h5>
+                      </div>
+                      <div class="card-body">
+                        <div class="table-responsive">
+                          <table class="table table-bordered">
+                            <tbody>
+                              <tr>
+                                <td style="width: 40%">
+                                  <label for="minAmount" class="form-label mb-0">Số tiền tối thiểu</label>
+                                  <small class="text-muted d-block">Số tiền tối thiểu để nhận hoa hồng</small>
+                                </td>
+                                <td>
+                                  <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="minAmount" name="minCommissionAmount" 
+                                           th:value="${affiliate.minCommissionAmount}" required step="0.01" min="0">
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label for="maxAmount" class="form-label mb-0">Số tiền tối đa</label>
+                                  <small class="text-muted d-block">Số tiền hoa hồng tối đa cho mỗi giao dịch</small>
+                                </td>
+                                <td>
+                                  <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="maxAmount" name="maxCommissionAmount" 
+                                           th:value="${affiliate.maxCommissionAmount}" required step="0.01" min="0">
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label for="waitingDays" class="form-label mb-0">Thời gian chờ</label>
+                                  <small class="text-muted d-block">Số ngày chờ trước khi nhận hoa hồng</small>
+                                </td>
+                                <td>
+                                  <div class="input-group">
+                                    <input type="number" class="form-control" id="waitingDays" name="commissionWaitingDays" 
+                                           th:value="${affiliate.commissionWaitingDays}" required min="0">
+                                    <span class="input-group-text">ngày</span>
+                                  </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Program Info Card -->
+                <div class="row">
+                  <div class="col-12">
+                    <div class="card mb-4">
+                      <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Thông tin chương trình</h5>
+                      </div>
+                      <div class="card-body">
+                        <div class="mb-3">
+                          <label for="description" class="form-label">Mô tả chương trình</label>
+                          <textarea class="form-control" id="description" name="description" rows="3" 
+                                    th:text="${affiliate.description}"></textarea>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="mb-3">
+                              <label for="startDate" class="form-label">Ngày bắt đầu</label>
+                              <input type="date" class="form-control" id="startDate" name="startDate" 
+                                     th:value="${#dates.format(affiliate.startDate, 'yyyy-MM-dd')}">
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="mb-3">
+                              <label for="endDate" class="form-label">Ngày kết thúc (không bắt buộc)</label>
+                              <input type="date" class="form-control" id="endDate" name="endDate" 
+                                     th:value="${affiliate.endDate != null ? #dates.format(affiliate.endDate, 'yyyy-MM-dd') : ''}">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <!-- / Content -->
+
+            <div class="content-backdrop fade"></div>
+          </div>
+          <!-- Content wrapper -->
+        </div>
+        <!-- / Layout page -->
+      </div>
+
+      <!-- Overlay -->
+      <div class="layout-overlay layout-menu-toggle"></div>
+    </div>
+    <!-- / Layout wrapper -->
+
+    <!-- Core JS -->
+    <div th:replace="~{Admin/Fragment/element :: bag}"></div>
+    <div th:replace="~{Admin/Fragment/element :: footer}"></div>
+
+    <script>
+      document.getElementById('affiliateSettingsForm').addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          const formData = new FormData(this);
+          const data = {
+              status: document.getElementById('programStatus').checked,
+              baseCommissionPercentage: parseFloat(formData.get('baseCommissionPercentage')),
+              newUserCommissionPercentage: parseFloat(formData.get('newUserCommissionPercentage')),
+              referralCommissionPercentage: parseFloat(formData.get('referralCommissionPercentage')),
+              minCommissionAmount: parseFloat(formData.get('minCommissionAmount')),
+              maxCommissionAmount: parseFloat(formData.get('maxCommissionAmount')),
+              commissionWaitingDays: parseInt(formData.get('commissionWaitingDays')),
+              description: formData.get('description'),
+              startDate: formData.get('startDate'),
+              endDate: formData.get('endDate') || null
+          };
+          
+          fetch('/admin/affiliate/save', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(data)
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  alert("Đã cập nhật thành công!");
+                  window.location.reload();
+              } else {
+                  alert("Lỗi: " + (data.message || "Có lỗi xảy ra khi lưu cài đặt"));
+              }
+          })
+          .catch(error => {
+              console.error('Error:', error);
+              alert("Lỗi: Có lỗi xảy ra khi lưu cài đặt");
+          });
+      });
+
+      // Handle program status change
+      document.getElementById('programStatus').addEventListener('change', function(e) {
+          fetch('/admin/affiliate/status', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+              },
+              body: 'status=' + this.checked
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (!data.success) {
+                  alert("Lỗi: " + data.message);
+                  this.checked = !this.checked;
+              }
+          })
+          .catch(error => {
+              console.error('Error:', error);
+              alert("Lỗi: Có lỗi xảy ra khi cập nhật trạng thái");
+              this.checked = !this.checked;
+          });
+      });
+    </script>
+  </body>
+</html> 

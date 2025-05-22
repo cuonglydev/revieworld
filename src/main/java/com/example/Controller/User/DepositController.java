@@ -31,6 +31,7 @@ import com.example.Security.SecurityUtils;
 import com.example.Service.AdminBankService;
 import com.example.Service.DepositService;
 import com.example.Service.RateService;
+import com.example.Service.SystemService;
 import com.example.Service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -46,10 +47,8 @@ public class DepositController {
 	@Autowired
 	private UserService userService;
 	
-
-	
 	@Autowired
-	private RateService rateService;
+	private SystemService systemService;
 	
 	@Autowired
 	private AdminBankService adminBankService;
@@ -83,8 +82,15 @@ public class DepositController {
 			return "redirect:/login";
 		}
 		
-		Rate rate = rateService.findByCountry("vi");
-		model.addAttribute("rate", rate);
+		// Get exchange rate from system settings
+		Double usdToVndRate = systemService.getUsdToVndRate();
+		model.addAttribute("exchangeRate", usdToVndRate);
+		
+		// Get deposit limits from system settings
+		Double minDeposit = systemService.getMinDepositAmount();
+		Double maxDeposit = systemService.getMaxDepositAmount();
+		model.addAttribute("minDeposit", minDeposit);
+		model.addAttribute("maxDeposit", maxDeposit);
 		
 		if (currentUser != null) {
 			model.addAttribute("currentBalance", currentUser.getAmount());
@@ -115,14 +121,23 @@ public class DepositController {
 			return "redirect:/login";
 		}
 		
-
+		// Validate deposit amount against system limits
+		Double minDeposit = systemService.getMinDepositAmount();
+		Double maxDeposit = systemService.getMaxDepositAmount();
+		
+		if (amount < minDeposit || amount > maxDeposit) {
+			redirectAttributes.addFlashAttribute("danger", 
+				String.format("Số tiền nạp phải từ $%.2f đến $%.2f", minDeposit, maxDeposit));
+			return "redirect:/account/deposit";
+		}
 		
 		if (!paymentMethod.equals("SEPAY") && !paymentMethod.equals("USDT")) {
 			redirectAttributes.addFlashAttribute("danger", "Phương thức thanh toán không hợp lệ");
 			return "redirect:/account/deposit";
 		}
 		
-		Rate rate = rateService.findByCountry("vi");
+		// Get exchange rate from system settings
+		Double usdToVndRate = systemService.getUsdToVndRate();
 		
 
 		try {
@@ -138,7 +153,7 @@ public class DepositController {
 				
 				// String paymentUrl = sepayService.createPayment(amount, orderId);
 				
-				String QR = qrUrl + "?acc=" + bankAccount + "&bank=" + bank + "&amount=" + (amount * rate.getRate()) + "&des=" + transactionId;
+				String QR = qrUrl + "?acc=" + bankAccount + "&bank=" + bank + "&amount=" + (amount * usdToVndRate) + "&des=" + transactionId;
 				
 				// Create deposit record
 				Deposit deposit = new Deposit();
@@ -153,8 +168,8 @@ public class DepositController {
 				
 				// redirectAttributes.addFlashAttribute("paymentUrl", paymentUrl);
 				
-				if(rate != null) {
-					redirectAttributes.addFlashAttribute("rate", rate);
+				if(usdToVndRate != null) {
+					redirectAttributes.addFlashAttribute("exchangeRate", usdToVndRate);
 				}
 				
 				
@@ -244,8 +259,9 @@ public class DepositController {
 			
 		model.addAttribute("deposit", deposit);
 		
-		Rate rate = rateService.findByCountry("vi");
-		model.addAttribute("rate", rate);
+		// Get exchange rate from system settings
+		Double usdToVndRate = systemService.getUsdToVndRate();
+		model.addAttribute("exchangeRate", usdToVndRate);
 		
 		return "User/Pages/Account/payment";
 	}

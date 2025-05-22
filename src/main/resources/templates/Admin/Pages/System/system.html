@@ -58,105 +58,176 @@
             <!-- Content -->
 
             <div class="container-xxl flex-grow-1 container-p-y">
-              <div class="row">
-                <!-- Default Deposit Settings -->
-                <div class="col-12">
-                  <div class="card mb-4">
-                    <h5 class="card-header">Cài đặt nạp tiền</h5>
-                    <div class="card-body">
-                      <form id="depositSettingsForm" method="POST" onsubmit="return false;">
-                        <div class="row">
-                          <div class="col-md-6 mb-3">
-                            <label for="minDeposit" class="form-label">Số tiền nạp tối thiểu</label>
-                            <div class="input-group">
-                              <span class="input-group-text">$</span>
-                              <input type="number" class="form-control" id="minDeposit" name="minDeposit" 
-                                     th:value="${settings.minDepositAmount}" required step="0.01">
-                            </div>
-                          </div>
-                          <div class="col-md-6 mb-3">
-                            <label for="maxDeposit" class="form-label">Số tiền nạp tối đa</label>
-                            <div class="input-group">
-                              <span class="input-group-text">$</span>
-                              <input type="number" class="form-control" id="maxDeposit" name="maxDeposit" 
-                                     th:value="${settings.maxDepositAmount}" required step="0.01">
-                            </div>
-                          </div>
+              <form id="depositSettingsForm" method="POST" onsubmit="return false;">
+                <div class="row">
+                  <!-- Deposit Settings Card -->
+                  <div class="col-12">
+                    <div class="card mb-4">
+                      <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Cài đặt nạp tiền</h5>
+                      </div>
+                      <div class="card-body">
+                        <div class="table-responsive">
+                          <table class="table table-bordered">
+                            <tbody>
+                              <tr>
+                                <td style="width: 40%">
+                                  <label for="minDeposit" class="form-label mb-0">Số tiền nạp tối thiểu</label>
+                                </td>
+                                <td>
+                                  <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="minDeposit" name="minDeposit" 
+                                           th:value="${settings.minDepositAmount}" required step="0.01">
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label for="maxDeposit" class="form-label mb-0">Số tiền nạp tối đa</label>
+                                </td>
+                                <td>
+                                  <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="maxDeposit" name="maxDeposit" 
+                                           th:value="${settings.maxDepositAmount}" required step="0.01">
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label for="usdToVndRate" class="form-label mb-0">Tỉ giá USD/VND</label>
+                                </td>
+                                <td>
+                                  <div class="input-group">
+                                    <span class="input-group-text">1 USD =</span>
+                                    <input type="number" class="form-control" id="usdToVndRate" name="usdToVndRate" 
+                                           th:value="${settings.usdToVndRate}" required step="0.01">
+                                    <span class="input-group-text">VND</span>
+                                  </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
                         </div>
+                      </div>
+                    </div>
+                  </div>
 
-                        <div class="row">
-                          <div class="col-md-6 mb-3">
-                            <label for="usdToVndRate" class="form-label">Tỉ giá USD/VND</label>
-                            <div class="input-group">
-                              <span class="input-group-text">1 USD =</span>
-                              <input type="number" class="form-control" id="usdToVndRate" name="usdToVndRate" 
-                                     th:value="${settings.usdToVndRate}" required step="0.01">
-                              <span class="input-group-text">VND</span>
-                            </div>
-                          </div>
-                          <div class="col-md-6 mb-3">
-                            <label for="commissionRate" class="form-label">Tỉ lệ hoa hồng chung</label>
-                            <div class="input-group">
-                              <input type="number" class="form-control" id="commissionRate" name="commissionRate" 
-                                     th:value="${settings.commissionRate}" required step="0.01">
-                              <span class="input-group-text">%</span>
-                            </div>
-                          </div>
+                  <!-- Commission Settings Card -->
+                  <div class="col-12">
+                    <div class="card mb-4">
+                      <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Cài đặt hoa hồng</h5>
+                      </div>
+                      <div class="card-body">
+                        <div class="table-responsive">
+                          <table class="table table-bordered">
+                            <tbody>
+                              <tr>
+                                <td style="width: 40%">
+                                  <label for="commissionRate" class="form-label mb-0">Tỉ lệ hoa hồng chung</label>
+                                </td>
+                                <td>
+                                  <div class="input-group">
+                                    <input type="number" class="form-control" id="commissionRate" name="commissionRate" 
+                                           th:value="${settings.commissionRate}" required step="0.01">
+                                    <span class="input-group-text">%</span>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label for="newUserCommission" class="form-label mb-0">Hoa hồng người dùng mới</label>
+                                  <small class="text-muted d-block">Tỉ lệ hoa hồng cho người dùng mới đăng ký</small>
+                                </td>
+                                <td>
+                                  <div class="input-group">
+                                    <input type="number" class="form-control" id="newUserCommission" name="newUserCommission" 
+                                           th:value="${settings.newUserCommissionRate}" required step="0.01">
+                                    <span class="input-group-text">%</span>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label for="affiliateCommission" class="form-label mb-0">Hoa hồng người giới thiệu</label>
+                                </td>
+                                <td>
+                                  <div class="input-group">
+                                    <input type="number" class="form-control" id="affiliateCommission" name="affiliateCommission" 
+                                           th:value="${settings.affiliateCommissionPercentage}" required step="0.01">
+                                    <span class="input-group-text">%</span>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label for="referralCommission" class="form-label mb-0">Hoa hồng người được giới thiệu</label>
+                                </td>
+                                <td>
+                                  <div class="input-group">
+                                    <input type="number" class="form-control" id="referralCommission" name="referralCommission" 
+                                           th:value="${settings.referralCommissionRate}" required step="0.01">
+                                    <span class="input-group-text">%</span>
+                                  </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
                         </div>
+                      </div>
+                    </div>
+                  </div>
 
-                        <div class="row">
-                          <div class="col-md-4 mb-3">
-                            <label for="newUserCommission" class="form-label">Hoa hồng người dùng mới</label>
-                            <div class="input-group">
-                              <input type="number" class="form-control" id="newUserCommission" name="newUserCommission" 
-                                     th:value="${settings.newUserCommissionRate}" required step="0.01">
-                              <span class="input-group-text">%</span>
-                            </div>
-                            <small class="text-muted">Tỉ lệ hoa hồng cho người dùng mới đăng ký</small>
-                          </div>
-                          <div class="col-md-4 mb-3">
-                            <label for="affiliateCommission" class="form-label">Hoa hồng người giới thiệu</label>
-                            <div class="input-group">
-                              <input type="number" class="form-control" id="affiliateCommission" name="affiliateCommission" 
-                                     th:value="${settings.affiliateCommissionPercentage}" required step="0.01">
-                              <span class="input-group-text">%</span>
-                            </div>
-                          </div>
-                          <div class="col-md-4 mb-3">
-                            <label for="referralCommission" class="form-label">Hoa hồng người được giới thiệu</label>
-                            <div class="input-group">
-                              <input type="number" class="form-control" id="referralCommission" name="referralCommission" 
-                                     th:value="${settings.referralCommissionRate}" required step="0.01">
-                              <span class="input-group-text">%</span>
-                            </div>
-                          </div>
+                  <!-- Support Contact Settings Card -->
+                  <div class="col-12">
+                    <div class="card mb-4">
+                      <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Cài đặt thông tin liên hệ</h5>
+                      </div>
+                      <div class="card-body">
+                        <div class="table-responsive">
+                          <table class="table table-bordered">
+                            <tbody>
+                              <tr>
+                                <td style="width: 40%">
+                                  <label for="supportTelegram" class="form-label mb-0">Link Telegram hỗ trợ</label>
+                                </td>
+                                <td>
+                                  <div class="input-group">
+                                    <span class="input-group-text">@</span>
+                                    <input type="text" class="form-control" id="supportTelegram" name="supportTelegram" 
+                                           th:value="${settings.supportTelegramLink}">
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label for="supportEmail" class="form-label mb-0">Email hỗ trợ</label>
+                                </td>
+                                <td>
+                                  <div class="input-group">
+                                    <span class="input-group-text">@</span>
+                                    <input type="email" class="form-control" id="supportEmail" name="supportEmail" 
+                                           th:value="${settings.supportEmail}">
+                                  </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
                         </div>
-
-                        <div class="row">
-                          <div class="col-md-6 mb-3">
-                            <label for="supportTelegram" class="form-label">Link Telegram hỗ trợ</label>
-                            <div class="input-group">
-                              <span class="input-group-text">@</span>
-                              <input type="text" class="form-control" id="supportTelegram" name="supportTelegram" 
-                                     th:value="${settings.supportTelegramLink}">
-                            </div>
-                          </div>
-                          <div class="col-md-6 mb-3">
-                            <label for="supportEmail" class="form-label">Email hỗ trợ</label>
-                            <div class="input-group">
-                              <span class="input-group-text">@</span>
-                              <input type="email" class="form-control" id="supportEmail" name="supportEmail" 
-                                     th:value="${settings.supportEmail}">
-                            </div>
-                          </div>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-                      </form>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+
+                <div class="row">
+                  <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                  </div>
+                </div>
+              </form>
             </div>
             <!-- / Content -->
 
