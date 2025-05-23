@@ -153,16 +153,8 @@
    <i class="fa-solid fa-headset"></i> Hỗ trợ
   </button>
   <ul class="dropdown-menu">
-    <li th:if="${systemSetting != null && systemSetting.supportTelegramLink != null && !systemSetting.supportTelegramLink.isEmpty()}">
-      <a class="dropdown-item d-flex align-items-center" th:href="${systemSetting.supportTelegramLink}" target="_blank">
-        <i class="fab fa-telegram me-2 text-primary"></i> Telegram
-      </a>
-    </li>
-    <li th:if="${systemSetting != null && systemSetting.supportEmail != null && !systemSetting.supportEmail.isEmpty()}">
-      <a class="dropdown-item d-flex align-items-center" th:href="${systemSetting.supportEmail}" target="_blank">
-        <i class="fas fa-headset me-2 text-success"></i> Hỗ trợ tại
-    </a>
-    </li>
+    <li><a class="dropdown-item d-flex align-items-center" href="#">Telegram</a></li>
+    <li><a class="dropdown-item d-flex align-items-center" href="#">Tham gia cộng đồng</a></li>
   </ul>
 </div>
 	</div>

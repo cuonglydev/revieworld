@@ -35,12 +35,11 @@
                         <span class="input-group-text">$</span>
                         <div class="form-floating">
                             <input type="number" class="form-control" id="amount" name="amount" 
-                                   placeholder="Số tiền" required 
-                                   th:attr="min=${minWithdraw},max=${maxWithdraw}" step="0.01">
+                                   placeholder="Số tiền" required min="5" max="500" step="0.01">
                             <label for="amount">Số tiền</label>
                         </div>
                     </div>
-                    <div class="form-text">Số tiền rút tối thiểu là $<span th:text="${minWithdraw}"></span> - $<span th:text="${maxWithdraw}"></span></div>
+                    <div class="form-text">Số tiền rút tối thiểu là $5 - $500</div>
                 </div>
 
                 <div class="mt-3">
