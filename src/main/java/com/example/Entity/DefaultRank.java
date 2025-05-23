@@ -25,6 +25,8 @@ public class DefaultRank {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
+	@Column(name = "status")
+	private Boolean status;
 	
 	@OneToOne
 	@JoinColumn(name = "rank")

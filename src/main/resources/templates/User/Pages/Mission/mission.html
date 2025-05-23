@@ -26,27 +26,65 @@
 					<div class="rounded shadow-sm bg-light p-2">
 
 						<div class="d-flex align-items-center justify-content-between">
-							<span class="text-secondary p-2"><i
-								class="fa-solid fa-sliders"></i></span>
-							<div class="d-flex">
-								<select class="form-select   me-2" style="width: 130px;" id="orderTypeSelect"
-									aria-label="Default select example">
-									<option selected value="">Tất cả sàn</option>
-									   <option th:each="item : ${orderTypes}" th:value="${item.name}" th:text="${item.name}"></option>
+							<h6 class="p-2 m-0">Nhiệm vụ</h6>
 
-								</select> <select id="statusSelect" class="form-select " style="width: 130px;"
-									aria-label="Default select example">
-									<option value="ACTIVE" selected="selected">Hoạt động</option>
-									<option value="PAUSING">Đang tạm dừng</option>
-									<option value="CLOSED">Đã hoàn tất</option>
-									<option value="">Tất cả</option>
-								</select>
+
+							<a class="btn btn-light text-secondary" data-bs-toggle="collapse"
+								href="#collapseExample" role="button" aria-expanded="false"
+								aria-controls="collapseExample"> <i
+								class="fa-solid fa-sliders"></i>
+							</a>
+
+
+
+						</div>
+
+
+						<div class="collapse mt-1 " id="collapseExample">
+
+							<div class="row">
+
+								<div class="col-12 col-md-4 mb-1">
+									<select class="form-select" id="workedSelect"
+										aria-label="Default select example">
+										<option selected value="false">Dành cho bạn</option>
+										<option value="">Tất cả</option>
+
+									</select>
+								</div>
+								<div class="col-12 col-md-4 mb-1">
+									<select class="form-select " id="orderTypeSelect"
+										aria-label="Default select example">
+										<option selected value="">Tất cả sàn</option>
+										<option th:each="item : ${orderTypes}" th:value="${item.name}"
+											th:text="${item.name}"></option>
+
+									</select>
+								</div>
+								<div class="col-12 col-md-4 mb-1">
+									<select id="statusSelect" class="form-select "
+										aria-label="Default select example">
+										<option value="ACTIVE" selected="selected">Hoạt động</option>
+										<option value="PAUSING">Đang tạm dừng</option>
+										<option value="CLOSED">Đã hoàn tất</option>
+										<option value="">Tất cả</option>
+									</select>
+								</div>
+
+
+
 							</div>
+
 						</div>
 					</div>
+
+
+
 				</div>
 
-				<div class="col-6 col-md-4 mb-3 order-item" th:each="item : ${orders}" th:attr="data-status=${item.status}, data-ordertype=${item.orderType != null ? item.orderType.name : ''}">
+				<div class="col-6 col-md-4 mb-3 order-item"
+					th:each="item : ${orders}"
+					th:attr="data-worked=${workedMap[item.id]}, data-status=${item.status}, data-ordertype=${item.orderType != null ? item.orderType.name : ''}">
 					<div class="bg-light rounded shadow-sm position-private">
 						<span class="position-absolute badge bg-success m-1 z-5"
 							style="z-index: 1" th:if="${item.status == 'ACTIVE'}">Hoạt
@@ -74,8 +112,11 @@
 									th:text="'$' + ${#numbers.formatDecimal(item.itemAmount,1,'COMMA',2 , 'POINT')}">$0.5</span>
 								<a class="btn btn-primary"
 									th:href="@{/mission/{slug} (slug=${item.slug})}"
-									th:if="${item.status == 'ACTIVE'}">Làm</a> <a
-									class="btn btn-outline-primary disabled"
+									th:if="${item.status == 'ACTIVE' and !workedMap[item.id]}">Làm</a>
+									<a class="btn btn-primary disabled"
+									th:href="@{/mission/{slug} (slug=${item.slug})}"
+									th:if="${item.status == 'ACTIVE' and workedMap[item.id]}">Đã làm</a>
+								<a class="btn btn-outline-primary disabled"
 									th:if="${item.status == 'PAUSING'}">Làm</a> <a
 									class="btn btn-outline-secondary disabled"
 									th:if="${item.status == 'CLOSED'}">Làm</a>
@@ -90,24 +131,28 @@
 		</div>
 	</section>
 
-<script>
+	<script>
 document.addEventListener("DOMContentLoaded", function () {
     const orderItems = document.querySelectorAll(".order-item");
     const orderTypeSelect = document.getElementById("orderTypeSelect");
     const statusSelect = document.getElementById("statusSelect");
+    const workedSelect = document.getElementById("workedSelect");
 
     function filterOrders() {
         const selectedType = orderTypeSelect.value;
         const selectedStatus = statusSelect.value;
+        const selectedWorked = workedSelect.value;
 
         orderItems.forEach(item => {
             const type = item.getAttribute("data-ordertype");
             const status = item.getAttribute("data-status");
+            const worked = item.getAttribute("data-worked");
 
             const matchType = !selectedType || selectedType === type;
             const matchStatus = !selectedStatus || selectedStatus === status;
+            const matchWorked = !selectedWorked || selectedWorked === worked;
 
-            if (matchType && matchStatus) {
+            if (matchType && matchStatus && matchWorked) {
                 item.style.display = "";
             } else {
                 item.style.display = "none";
@@ -119,8 +164,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     orderTypeSelect.addEventListener("change", filterOrders);
     statusSelect.addEventListener("change", filterOrders);
+    workedSelect.addEventListener("change", filterOrders);
 });
 </script>
+	<div th:replace="~{User/Fragment/element :: toast}"></div>
 	<div th:replace="~{User/Fragment/element :: footer}"></div>
 	<script src="/User/js/bootstrap.bundle.min.js"></script>
 	<script src="/User/js/menu.js"></script>

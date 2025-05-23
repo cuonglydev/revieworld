@@ -58,6 +58,9 @@ public class Order {
 	@Column(name = "quantity_done")
 	private int quantityDone;
 	
+	@Column(name = "worked_quantity")
+	private int workedQuantity;
+	
 	@Column(name = "turn_quantity")
 	private int turnQuantity;
 	

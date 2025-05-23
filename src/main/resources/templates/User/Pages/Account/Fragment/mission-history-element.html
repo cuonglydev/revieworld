@@ -2,26 +2,33 @@
 <div class="p-2">
                   <h5 class="fw-semibold">Lịch sử nhiệm vụ</h5>
 
-                  <div class="row">
-                    <div class="col-12 col-md-6">
+                  <div class="row" th:if="${missions.size > 0}">
+                    <div class="col-12 col-md-6 mb-2" th:each="item : ${missions}">
                       <div class="rounded shadow-sm p-2 border">
                         <div class="d-flex justify-content-between">
-                          <a class="fs-6 text-dark text-decoration-none">Review maps</a>
-                          <a class="btn btn-primary py-0 px-1" href="/account/mission-history/detail"><i
+                          <a th:href="@{/account/mission-history/{id} (id=${item.id})}" class="fs-6 text-dark text-decoration-none" th:text="${item.order.orderTypeName}">Review maps</a>
+                          <a th:href="@{/account/mission-history/{id} (id=${item.id})}" class="btn btn-primary py-0 px-1" href="/account/mission-history/detail"><i
                               class="fa-solid fa-eye"></i></a>
                         </div>
-                        <span class="text-secondary fs__12px">10:10 17/02/2025</span>
-                        <p class="text-truncate">map name</p>
+                        <span class="text-secondary fs__12px" th:text="${#dates.format(item.createdAt, 'HH:mm dd-MM-yyyy')}">10:10 17/02/2025</span>
+                        <div class="mb-3">
+                        <a th:href="@{/account/mission-history/{id} (id=${item.id})}" class="text-truncate text-decoration-none text-dark" th:text="${item.order.name}">map name</a>
+                        </div>
 
                         <div class="d-flex justify-content-between align-items-center">
-                          <span class="badge bg-success">Đã hoàn thành</span>
-                          <span class="text-success">+0.5$</span>
+                          <span class="badge bg-success" th:if="${item.status == 'SUCCESS'}">Đã hoàn thành</span>
+                          <span class="badge bg-danger" th:if="${item.status == 'REFUSED'}">Đã từ chối</span>
+                          <span class="badge bg-secondary" th:if="${item.status == 'WAITING'}">Đang chờ</span>
+                          <span class="badge bg-info" th:if="${item.status == 'REQUEST_EDIT'}">Yêu cầu chỉnh sửa</span>
+                          <span class="badge bg-warning" th:if="${item.status == 'REQUEST_REFUSE'}">Từ chối</span>
+                          <span class="badge bg-dark" th:if="${item.status == 'APPEAL'}">Đang kháng đơn</span>
+                          <span class="text-success" th:text="'$' + ${#numbers.formatDecimal(item.amount, 1, 'COMMA', 2, 'POINT')}">+0.5$</span>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <div class="d-flex flex-column align-items-center justify-content-center py-5">
+                  <div class="d-flex flex-column align-items-center justify-content-center py-5" th:if="${missions.size == 0}">
                     <img style="width: 50px; height: 50px;" src="/User/assets/photo/empty-icon.png">
                     <p class="text-secondary fs__12px">Nhiệm vụ đang trống</p>
                   </div>

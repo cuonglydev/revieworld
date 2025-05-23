@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -20,39 +21,27 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "mission")
-public class Mission {
+@Table(name = "mission_note")
+public class MissionNote {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	@Column(name = "status", nullable = false)
-	private String status;
+	@Column(name = "note", columnDefinition = "TEXT")
+	@Lob
+	private String note;
 	
-	@Column(name = "url", length = 500)
-	private String url;
+	@Column(name = "photo", length = 500)
+	private String photo;
 	
-	@Column(name = "order_photo", length = 500)
-	private String orderPhoto;
-	
-	@Column(name = "admin_note", nullable = true, length = 500)
-	private String adminNote;
-	
-	@Column(name = "amount")
-	private Double Amount;
-	
-	@Column(name = "status_date")
-	private Date statusDate;
+	@Column(name = "sender", nullable = false)
+	private String sender;
 	
 	@Column(name = "created_at")
 	private Date createdAt;
 	
 	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private User user;
-	
-	@ManyToOne
-	@JoinColumn(name = "order_id")
-	private Order order;
+	@JoinColumn(name = "mission_id")
+	private Mission mission;
 }

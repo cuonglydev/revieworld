@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reviewords</title>
+
+  <div th:replace="~{User/Fragment/element :: head}"></div>
+
+  <link rel="stylesheet" href="/User/css/index.css">
+
+
+</head>
+
+<body>
+
+   <div th:replace="~{User/Fragment/element :: header}"></div>
+
+<div class="container">
+		<div
+			class="border-bottom border-secondary-subtle d-flex justify-content-between p-2">
+			<a href="#" id="goBack" class="text-secondary fs__12px"><i
+				class="fa-solid fa-arrow-left"></i> Trở về</a> <span class="fw-semibold"
+				>Chi tiết nhiệm vụ</span>
+		</div>
+	</div>
+	
+   <section class="my-3">
+   	<div class="container">
+   		<div class="rounded shadow-sm bg-light p-2">
+   			<div class="row">
+  				<div class="col-12 col-md-6">
+  					<h6>yêu cầu của bạn</h6>
+  					<span th:text="${order.detail}"></span>
+  					<p class="text-secondary" th:if="${mission.orderPhoto != null}">Ảnh yêu cầu</p>
+  					<img th:src="${mission.orderPhoto}" th:if="${mission.orderPhoto != null}">
+  				</div>
+   			</div>
+   		</div>
+   	</div>
+   </section>
+
+
+  <div th:replace="~{User/Fragment/element :: footer}"></div>
+  <div th:replace="~{User/Fragment/element :: toast}"></div>
+  
+  <script src="/User/js/goBack.js"></script>
+  <script src="/User/js/bootstrap.bundle.min.js"></script>
+  <script src="/User/js/menu.js"></script>
+</body>
+
+</html>

@@ -86,7 +86,7 @@
 
 <form th:action="@{/admin/content/update}" method="post"
       enctype="multipart/form-data"
-      th:object="${content}"
+
       class="needs-validation"
       novalidate>
 
@@ -99,7 +99,9 @@
   <!-- Nội dung (Summernote) -->
   <div class="mb-3">
     <label for="summernote" class="form-label">Nội dung</label>
+
     <textarea id="summernote" name="content" class="form-control" rows="6"></textarea>
+
   </div>
 
   <!-- Tác giả -->

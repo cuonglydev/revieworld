@@ -56,10 +56,11 @@ public class WithdrawManageController {
     
     }
     
-    @PostMapping("path")
-    public String postMethodName(@RequestParam("id") int id ,@RequestParam("note") String note, RedirectAttributes redirectAttributes, HttpServletRequest referer) {
+    @PostMapping("/withdraw/refuse")
+    public String postMethodName(@RequestParam("id") int id ,@RequestParam("note") String note, RedirectAttributes redirectAttributes, HttpServletRequest request) {
         //TODO: process POST request
-      try {
+    	String referer = request.getHeader("Referer");
+    	try {
     	  Withdraw withdraw = withdrawService.findById(id);
     	  
     	  if(!"WAITING".equals(withdraw.getStatus())) {
@@ -72,7 +73,7 @@ public class WithdrawManageController {
     	  withdrawService.save(withdraw);
     	  
     	  User user = userService.findById(withdraw.getUser().getId());
-    	  user.setAmount(user.getAmount() + withdraw.getAmount());
+    	  user.setBonusAmount(user.getBonusAmount() + withdraw.getAmount());
     	  userService.save(user);
     	  
     	  redirectAttributes.addFlashAttribute("success", "Từ chối rút tiền thành công!");
@@ -85,17 +86,17 @@ public class WithdrawManageController {
     
     
 
-    @PostMapping("/withdraw/{id}/approve")
-    @ResponseBody
-    public ResponseEntity<?> approveRequest(@PathVariable int id) {
-        withdrawService.approveWithdrawal(id);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/withdraw/{id}/reject")
-    @ResponseBody
-    public ResponseEntity<?> rejectRequest(@PathVariable int id, @RequestParam String reason) {
-        withdrawService.rejectWithdrawal(id, reason);
-        return ResponseEntity.ok().build();
-    }
+//    @PostMapping("/withdraw/{id}/approve")
+//    @ResponseBody
+//    public ResponseEntity<?> approveRequest(@PathVariable int id) {
+//        withdrawService.approveWithdrawal(id);
+//        return ResponseEntity.ok().build();
+//    }
+//
+//    @PostMapping("/withdraw/{id}/reject")
+//    @ResponseBody
+//    public ResponseEntity<?> rejectRequest(@PathVariable int id, @RequestParam String reason) {
+//        withdrawService.rejectWithdrawal(id, reason);
+//        return ResponseEntity.ok().build();
+//    }
 } 

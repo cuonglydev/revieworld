@@ -91,7 +91,7 @@ public class WithdrawController {
 		withdraw.setAccountName(userBank.getAccountName());
 		withdraw.setAccountNumber(userBank.getAccountNumber());
 		withdraw.setUserBankMethod(userBank.getMethod());
-		withdraw.setStatus("PENDING");
+		withdraw.setStatus("WAITING");
 		withdraw.setCreateAt(new java.util.Date());
 		withdraw.setUser(currentUser);
 		

@@ -12,4 +12,5 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 	Order findBySlug(String slug);
 	List<Order> findAllByStatus(String status);
 	List<Order> findAllByOrderTypeId(int orderTypeId);
+	List<Order> findAllByUserIdAndStatusIn(int userId, List<String> status);
 }

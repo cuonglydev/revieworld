@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.example.Entity.Mission;
 import com.example.Entity.User;
 import com.example.Entity.UserBank;
 import com.example.Service.UserService;
@@ -23,6 +24,7 @@ import com.example.Service.WithdrawService;
 import jakarta.servlet.http.HttpServletRequest;
 
 import com.example.Service.DepositService;
+import com.example.Service.MissionService;
 import com.example.Service.UserBankService;
 
 import java.util.UUID;
@@ -51,6 +53,9 @@ public class AccountController {
 	
 	@Autowired
 	private UserBankService userBankService;
+	
+	@Autowired
+	private MissionService missionService;
 
 	@GetMapping("/account")
 	public String accountPage(Model model) {
@@ -73,6 +78,9 @@ public class AccountController {
 		
 		List<UserBank> userBanks = userBankService.findAllByUserId(currentUser.getId());
 		model.addAttribute("userBanks", userBanks);
+		
+		List<Mission> missions = missionService.findAllByUserId(currentUser.getId());
+		model.addAttribute("missions", missions);
 		
 		return "User/Pages/Account/account";
 	}
@@ -134,52 +142,52 @@ public class AccountController {
 		}
 	}
 
-	@GetMapping("/account/invite-link")
-	@ResponseBody
-	public ResponseEntity<?> getInviteLink() {
-		User currentUser = userService.getCurrentUser();
-		if (currentUser == null) {
-			return ResponseEntity.badRequest().body("User not found");
-		}
-
-		String inviteCode = currentUser.getInviteCode();
-		if (inviteCode == null || inviteCode.isEmpty()) {
-			return ResponseEntity.badRequest().body("Invite code not found");
-		}
-
-		String inviteLink = "hosting:8080/register?inviteCode=" + inviteCode;
-		return ResponseEntity.ok(inviteLink);
-	}
-
-	@PostMapping("/account/generate-invite")
-	@ResponseBody
-	public ResponseEntity<?> generateInviteCode() {
-		User currentUser = userService.getCurrentUser();
-		if (currentUser == null) {
-			return ResponseEntity.badRequest().body("User not found");
-		}
-
-		String newInviteCode = UUID.randomUUID().toString();
-		currentUser.setInviteCode(newInviteCode);
-		userService.save(currentUser);
-
-		return ResponseEntity.ok("New invite code generated successfully");
-	}
-
-	@GetMapping("/account/check-login")
-	@ResponseBody
-	public ResponseEntity<?> checkLogin() {
-		User currentUser = userService.getCurrentUser();
-		Map<String, Object> response = new HashMap<>();
-		
-		if (currentUser != null) {
-			response.put("loggedIn", true);
-			response.put("userId", currentUser.getId());
-			response.put("email", currentUser.getEmail());
-			return ResponseEntity.ok(response);
-		} else {
-			response.put("loggedIn", false);
-			return ResponseEntity.ok(response);
-		}
-	}
+//	@GetMapping("/account/invite-link")
+//	@ResponseBody
+//	public ResponseEntity<?> getInviteLink() {
+//		User currentUser = userService.getCurrentUser();
+//		if (currentUser == null) {
+//			return ResponseEntity.badRequest().body("User not found");
+//		}
+//
+//		String inviteCode = currentUser.getInviteCode();
+//		if (inviteCode == null || inviteCode.isEmpty()) {
+//			return ResponseEntity.badRequest().body("Invite code not found");
+//		}
+//
+//		String inviteLink = "hosting:8080/register?inviteCode=" + inviteCode;
+//		return ResponseEntity.ok(inviteLink);
+//	}
+//
+//	@PostMapping("/account/generate-invite")
+//	@ResponseBody
+//	public ResponseEntity<?> generateInviteCode() {
+//		User currentUser = userService.getCurrentUser();
+//		if (currentUser == null) {
+//			return ResponseEntity.badRequest().body("User not found");
+//		}
+//
+//		String newInviteCode = UUID.randomUUID().toString();
+//		currentUser.setInviteCode(newInviteCode);
+//		userService.save(currentUser);
+//
+//		return ResponseEntity.ok("New invite code generated successfully");
+//	}
+//
+//	@GetMapping("/account/check-login")
+//	@ResponseBody
+//	public ResponseEntity<?> checkLogin() {
+//		User currentUser = userService.getCurrentUser();
+//		Map<String, Object> response = new HashMap<>();
+//		
+//		if (currentUser != null) {
+//			response.put("loggedIn", true);
+//			response.put("userId", currentUser.getId());
+//			response.put("email", currentUser.getEmail());
+//			return ResponseEntity.ok(response);
+//		} else {
+//			response.put("loggedIn", false);
+//			return ResponseEntity.ok(response);
+//		}
+//	}
 }

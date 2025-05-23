@@ -30,7 +30,7 @@
 
 	<section class="mt-3">
 		<div class="container">
-			
+
 			<div class="rounded shadow-sm bg-light p-2 mt-2">
 				<div class="row">
 					<div class="col-12 col-md-4">
@@ -65,13 +65,45 @@
 										bài review thường thu hút rất nhiều người đọc, song mang lại
 										độ tin cậy cao hơn những bài quảng cáo, PR thông thường.</span>
 								</div>
+
+								<div th:if="${orderPhoto != null}">
+									<p class="mb-0 text-secondary">Ảnh yêu cầu đánh giá:</p>
+
+									<a class="w-100 rounded-top overflow-hidden d-flex"
+										type="button" style="height: 150px;" data-bs-toggle="modal"
+										data-bs-target="#exampleModal-photo"> <img
+										class="w-100 object-fit-cover h-100"
+										th:src="${orderPhoto.photo}">
+
+									</a> <a class="btn btn-dark w-100 rounded-top-0"
+   th:href="@{/download(photoPath=${orderPhoto.photo})}"
+   >
+   Tải ảnh xuống
+</a>
+
+
+									<div class="modal fade" id="exampleModal-photo" tabindex="-1"
+										aria-labelledby="exampleModalLabel" aria-hidden="true">
+										<div class="modal-dialog modal-dialog-centered modal-xl">
+											<div class="modal-content">
+
+												<div class="modal-body">
+													<img class="w-100 rounded"
+														th:src="${orderPhoto.photo}">
+
+												</div>
+
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
 
 							<div class="overflow-x-auto py-3 ">
 								<div class="mt-3 d-flex text-nowrap">
 
-									<div class="me-1 "  >
-										<span class=" p-2 bg-success text-light rounded-start " >
+									<div class="me-1 ">
+										<span class=" p-2 bg-success text-light rounded-start ">
 											<i class="fa-solid fa-dollar-sign ps-1 "></i>
 										</span> <span class="border p-2 rounded-end text-success"
 											th:text="${#numbers.formatDecimal(order.itemAmount, 1, 'COMMA', 2, 'POINT')}"></span>
@@ -83,17 +115,19 @@
 										</span> <span class="border p-2 rounded-end text-success">Hoạt
 											động</span>
 									</div>
-									
-										<div class="me-1 " th:if="${order.status == 'PAUSING'}">
-										<span class=" p-2 bg-dark text-light rounded-start ">
-											<i class="fa-solid fa-gears ps-1"></i>
-										</span> <span class="border p-2 rounded-end text-dark">Tạm dừng</span>
+
+									<div class="me-1 " th:if="${order.status == 'PAUSING'}">
+										<span class=" p-2 bg-dark text-light rounded-start "> <i
+											class="fa-solid fa-gears ps-1"></i>
+										</span> <span class="border p-2 rounded-end text-dark">Tạm
+											dừng</span>
 									</div>
-									
-										<div class="me-1 " th:if="${order.status == 'CLOSED'}">
+
+									<div class="me-1 " th:if="${order.status == 'CLOSED'}">
 										<span class=" p-2 bg-secondary text-light rounded-start ">
 											<i class="fa-solid fa-gears ps-1"></i>
-										</span> <span class="border p-2 rounded-end text-secondary">Đã hết</span>
+										</span> <span class="border p-2 rounded-end text-secondary">Đã
+											hết</span>
 									</div>
 
 									<div class="me-1 ">
@@ -111,10 +145,13 @@
 				</div>
 			</div>
 
-			<div class="rounded shadow-sm p-2 bg-light mt-2">
+			<form class="rounded shadow-sm p-2 bg-light mt-2"
+				th:action="@{/mission/create}" method="post">
 
-				<a class="btn btn-outline-primary mb-3 w-100" th:href="${order.orderTypeLink}" target="_blank">Xem hướng dẫn</a>
-
+				<a class="btn btn-outline-primary mb-3 w-100"
+					th:href="${order.orderTypeLink}" target="_blank">Xem hướng dẫn</a>
+				<input th:value="${order.id}" name="orderId" hidden>
+				<input th:value="${orderPhoto.photo}" name="orderPhoto" hidden>
 
 				<div class="mb-3">
 					<label for="exampleInputEmail1" class="form-label">
@@ -124,8 +161,8 @@
 						</div>
 					</label>
 					<div class="input-group mb-3">
-						<input type="text" class="form-control" readonly value="map name" th:value="${order.name}"
-							id="copyInput">
+						<input type="text" class="form-control" readonly
+							th:value="${order.name}" id="copyInput">
 						<button class="btn btn-outline-secondary" type="button"
 							id="copyButton">Copy</button>
 					</div>
@@ -137,7 +174,8 @@
 							<span class=" bg__orange__subtle rounded p-1">Bước 2:</span> <span>Dán
 								tên được copy ở trên vào thanh tìm kiếm ở trang dưới đây</span>
 						</div>
-					</label> <a class="btn w-100 btn__orange" th:href="${order.orderTypeUrl}" target="_blank">Mở trang web</a>
+					</label> <a class="btn w-100 btn__orange" th:href="${order.orderTypeUrl}"
+						target="_blank">Mở trang web</a>
 				</div>
 
 				<div class="mb-3">
@@ -156,19 +194,22 @@
 							<span class=" bg__orange__subtle rounded p-1">Bước 4:</span> <span>Dán
 								link bạn đã đánh giá và ấn xác nhận hoàn thành</span>
 						</div>
-					</label> <input type="text" class="form-control"
+					</label> <input type="text" class="form-control" name="url"
 						placeholder="Nhập link đã đánh giá ở đây" required>
 				</div>
 
-				<button class="btn btn-primary w-100">Xác nhận</button>
-			</div>
+				<button type="submit" class="btn btn-primary w-100"
+					th:if="${!worked}">Xác nhận</button>
+				<button type="button" class="btn btn-primary w-100"
+					disabled="disabled" th:if="${worked}">Đã làm</button>
+			</form>
 
 		</div>
 	</section>
 
 
 
-
+	<div th:replace="~{User/Fragment/element :: toast}"></div>
 	<div th:replace="~{User/Fragment/element :: footer}"></div>
 
 	<script src="/User/js/obfuscate-email.js"></script>
