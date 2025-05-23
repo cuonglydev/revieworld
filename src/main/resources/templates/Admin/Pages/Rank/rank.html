@@ -12,218 +12,272 @@
 =========================================================
  -->
 <!-- beautify ignore:start -->
-<html
-  lang="en"
-  class="light-style layout-menu-fixed"
-  dir="ltr"
-  data-theme="theme-default"
-  data-assets-path="/Admin/assets/"
-  data-template="vertical-menu-template-free"
->
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
-    />
+<html lang="en" class="light-style layout-menu-fixed" dir="ltr"
+	data-theme="theme-default" data-assets-path="/Admin/assets/"
+	data-template="vertical-menu-template-free">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>ADMIN - Analytics</title>
+<title>ADMIN - Analytics</title>
 
-    <meta name="description" content="" />
+<meta name="description" content="" />
 
-    <!-- Favicon -->
-   <div th:replace="~{Admin/Fragment/element :: head}"></div>
-   
+<!-- Favicon -->
+<div th:replace="~{Admin/Fragment/element :: head}"></div>
 
-  </head>
 
-  <body>
-    <!-- Layout wrapper -->
-    <div class="layout-wrapper layout-content-navbar">
-      <div class="layout-container">
-        <!-- Menu -->
-<div th:replace="~{Admin/Fragment/element :: menu}"></div>
-        <!-- / Menu -->
+</head>
 
-        <!-- Layout container -->
-        <div class="layout-page">
-          <!-- Navbar -->
+<body>
+	<!-- Layout wrapper -->
+	<div class="layout-wrapper layout-content-navbar">
+		<div class="layout-container">
+			<!-- Menu -->
+			<div th:replace="~{Admin/Fragment/element :: menu}"></div>
+			<!-- / Menu -->
 
-         <div th:replace="~{Admin/Fragment/element :: header}"></div>
+			<!-- Layout container -->
+			<div class="layout-page">
+				<!-- Navbar -->
 
-          <!-- / Navbar -->
+				<div th:replace="~{Admin/Fragment/element :: header}"></div>
 
-          <!-- Content wrapper -->
-          <div class="content-wrapper">
-            <!-- Content -->
+				<!-- / Navbar -->
 
-            <div class="container-xxl flex-grow-1 container-p-y ">
-              <div class="row">
-                <div class="col-xl ">
-                  <div class="card mb-4 p-2">
+				<!-- Content wrapper -->
+				<div class="content-wrapper">
+					<!-- Content -->
 
-                  
-    
-                    <!-- <a href="/admin/ranks/new" class="btn btn-primary mb-3">Add New Rank</a> -->
-                  <div class="d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0 py-3 ps-2">Mức hạng</h5>
-                    <button type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#exampleModal-new">
-                     Thêm mức hạng
-                    </button>
-                  </div>
-                    <div class="modal fade" id="exampleModal-new" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Thêm mức hạng</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                          </div>
-                          <div class="modal-body">
-                            <form th:action="@{/admin/rank/save}" method="post" class="needs-validation" novalidate>
-                              <div class="mb-3">
-                                
-                                  <label for="name" class="form-label">Tên</label>
-                                  <input type="text" class="form-control" id="name" name="name"  required/>
-                                  <div class="invalid-feedback">
-                                      Please enter a rank name.
-                                  </div>
-                              </div>
-                              <div class="mb-3">
-                                <label for="threshold" class="form-label">Ngưỡng</label>
-                                <div class="input-group">
-                                  <span class="input-group-text">$</span>
-                                  <input type="number" class="form-control" id="threshold" name="threshold" required/>
-                                </div>
-                              </div>
-                              
-                              <div class="mb-3">
-                                <label for="percentage" class="form-label">Phần trăm</label>
-                                <div class="input-group">
-                                  <span class="input-group-text">%</span>
-                                  <input type="number" class="form-control" id="percentage" name="percentage" required/>
-                                </div>
-                              </div>
+					<div class="container-xxl flex-grow-1 container-p-y ">
+						<div class="row">
+							<div class="col-xl ">
 
-                          
-                              <button type="submit" class="btn btn-primary">Tạo</button>
-                          </form>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <table class="table table-striped" id="example">
-                        <thead>
-                            <tr>
-                                <th scope="col">Tên</th>
-                                <th scope="col">Ngưỡng</th>
-                                <th scope="col">Phần trăm</th>
-                                <th scope="col">Hành động</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="rank : ${ranks}">
-                                <td th:text="${rank.name}"></td>
-                                <td th:text="'$ ' + ${#numbers.formatDecimal(rank.threshold, 0, 'COMMA', 2, 'POINT')}"></td>
-                                <td th:text="${#numbers.formatDecimal(rank.percentage, 0, 'COMMA', rank.threshold % 1 == 0 ? 0 : 2, 'POINT')} + '%'"></td>
-                                <td>
-                                 <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" th:attr="data-bs-target='#exampleModal-update' + ${rank.id}" >
-                                    Edit
-                                  </button>
-                                  <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" th:attr="data-bs-target='#exampleModal-delete' + ${rank.id}" >
-                                    Xóa
-                                  </button>
-                                  <div class="modal fade" th:id="'exampleModal-update' + ${rank.id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                      <div class="modal-content">
-                                        <div class="modal-header">
-                                          <h1 class="modal-title fs-5" id="exampleModalLabel">Sửa rank</h1>
-                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                          <form th:action="@{/admin/rank/save}" method="post" class="needs-validation" novalidate>
-                                            <div class="mb-3">
-                                              <input type="hidden" class="form-control" id="name" name="id" th:value="${rank.id}"  required/>
-                                                <label for="name" class="form-label">Tên</label>
-                                                <input type="text" class="form-control" id="name" name="name" th:value="${rank.name}"  required/>
-                                                <div class="invalid-feedback">
-                                                    Nhập tên rank.
-                                                </div>
-                                            </div>
-                                            <div class="mb-3">
-                                              <label for="percentage" class="form-label">Ngưỡng</label>
-                                              <div class="input-group">
-                                                <span class="input-group-text">$</span>
-                                                <input type="number" class="form-control" id="threshold" th:value="${rank.threshold}" name="threshold" required/>
-                                              </div>
-                                            </div>
-                                        
-                                            <div class="mb-3">
-                                              <label for="percentage" class="form-label">Phần trăm</label>
-                                              <div class="input-group">
-                                                <span class="input-group-text">%</span>
-                                                <input type="number" class="form-control" id="percentage" th:value="${rank.percentage}" name="percentage" required/>
-                                              </div>
-                                            </div>
-                                        
-                                            <button type="submit" class="btn btn-primary">Lưu</button>
-                                        </form>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                 
-                                  <div class="modal fade" th:id="'exampleModal-delete' + ${rank.id}" tabindex="-1" aria-labelledby="exampleModalLabel-delete" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                      <div class="modal-content">
-                                        <div class="modal-header">
-                                          <h1 class="modal-title fs-5" id="exampleModalLabel">Xóa</h1>
-                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                         Bạn có chắc rằng muốn xóa?
-                                        </div>
-                                        <div class="modal-footer">
-                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                          <button type="button" class="btn btn-danger btn-sm"><a href="/admin/ranks/delete/{id}" th:href="@{/admin/rank/delete/{id}(id=${rank.id})}" class="btn btn-danger btn-sm">Delete</a> </button>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                
-                                    <!-- <div href="/admin/ranks/edit/{id}" th:href="@{/admin/rank/edit/{id}(id=${rank.id})}" class="btn btn-warning btn-sm">Edit</div> -->
-                                    
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                  </div>
-                </div>
-             
-              </div>
-              
-            </div>
-            <!-- / Content -->
 
-            <!-- Footer -->
-            <!-- / Footer -->
 
-            <div class="content-backdrop fade"></div>
-          </div>
-          <!-- Content wrapper -->
-        </div>
-        <!-- / Layout page -->
-      </div>
 
-      <!-- Overlay -->
-      <div class="layout-overlay layout-menu-toggle"></div>
-    </div>
-    <!-- / Layout wrapper -->
+								<div class="card mb-2 p-2">
 
-    
-    <!-- Core JS -->
-    <!-- build:js assets/vendor/js/core.js -->
-    <div th:replace="~{Admin/Fragment/element :: bag}"></div>
-<div th:replace="~{Admin/Fragment/element :: footer}"></div>
-  </body>
+
+									<!-- <a href="/admin/ranks/new" class="btn btn-primary mb-3">Add New Rank</a> -->
+									<div class="d-flex justify-content-between align-items-center">
+										<h5 class="mb-0 py-3 ps-2">Mức hạng</h5>
+										<button type="button" class="btn btn-primary "
+											data-bs-toggle="modal" data-bs-target="#exampleModal-new">
+											Thêm mức hạng</button>
+									</div>
+									<div class="modal fade" id="exampleModal-new" tabindex="-1"
+										aria-labelledby="exampleModalLabel" aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h1 class="modal-title fs-5" id="exampleModalLabel">Thêm
+														mức hạng</h1>
+													<button type="button" class="btn-close"
+														data-bs-dismiss="modal" aria-label="Close"></button>
+												</div>
+												<div class="modal-body">
+													<form th:action="@{/admin/rank/save}" method="post"
+														class="needs-validation" novalidate>
+														<div class="mb-3">
+
+															<label for="name" class="form-label">Tên</label> <input
+																type="text" class="form-control" id="name" name="name"
+																required />
+															<div class="invalid-feedback">Please enter a rank
+																name.</div>
+														</div>
+														<div class="mb-3">
+															<label for="threshold" class="form-label">Ngưỡng</label>
+															<div class="input-group">
+																<span class="input-group-text">$</span> <input
+																	type="number" class="form-control" id="threshold"
+																	name="threshold" required />
+															</div>
+														</div>
+
+														<div class="mb-3">
+															<label for="percentage" class="form-label">Phần
+																trăm</label>
+															<div class="input-group">
+																<span class="input-group-text">%</span> <input
+																	type="number" class="form-control" id="percentage"
+																	name="percentage" required />
+															</div>
+														</div>
+
+
+														<button type="submit" class="btn btn-primary">Tạo</button>
+													</form>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<table class="table table-striped" id="example">
+										<thead>
+											<tr>
+												<th scope="col">Tên</th>
+												<th scope="col">Ngưỡng</th>
+												<th scope="col">Phần trăm</th>
+												<th scope="col">Hành động</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="rank : ${ranks}">
+												<td th:text="${rank.name}"></td>
+												<td
+													th:text="'$ ' + ${#numbers.formatDecimal(rank.threshold, 0, 'COMMA', 2, 'POINT')}"></td>
+												<td
+													th:text="${#numbers.formatDecimal(rank.percentage, 0, 'COMMA', rank.threshold % 1 == 0 ? 0 : 2, 'POINT')} + '%'"></td>
+												<td>
+													<button type="button" class="btn btn-success "
+														data-bs-toggle="modal"
+														th:attr="data-bs-target='#exampleModal-update' + ${rank.id}">
+														Chỉnh sửa</button>
+													<button type="button" class="btn btn-danger "
+														data-bs-toggle="modal"
+														th:attr="data-bs-target='#exampleModal-delete' + ${rank.id}">
+														Xóa</button>
+													<div class="modal fade"
+														th:id="'exampleModal-update' + ${rank.id}" tabindex="-1"
+														aria-labelledby="exampleModalLabel" aria-hidden="true">
+														<div class="modal-dialog">
+															<div class="modal-content">
+																<div class="modal-header">
+																	<h1 class="modal-title fs-5" id="exampleModalLabel">Sửa
+																		rank</h1>
+																	<button type="button" class="btn-close"
+																		data-bs-dismiss="modal" aria-label="Close"></button>
+																</div>
+																<div class="modal-body">
+																	<form th:action="@{/admin/rank/save}" method="post"
+																		class="needs-validation" novalidate>
+																		<div class="mb-3">
+																			<input type="hidden" class="form-control" id="name"
+																				name="id" th:value="${rank.id}" required /> <label
+																				for="name" class="form-label">Tên</label> <input
+																				type="text" class="form-control" id="name"
+																				name="name" th:value="${rank.name}" required />
+																			<div class="invalid-feedback">Nhập tên rank.</div>
+																		</div>
+																		<div class="mb-3">
+																			<label for="percentage" class="form-label">Ngưỡng</label>
+																			<div class="input-group">
+																				<span class="input-group-text">$</span> <input
+																					type="number" class="form-control" id="threshold"
+																					th:value="${rank.threshold}" name="threshold"
+																					required />
+																			</div>
+																		</div>
+
+																		<div class="mb-3">
+																			<label for="percentage" class="form-label">Phần
+																				trăm</label>
+																			<div class="input-group">
+																				<span class="input-group-text">%</span> <input
+																					type="number" class="form-control" id="percentage"
+																					th:value="${rank.percentage}" name="percentage"
+																					required />
+																			</div>
+																		</div>
+
+																		<button type="submit" class="btn btn-primary">Lưu</button>
+																	</form>
+																</div>
+															</div>
+														</div>
+													</div>
+
+													<div class="modal fade"
+														th:id="'exampleModal-delete' + ${rank.id}" tabindex="-1"
+														aria-labelledby="exampleModalLabel-delete"
+														aria-hidden="true">
+														<div class="modal-dialog modal-dialog-centered">
+															<div class="modal-content">
+																<div class="modal-header">
+																	<h1 class="modal-title fs-5" id="exampleModalLabel">Xóa</h1>
+																	<button type="button" class="btn-close"
+																		data-bs-dismiss="modal" aria-label="Close"></button>
+																</div>
+																<div class="modal-body">Bạn có chắc rằng muốn xóa?
+																</div>
+																<div class="modal-footer">
+																	<button type="button" class="btn btn-secondary"
+																		data-bs-dismiss="modal">Close</button>
+																	<button type="button" class="btn btn-danger btn-sm">
+																		<a href="/admin/ranks/delete/{id}"
+																			th:href="@{/admin/rank/delete/{id}(id=${rank.id})}"
+																			class="btn btn-danger btn-sm">Delete</a>
+																	</button>
+																</div>
+															</div>
+														</div>
+													</div> <!-- <div href="/admin/ranks/edit/{id}" th:href="@{/admin/rank/edit/{id}(id=${rank.id})}" class="btn btn-warning btn-sm">Edit</div> -->
+
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+
+
+
+
+								<div class="card mb-2 p-2">
+									<h5 class="mb-0">Mức hạng mặc định</h5>
+									<form class="mt-3" method="post"
+										action="/admin/default-rank/save">
+										<input th:value="${defaultRank.id}" name="id" hidden>
+										<div class="form-check form-switch">
+											<input class="form-check-input" type="checkbox" role="switch"
+												th:checked="${defaultRank.status}" name="status"> <label
+												class="form-check-label" for="switchCheckChecked">Sử
+												dụng thứ hạng mặc định?</label>
+										</div>
+										<div class="mb-3">
+											<label for="exampleFormControlInput1" class="form-label">Mức
+												hạng mặc định</label> <select class="form-select"
+												aria-label="Default select example" name="rank"
+												required="required">
+												<option selected value="">Chọn thứ hạng</option>
+												<option value="1" th:value="${item.id}"
+													th:each="item : ${ranks}" th:text="${item.name}"
+													th:selected="${item.id == defaultRank.rank.id}">One</option>
+											</select>
+										</div>
+
+										<button type="submit" class="btn btn-primary">Cập
+											nhật</button>
+									</form>
+								</div>
+							</div>
+
+						</div>
+
+					</div>
+					<!-- / Content -->
+
+					<!-- Footer -->
+					<!-- / Footer -->
+
+					<div class="content-backdrop fade"></div>
+				</div>
+				<!-- Content wrapper -->
+			</div>
+			<!-- / Layout page -->
+		</div>
+
+		<!-- Overlay -->
+		<div class="layout-overlay layout-menu-toggle"></div>
+	</div>
+	<!-- / Layout wrapper -->
+
+
+	<!-- Core JS -->
+	<!-- build:js assets/vendor/js/core.js -->
+	<div th:replace="~{Admin/Fragment/element :: bag}"></div>
+	<div th:replace="~{Admin/Fragment/element :: footer}"></div>
+</body>
 </html>

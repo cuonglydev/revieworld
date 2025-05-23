@@ -25,11 +25,6 @@ public class UserAuthDetailsService implements UserDetailsService {
 	    if (user == null) {
 	        throw new UsernameNotFoundException("Email không tồn tại: " + email);
 	    }
-	    
-	    System.out.println("Đang xác thực: " + email);
-	    System.out.println("Hash trong DB: " + user.getPassword());
-	    
-	   
 
 	    return new CustomUserDetails(user);
 	}

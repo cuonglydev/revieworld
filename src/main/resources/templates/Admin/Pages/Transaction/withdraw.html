@@ -182,7 +182,8 @@
       <div class="modal-body pb-0">
       
       <input th:value="${item.id}" name="id" hidden>
-        <span>Xác nhận từ chối rút số tiền <text class="fw-semibold" th:text="'$' + ${#numbers.formatDecimal(item.amount, 1 , 'COMMA', 2 ,'POINT')}"></text> từ tài khoản <text  class="fw-semibold" th:text="${item.user.email}"></text> </span>
+        <span>Xác nhận từ chối rút số tiền <text class="fw-semibold" th:text="'$' + ${#numbers.formatDecimal(item.amount, 1 , 'COMMA', 2 ,'POINT')}"></text> từ tài khoản <text  class="fw-semibold" th:text="${item.user.email}">
+        và số tiền sẽ được hoàn trả về tài khoản người dùng.</text> </span>
       <div class="mb-3">
   <textarea name="note" class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Lý do từ chối"></textarea>
 </div>
@@ -233,9 +234,9 @@
                           
                             <td>
                               <span th:class="${'badge bg-' + 
-                                (item.status == 'PENDING' ? 'warning' : 
+                                (item.status == 'WAITING' ? 'secondary' : 
                                 (item.status == 'APPROVED' ? 'success' : 'danger'))}"
-                                th:text="${item.status == 'PENDING' ? 'Đang chờ' : 
+                                th:text="${item.status == 'WAITING' ? 'Đang chờ' : 
                                         (item.status == 'APPROVED' ? 'Đã duyệt' : 'Đã từ chối')}">
                               </span>
                             </td>

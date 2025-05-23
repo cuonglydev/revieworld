@@ -18,9 +18,9 @@
                         <td class="text-start" th:text="'$' + ${#numbers.formatDecimal(deposit.amount, 1, 'COMMA', 2, 'POINT')}"></td>
                          <td>
                             <span th:switch="${deposit.paymentMethod}">
-                                <span th:case="'SEPAY'" class="badge bg-primary text-white" style="font-size: 14px; font-weight: 600; padding: 6px 16px;">VN BANKING</span>
-                                <span th:case="'USDT'" class="badge bg-success text-white" style="font-size: 14px; font-weight: 600; padding: 6px 16px;">USDT</span>
-                                <span th:case="*" class="badge bg-secondary text-white" style="font-size: 14px; font-weight: 600; padding: 6px 16px;" th:text="${deposit.paymentMethod}"></span>
+                                <span th:case="'SEPAY'" class="badge bg-primary text-white" >VN BANKING</span>
+                                <span th:case="'USDT'" class="badge bg-success text-white">USDT</span>
+                                <span th:case="*"  th:text="${deposit.paymentMethod}"></span>
                             </span>
                         </td>
                         <td class="text-start" th:text="${deposit.createdAt != null ? #dates.format(deposit.createdAt, 'HH:mm dd/MM/yyyy') : '-'}"></td>

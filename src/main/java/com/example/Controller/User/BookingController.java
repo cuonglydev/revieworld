@@ -1,5 +1,6 @@
 package com.example.Controller.User;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -20,10 +21,12 @@ import com.example.Common.TokenGenerator;
 import com.example.Entity.DefaultRank;
 import com.example.Entity.Language;
 import com.example.Entity.Order;
+import com.example.Entity.OrderPhoto;
 import com.example.Entity.OrderType;
 import com.example.Entity.User;
 import com.example.Service.DefaultRankService;
 import com.example.Service.LanguageService;
+import com.example.Service.OrderPhotoService;
 import com.example.Service.OrderService;
 import com.example.Service.OrderTypeService;
 import com.example.Service.UploadService;
@@ -53,6 +56,9 @@ public class BookingController {
 	@Autowired
 	private TokenGenerator tokenGenerator;
 	
+	@Autowired
+	private OrderPhotoService orderPhotoService;
+	
 	
 	@Value("${upload.dir}")
 	private String uploadDir;
@@ -69,7 +75,8 @@ public class BookingController {
 		List<OrderType> orderTypes = orderTypeService.getAllOrderTypes();
 		model.addAttribute("orderTypes", orderTypes);
 		
-		List<Order> orders = orderService.findAllByUserAndStatus(user.getId(), "ACTIVE");
+		List<String> statuses = Arrays.asList("ACTIVE", "PAUSE");
+		List<Order> orders = orderService.findAllByUserIdAndStatusIn(user.getId(),  statuses);
 		model.addAttribute("orders", orders);
 		return "User/Pages/Booking/booking";
 	}
@@ -90,6 +97,7 @@ public class BookingController {
 
 	@PostMapping("/booking/create")
 	public String createBooking(@ModelAttribute Order order, @RequestParam(value = "file") MultipartFile photo,
+			@RequestParam(value = "photos", required = false) List<MultipartFile> photos,
 			@RequestParam("languageId") int languageId, @RequestParam("orderTypeId") int orderTypeId, RedirectAttributes redirectAttributes) {
 		User user = userService.getCurrentUser();
 		Date currentDate = new Date();
@@ -99,6 +107,7 @@ public class BookingController {
 		
 		String slugToken = tokenGenerator.generateToken();
 		
+	
 		
 		try {
 			
@@ -154,6 +163,17 @@ public class BookingController {
 			order.setUser(user);
 			order.setOrderType(orderType);
 			orderService.save(order);
+			
+			for(MultipartFile file : photos) {
+				if(file != null) {
+					OrderPhoto orderPhoto = new OrderPhoto();
+					String urlFileName = uploadService.saveFile(file, "images");
+					orderPhoto.setPhoto(staticFolder + "images/" + urlFileName);
+					orderPhoto.setOrder(order);
+					orderPhoto.setStatus("ACTIVE");
+					orderPhotoService.save(orderPhoto);
+				}
+			}
 			
 			user.setAmount(user.getAmount() - totalAmount);
 			userService.save(user);

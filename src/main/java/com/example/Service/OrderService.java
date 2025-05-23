@@ -40,6 +40,10 @@ public class OrderService {
     	return orderRepository.findAllByOrderTypeId(orderTypeId);
     }
     
+    public List<Order> findAllByUserIdAndStatusIn(int userId, List<String> statuses){
+    	return orderRepository.findAllByUserIdAndStatusIn(userId, statuses);
+    }
+    
     public void save(Order order) {
     	orderRepository.save(order);
     }
