@@ -1,8 +1,14 @@
 package com.example.Controller.Admin;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.example.Service.UploadService;
+
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -11,9 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/admin")
 public class ContentManageController {
 
-<<<<<<< Updated upstream
-	
-=======
+
     @Value("${static-folder}")
     private String staticFolder;
     @Autowired
@@ -123,5 +127,4 @@ public class ContentManageController {
 
         return "redirect:/admin/content";
     }
->>>>>>> Stashed changes
 }
