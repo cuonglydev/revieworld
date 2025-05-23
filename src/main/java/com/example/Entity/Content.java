@@ -2,6 +2,8 @@ package com.example.Entity;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,20 +27,21 @@ public class Content {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
+
 	@Column(name = "content", columnDefinition = "TEXT")
 	@Lob
 	private String content;
-	
+
 	@Column(name = "title", nullable = false)
 	private String title;
-	
+
 	@Column(name = "photo")
 	private String photo;
-	
+
 	@Column(name = "author")
 	private String author;
-	
+
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Column(name = "created_at")
 	private Date createdAt;
 }

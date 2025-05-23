@@ -10,16 +10,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/admin")
 public class AdminAuthController {
-	
 
+	@GetMapping("/login")
+	public String loginPage(@RequestParam(value = "error", required = false) String error,
+			Model model) {
+		if (error != null) {
+			model.addAttribute("danger", "Đăng nhập thất bại. Kiểm tra lại thông tin!");
+		}
+		return "Admin/Auth/login";
+	}
 
-	  @GetMapping("/login")
-	    public String loginPage(@RequestParam(value = "error", required = false) String error,
-	                            Model model) {
-	        if (error != null) {
-	            model.addAttribute("danger", "Đăng nhập thất bại. Kiểm tra lại thông tin!");
-	        }
-	        return "Admin/Auth/login"; 
-	    }
-	
 }

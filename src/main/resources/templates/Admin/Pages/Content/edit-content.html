@@ -1,4 +1,4 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 
 <!-- =========================================================
 * Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
@@ -82,107 +82,52 @@
             <!-- Content -->
             <div class="container-xxl flex-grow-1 container-p-y">
               <div class="row">
-   <h2 class="text-primary mb-4">📝 Thêm Content</h2>
+                
+              </div>
+            </div>
+            <!-- / Content -->
+<h2 class="text-primary mb-4">✏️ Chỉnh sửa Content</h2>
 
 <form th:action="@{/admin/content/update}" method="post"
       enctype="multipart/form-data"
-
+      th:object="${content}"
       class="needs-validation"
       novalidate>
+  <!-- ID ẩn để cập nhật đúng bản ghi -->
+  <input type="hidden" th:field="*{id}" />
 
   <!-- Tiêu đề -->
   <div class="mb-3">
     <label for="title" class="form-label">Tiêu đề</label>
-    <input type="text" id="title" name="title" class="form-control" required />
+    <input type="text" id="title" th:field="*{title}" class="form-control" required />
   </div>
 
   <!-- Nội dung (Summernote) -->
   <div class="mb-3">
     <label for="summernote" class="form-label">Nội dung</label>
-
-    <textarea id="summernote" name="content" class="form-control" rows="6"></textarea>
-
+    <textarea id="summernote" th:field="*{content}" class="form-control" rows="6"></textarea>
   </div>
 
   <!-- Tác giả -->
   <div class="mb-3">
     <label for="author" class="form-label">Tác giả</label>
-    <input type="text" name="author" class="form-control" />
+    <input type="text" th:field="*{author}" class="form-control" />
   </div>
 
   <!-- Hình ảnh -->
   <div class="mb-3">
     <label for="photo" class="form-label">Ảnh đại diện</label>
-    <input type="file"  name="photoFile" class="form-control" required />
+    <input type="file" name="photoFile" class="form-control" />
+    <div th:if="*{photo}">
+      <img th:src="@{${content.photo}}" alt="Ảnh hiện tại" class="img-thumbnail mt-2" style="max-width: 150px;">
+    </div>
   </div>
 
   <!-- Nút submit -->
   <div class="text-end mt-4">
-    <button type="submit" class="btn btn-primary px-4">Tạo</button>
+    <button type="submit" class="btn btn-success px-4">Lưu thay đổi</button>
   </div>
 </form>
-
-
- <div class="table-responsive mt-2">
-      <table class="table" id="example">
-        <thead >
-          <tr>
-            <th>ID</th>
-             <th>Tiêu Đề</th>
-            <th>Tác Giả</th>
-            <th>Ngày Viết</th>
-            <th>Tuỳ Chỉnh</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:each="content : ${contents}">
-            <td th:text="${content.id}"></td>
-            <td th:text="${content.title}"></td>
-            <td th:text="${content.author}"></td>
-             <td th:text="${#dates.format(content.createdAt, 'HH:mm yyyy-MM-dd')}"></td>
-            <td>
-          
-  
-  
-   <a th:href="@{'/admin/content/edit/' + ${content.id}}" class="btn btn-sm btn-primary me-1">Chỉnh sửa</a>
-    <a th:href="@{'/admin/content/delete/' + ${content.id}}" 
-       class="btn btn-sm btn-danger"
-         onclick="return confirm('Bạn có muốn xóa không?');"
-      >Xóa</a>
-
-
-            </td>
-
-          </tr>
-          
-        </tbody>
-      </table>
-    </div>
-
-
-
-
-
-
-    <!-- // Bootstrap validation
-    (() => {
-      'use strict'
-      const forms = document.querySelectorAll('.needs-validation')
-      Array.from(forms).forEach(form => {
-        form.addEventListener('submit', event => {
-          if (!form.checkValidity()) {
-            event.preventDefault()
-            event.stopPropagation()
-          }
-          form.classList.add('was-validated')
-        }, false)
-      })
-    })() -->
-  </script>
-              </div>
-            </div>
-            <!-- / Content -->
-
             <div class="content-backdrop fade"></div>
           </div>
           <!-- Content wrapper -->
@@ -198,38 +143,20 @@
     <div th:replace="~{Admin/Fragment/element :: bag}"></div>
     <div th:replace="~{Admin/Fragment/element :: footer}"></div>
     <script>
-      // Bootstrap validation
-      (() => {
-        'use strict'
-        const forms = document.querySelectorAll('.needs-validation')
-        Array.from(forms).forEach(form => {
-          form.addEventListener('submit', event => {
-            if (!form.checkValidity()) {
-              event.preventDefault()
-              event.stopPropagation()
-            }
-            form.classList.add('was-validated')
-          }, false)
-        })
-      })()
-    </script>
-    <script>
-      $(document).ready(function () {
-        $('#summernote').summernote({
-          placeholder: 'Nhập nội dung bài viết...',
-          tabsize: 2,
-          height: 300,                 // chiều cao editor
-          toolbar: [
-            // customize toolbar nếu cần
-            ['style', ['style']],
-            ['font', ['bold', 'underline', 'clear']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['insert', ['link', 'picture', 'video']],
-            ['view', ['fullscreen', 'codeview']]
-          ]
-        });
-      });
+        // Bootstrap validation
+        (() => {
+            'use strict'
+            const forms = document.querySelectorAll('.needs-validation')
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
     </script>
   </body>
-</html> 
+</html>
