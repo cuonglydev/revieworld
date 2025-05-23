@@ -15,7 +15,6 @@ import com.example.Entity.UserBank;
 import com.example.Service.UserService;
 import com.example.Service.WithdrawService;
 import com.example.Service.UserBankService;
-import com.example.Service.SystemService;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -31,9 +30,6 @@ public class WithdrawController {
 	@Autowired
 	private UserBankService userBankService;
 	
-	@Autowired
-	private SystemService systemService;
-	
 	@GetMapping("/account/withdraw")
 	public String withdrawPage(Model model) {
 		User currentUser = userService.getCurrentUser();
@@ -44,8 +40,6 @@ public class WithdrawController {
 		// Add user's bank accounts to model
 		model.addAttribute("userBanks", userBankService.findAllByUserId(currentUser.getId()));
 		model.addAttribute("bonusBalance", currentUser.getBonusAmount());
-		model.addAttribute("minWithdraw", systemService.getMinWithdrawAmount());
-		model.addAttribute("maxWithdraw", systemService.getMaxWithdrawAmount());
 		
 		return "User/Pages/Account/withdraw";
 	}
@@ -68,10 +62,10 @@ public class WithdrawController {
 								@RequestParam("bankId") int bankId,
 								RedirectAttributes redirectAttributes) {
 		User currentUser = userService.getCurrentUser();
-		double minWithdraw = systemService.getMinWithdrawAmount();
-		double maxWithdraw = systemService.getMaxWithdrawAmount();
-		if (amount == null || amount < minWithdraw || amount > maxWithdraw) {
-			redirectAttributes.addFlashAttribute("danger", "Số tiền rút phải từ $" + minWithdraw + " đến $" + maxWithdraw);
+		
+		// Validate amount
+		if (amount == null || amount < 5 || amount > 500) {
+			redirectAttributes.addFlashAttribute("danger", "Số tiền rút phải từ $5 đến $500");
 			return "redirect:/account/withdraw";
 		}
 		
