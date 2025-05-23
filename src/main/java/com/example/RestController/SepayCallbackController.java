@@ -13,6 +13,7 @@ import com.example.Service.DepositService;
 import com.example.Service.RateService;
 import com.example.Service.UserAffiliateItemService;
 import com.example.Service.UserAffiliateService;
+import com.example.Service.SystemService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,10 +42,10 @@ public class SepayCallbackController {
     private UserService userService;
     
     @Autowired
-    DepositService depositService;
+    private DepositService depositService;
     
     @Autowired
-    RateService rateService;
+    private SystemService systemService;
     
     @Autowired
     private UserAffiliateService userAffiliateService;
@@ -61,7 +62,8 @@ public class SepayCallbackController {
     public ResponseEntity<Map<String, Object>> handleSepayCallback(@RequestBody Map<String, Object> payload) {
         System.out.println("Received payload: " + payload);
         
-        Rate rate = rateService.findByCountry("vi");
+        // Get exchange rate from system settings
+        Double usdToVndRate = systemService.getUsdToVndRate();
       
         if (!payload.containsKey("id")) {
             return ResponseEntity
@@ -98,52 +100,75 @@ public class SepayCallbackController {
         
         Deposit deposit = depositService.findByTransactionId(code);
         if(deposit != null) {
-        	
-        	deposit.setAmount(amount / rate.getRate());
-        	
-        	deposit.setStatus("SUCCESS");
-        	
-        	Date currentDate = new Date();
+            // Convert VND amount to USD using system exchange rate
+            Double usdAmount = amount / usdToVndRate;
+            deposit.setAmount(usdAmount);
+            deposit.setStatus("SUCCESS");
+            
+            Date currentDate = new Date();
             deposit.setCreatedAt(currentDate);
-        	depositService.save(deposit);
-        	
-        	User user = userService.findById(deposit.getUser().getId());
-        	
-        	Double userAmount = user.getAmount() + (amount / rate.getRate());
-        	user.setAmount(userAmount);
-        	
-        	
-        	
-        	Affiliate affiliate = affiliateService.findByid(1);
-        	if(affiliate != null && affiliate.getStatus()) {
-        		if(user.getUserAffiliate() != null) {
-        			UserAffiliate userAffiliate = userAffiliateService.findById(user.getUserAffiliate().getId());
-        			if(userAffiliate != null) {
-            			User inviter = userService.findById(userAffiliate.getUser().getId());
-            			
-            			Double fee = deposit.getAmount() * (affiliate.getPercentage() / 100);
-            			UserAffiliateItem userAffiliateItem = new UserAffiliateItem();
-            			userAffiliateItem.setAmount(fee);
-            			userAffiliateItem.setCreatedAt(currentDate);
-            			userAffiliateItem.setUser(inviter);
-            			userAffiliateItem.setUserAffiliate(userAffiliate);
-            			userAffiliateItemService.save(userAffiliateItem);
-            			
-            			userAffiliate.setAmount(userAffiliate.getAmount() + fee);
-            			userAffiliateService.save(userAffiliate);
-            		}
-        		}
-        	}
-        	
-        	userService.save(user);
+            depositService.save(deposit);
+            
+            User user = userService.findById(deposit.getUser().getId());
+            
+            // Add deposit amount to user's balance
+            user.setAmount(user.getAmount() + usdAmount);
+            
+            // Get commission rates from system settings
+            Double commissionRate = systemService.getCommissionRate();
+            Double newUserCommissionRate = systemService.getNewUserCommissionRate();
+            Double affiliateCommissionRate = systemService.getAffiliateCommissionRate();
+            Double referralCommissionRate = systemService.getReferralCommissionRate();
+            
+            // Calculate and apply commissions
+            if(user.getUserAffiliate() != null) {
+                UserAffiliate userAffiliate = userAffiliateService.findById(user.getUserAffiliate().getId());
+                if(userAffiliate != null) {
+                    User inviter = userService.findById(userAffiliate.getUser().getId());
+                    
+                    // Calculate affiliate commission
+                    Double affiliateCommission = usdAmount * (affiliateCommissionRate / 100);
+                    
+                    // Create affiliate commission record
+                    UserAffiliateItem userAffiliateItem = new UserAffiliateItem();
+                    userAffiliateItem.setAmount(affiliateCommission);
+                    userAffiliateItem.setCreatedAt(currentDate);
+                    userAffiliateItem.setUser(inviter);
+                    userAffiliateItem.setUserAffiliate(userAffiliate);
+                    userAffiliateItemService.save(userAffiliateItem);
+                    
+                    // Update affiliate total commission
+                    userAffiliate.setAmount(userAffiliate.getAmount() + affiliateCommission);
+                    userAffiliateService.save(userAffiliate);
+                    
+                    // Apply referral commission to the referred user
+                    Double referralCommission = usdAmount * (referralCommissionRate / 100);
+                    user.setBonusAmount(user.getBonusAmount() + referralCommission);
+                }
+            }
+            
+            // Apply new user commission if applicable
+            if (user.getCreatedAt() != null && 
+                (currentDate.getTime() - user.getCreatedAt().getTime()) <= 24 * 60 * 60 * 1000) {
+                Double newUserCommission = usdAmount * (newUserCommissionRate / 100);
+                user.setBonusAmount(user.getBonusAmount() + newUserCommission);
+            }
+            
+            // Apply general commission
+            Double generalCommission = usdAmount * (commissionRate / 100);
+            user.setBonusAmount(user.getBonusAmount() + generalCommission);
+            
+            userService.save(user);
+            
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(Map.of("success", true));
         }
         
-
-        
         return ResponseEntity
-                .status(HttpStatus.CREATED) 
+                .badRequest()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Map.of("success", true));
+                .body(Map.of("success", false, "error", "Invalid transaction"));
     }
     
 	/*

@@ -58,16 +58,28 @@
                 
                   <div class="mb-3">
                     <label for="amount" class="form-label">1. Nhập số tiền muốn nạp vào ví</label>
-                    <div class="input-group ">
+                    <div class="input-group">
                         <span class="input-group-text">$</span>
                         <div class="form-floating">
-                          <input type="number" class="form-control" id="amount" name="amount" placeholder="Số tiền" 
-                                 min="1" required step="0.01">
-                          <label for="amount">Số tiền</label>
+                            <input type="number" 
+                                   class="form-control" 
+                                   id="amount" 
+                                   name="amount" 
+                                   placeholder="Số tiền"
+                                   min="1"
+                                   th:max="${maxDeposit}"
+                                   th:attr="data-min=1,data-max=${maxDeposit}"
+                                   required 
+                                   step="0.01">
+                            <label for="amount">Số tiền</label>
                         </div>
-                      </div>
+                    </div>
                     <div class="form-text">
-                      Tỉ giá: 1 USD = <span class="fw-semibold" th:text="${#numbers.formatDecimal(rate.rate, 1 , 'COMMA', 0, 'POINT')} + 'VND'"></span>
+                        <div class="exchange-rate">
+                            <p>Tỉ giá: 1 USD = <span th:text="${exchangeRate}">0</span> VND</p>
+                          
+                            <p class="text-muted">Giới hạn nạp: $1 - $<span th:text="${maxDeposit}">0</span></p>
+                        </div>
                     </div>
                   </div>
                   
@@ -98,6 +110,32 @@
   <script src="/User/js/goBack.js"></script>
   <script src="/User/js/bootstrap.bundle.min.js"></script>
   <script src="/User/js/menu.js"></script>
+  <script th:inline="javascript">
+    const exchangeRate = /*[[${exchangeRate}]]*/ 0;
+    const minDeposit = 1;
+    const maxDeposit = /*[[${maxDeposit}]]*/ 0;
+    
+    function updateVNDAmount() {
+        const amountInput = document.getElementById('amount');
+        const amount = parseFloat(amountInput.value) || 0;
+        
+        // Validate amount
+        if (amount < minDeposit) {
+            amountInput.setCustomValidity(`Số tiền tối thiểu là $${minDeposit}`);
+        } else if (amount > maxDeposit) {
+            amountInput.setCustomValidity(`Số tiền tối đa là $${maxDeposit}`);
+        } else {
+            amountInput.setCustomValidity('');
+        }
+        
+        const vndAmount = amount * exchangeRate;
+        document.getElementById('vndAmount').textContent = new Intl.NumberFormat('vi-VN').format(vndAmount);
+    }
+    
+    document.getElementById('amount').addEventListener('input', updateVNDAmount);
+    // Initialize on page load
+    updateVNDAmount();
+  </script>
 </body>
 
 </html>
