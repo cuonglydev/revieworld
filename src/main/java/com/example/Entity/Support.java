@@ -22,10 +22,11 @@ public class Support {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
+
 	@Column(name = "name")
 	private String name;
-	
+	@Column(name = "photo")
+	private String photo;
 	@Column(name = "url")
 	private String url;
 }

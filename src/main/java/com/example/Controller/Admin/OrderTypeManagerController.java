@@ -29,15 +29,14 @@ public class OrderTypeManagerController {
 
     @Autowired
     private UploadService uploadService; // Service dùng để upload file ảnh
-    
+
     @Autowired
     private LanguageService languageService;
-    
+
     @Autowired
     private OrderService orderService;
-    
+
     private Slugify slugify;
-    
 
     @Value("${upload.dir}")
     private String uploadDir; // Đường dẫn thư mục upload từ application.properties
@@ -45,13 +44,14 @@ public class OrderTypeManagerController {
     @Value("${static-folder}")
     private String staticFolder; // Thư mục tĩnh để lưu đường dẫn hình ảnh hiển thị trên web
 
-//    // ========================= Hiển thị form tạo mới OrderType
-//    // =========================
-//    @GetMapping("/ordertype/new")
-//    public String showCreateForm(Model model) {
-//        model.addAttribute("orderType", new OrderType()); // Tạo đối tượng mới để binding form
-//        return "Admin/Pages/OrderType/create"; // Trả về view form tạo mới
-//    }
+    // // ========================= Hiển thị form tạo mới OrderType
+    // // =========================
+    // @GetMapping("/ordertype/new")
+    // public String showCreateForm(Model model) {
+    // model.addAttribute("orderType", new OrderType()); // Tạo đối tượng mới để
+    // binding form
+    // return "Admin/Pages/OrderType/create"; // Trả về view form tạo mới
+    // }
 
     // ========================= Hiển thị danh sách OrderType
     // =========================
@@ -70,18 +70,18 @@ public class OrderTypeManagerController {
     // ========================= Xóa một OrderType theo ID =========================
     @GetMapping("/ordertype/delete/{id}")
     public String deleteOrderType(@PathVariable int id, RedirectAttributes redirectAttributes) {
-    	List<Order> orders = orderService.findAllByOrderTypeId(id);
+        List<Order> orders = orderService.findAllByOrderTypeId(id);
         try {
-        	for(Order order : orders) {
-        		Order getOrder = orderService.findById(order.getId());
-        		getOrder.setOrderType(null);
-        		orderService.save(getOrder);
-        	}
-        	List<Language> languages = languageService.findAllByOrderTypeId(id);
-        	for(Language language : languages) {
-        		languageService.deleteById(language.getId());
-        	}
-        	
+            for (Order order : orders) {
+                Order getOrder = orderService.findById(order.getId());
+                getOrder.setOrderType(null);
+                orderService.save(getOrder);
+            }
+            List<Language> languages = languageService.findAllByOrderTypeId(id);
+            for (Language language : languages) {
+                languageService.deleteById(language.getId());
+            }
+
             orderTypeService.deleteOrderType(id); // Gọi service để xóa
             redirectAttributes.addFlashAttribute("success", "Xóa thành công");
         } catch (Exception e) {
@@ -96,10 +96,10 @@ public class OrderTypeManagerController {
     public String showEditForm(@PathVariable int id, Model model) {
         OrderType orderType = orderTypeService.getOrderTypeById(id).orElse(null);
         model.addAttribute("orderType", orderType); // Đưa dữ liệu orderType vào model để binding lên form
-        
+
         List<Language> languages = languageService.findAllByOrderTypeId(id);
         model.addAttribute("languages", languages);
-        
+
         return "Admin/Pages/Order/order-type-detail";
     }
 
@@ -137,19 +137,19 @@ public class OrderTypeManagerController {
 
                 // =========== CẬP NHẬT ===========
             } else {
-               
-            	OrderType existing = orderTypeService.getOrderTypeById(orderType.getId()).orElse(null);
+
+                OrderType existing = orderTypeService.getOrderTypeById(orderType.getId()).orElse(null);
                 // Nếu có file ảnh mới => cập nhật
                 if (!photoFile.isEmpty()) {
                     String filePhoto = uploadService.saveFile(photoFile, "images");
                     orderType.setPhoto(staticFolder + "images/" + filePhoto);
                 } else {
-                	 
+
                     orderType.setPhoto(existing.getPhoto());
                 }
 
                 orderType.setCreatedAt(existing.getCreatedAt());
-                
+
                 orderTypeService.saveOrderType(orderType); // Lưu lại thông tin đã cập nhật
                 redirectAttributes.addFlashAttribute("success", "Cập nhật thành công");
             }
