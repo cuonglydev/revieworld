@@ -24,13 +24,13 @@ public class OrderPhoto {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
+
 	@Column(name = "photo")
 	private String photo;
-	
+
 	@Column(name = "status")
 	private String status;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "order_id")
 	private Order order;
