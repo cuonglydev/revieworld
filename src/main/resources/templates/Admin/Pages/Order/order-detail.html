@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+
+<!-- =========================================================
+* Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
+==============================================================
+
+* Product Page: https://themeselection.com/products/sneat-bootstrap-html-admin-template/
+* Created by: ThemeSelection
+* License: You must have a valid license purchased in order to legally use the theme for your project.
+* Copyright ThemeSelection (https://themeselection.com)
+
+=========================================================
+ -->
+<!-- beautify ignore:start -->
+<html lang="en" class="light-style layout-menu-fixed" dir="ltr"
+	data-theme="theme-default" data-assets-path="/Admin/assets/"
+	data-template="vertical-menu-template-free">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+
+<title>ADMIN - Analytics</title>
+
+<meta name="description" content="" />
+
+<!-- Favicon -->
+<div th:replace="~{Admin/Fragment/element :: head}"></div>
+
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<style>
+swiper-container {
+	width: 100%;
+	height: 100%;
+}
+
+swiper-slide {
+	text-align: center;
+	font-size: 18px;
+	background: #fff;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+swiper-slide img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+swiper-container {
+	width: 100%;
+	height: fit-content;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+swiper-slide {
+	background-size: cover;
+	background-position: center;
+}
+
+.mySwiper {
+	height: 80%;
+	width: 100%;
+}
+
+.mySwiper2 {
+	height: 20%;
+	box-sizing: border-box;
+	padding: 10px 0;
+}
+
+.mySwiper2 swiper-slide {
+	width: 25%;
+	height: 100%;
+	opacity: 0.4;
+}
+
+.mySwiper2 .swiper-slide-thumb-active {
+	opacity: 1;
+}
+
+swiper-slide img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+</style>
+
+</head>
+
+<body>
+	<!-- Layout wrapper -->
+	<div class="layout-wrapper layout-content-navbar">
+		<div class="layout-container">
+			<!-- Menu -->
+			<div th:replace="~{Admin/Fragment/element :: menu}"></div>
+			<!-- / Menu -->
+
+			<!-- Layout container -->
+			<div class="layout-page">
+				<!-- Navbar -->
+
+				<div th:replace="~{Admin/Fragment/element :: header}"></div>
+
+				<!-- / Navbar -->
+
+				<!-- Content wrapper -->
+				<div class="content-wrapper">
+					<!-- Content -->
+
+					<div class="container-xxl flex-grow-1 container-p-y">
+						<div class="row">
+
+							<div class="col-12">
+								<nav aria-label="breadcrumb">
+									<ol class="breadcrumb">
+										<li class="breadcrumb-item"><a href="/admin/order">Đơn
+												hàng</a></li>
+										<li class="breadcrumb-item active" aria-current="page"
+											th:text="${order.name}">Library</li>
+									</ol>
+								</nav>
+							</div>
+
+							<div class="col-12">
+								<div class="card">
+									<div class="card-header">
+										<h5>
+											Chi tiết đơn hàng <span th:text="${order.name}"
+												class="fw-bold"></span>
+										</h5>
+									</div>
+
+									<div class="card-body">
+										<form>
+											<div class="row">
+												<div class="col-12 col-md-4 mb-1">
+													<p>Ảnh map</p>
+													<img th:src="${order.photo}" class="w-100 rounded">
+
+													<div th:if="${orderPhotos.size != 0}">
+
+														<p>Ảnh yêu cầu review</p>
+														<a
+															class="d-flex rounded overflow-hidden position-relative"
+															type="button" data-bs-toggle="modal"
+															data-bs-target="#exampleModal-orderPhoto"
+															style="width: 100px; height: 100px; border: 1px dashed gray;">
+															<img th:src="${orderPhotos[0].photo}"
+															class="w-100 h-100 "
+															style="object-fit: cover; opacity: 0.5;"> <span
+															class="position-absolute text-dark top-50 start-50 translate-middle bg-light rounded px-1"
+															th:text="'+' + ${orderPhotos.size}"></span>
+														</a>
+
+														<div class="modal fade" id="exampleModal-orderPhoto"
+															tabindex="-1" aria-labelledby="exampleModalLabel"
+															aria-hidden="true">
+															<div class="modal-dialog modal-dialog-centered modal-xl">
+																<div class="modal-content">
+																	<div class="modal-header">
+																		<h1 class="modal-title fs-5" id="exampleModalLabel">Ảnh
+																			yêu cầu</h1>
+																		<button type="button" class="btn-close"
+																			data-bs-dismiss="modal" aria-label="Close"></button>
+																	</div>
+																	<div class="modal-body">
+																		<swiper-container
+																			style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff; "
+																			class="mySwiper position-relative"
+																			thumbs-swiper=".mySwiper2" space-between="10"
+																			navigation="true"> <swiper-slide
+																			th:each="item : ${orderPhotos}"> <img
+																			th:src="${item.photo}" /> <span
+																			class="position-absolute top-0 start-0 badge bg-dark fs__12px"
+																			n th:if="${item.status == 'DONE'}">Đã dùng</span> </swiper-slide> </swiper-container>
+
+																		<swiper-container class="mySwiper2" space-between="10"
+																			slides-per-view="4" free-mode="true"
+																			watch-slides-progress="true"> <swiper-slide
+																			th:each="item : ${orderPhotos}"> <img
+																			th:src="${item.photo}" /> </swiper-slide> </swiper-container>
+																	</div>
+
+																</div>
+															</div>
+														</div>
+
+
+													</div>
+
+												</div>
+												<div class="col-12 col-md-8 mb-1">
+													<div class="mb-3">
+														<label class="form-label">Tên</label> <input type="text"
+															th:value="${order.name}" class="form-control"
+															readonly="readonly">
+													</div>
+
+													<div class="mb-3">
+														<label class="form-label">Ngày tạo</label> <input
+															type="text" th:value="${order.createdAt}"
+															class="form-control" readonly="readonly">
+													</div>
+
+													<div class="mb-3">
+														<label class="form-label">Ngôn ngữ</label> <input
+															type="text" th:value="${order.language}"
+															class="form-control" readonly="readonly">
+													</div>
+
+													<div class="mb-3">
+														<label class="form-label">Mô tả</label> <input type="text"
+															th:value="${order.description}" class="form-control"
+															readonly="readonly">
+													</div>
+
+													<div class="mb-3">
+														<label class="form-label">Yêu cầu</label>
+														<textarea class="form-control"
+															id="exampleFormControlTextarea1"
+															th:text="${order.detail}" rows="3" readonly="readonly"></textarea>
+													</div>
+												</div>
+											</div>
+									</div>
+									</form>
+								</div>
+							</div>
+						</div>
+
+
+						<div class="mt-2">
+							<div class="row">
+								<div class="col-12 col-md-6 mb-1">
+									<div class="rounded shadow-sm p-2 bg-light">
+										<div class="d-flex justify-content-between">
+											<h6 class="fw-semibold">Tiến trình</h6>
+											<button type="button"
+												th:if="${order.status == 'ACTIVE' or order.status == 'PAUSE'}"
+												class="btn btn-outline-secondary py-0 fs__12px px-2"
+												data-bs-toggle="modal" data-bs-target="#exampleModal-pause">
+												Tạm dừng</button>
+
+											<button type="button"
+												th:if="${order.status == 'REQUEST_PAUSE'}"
+												class="btn btn-outline-primary py-0 fs__12px px-2"
+												data-bs-toggle="modal" data-bs-target="#exampleModal-active">
+												Mở nhận review</button>
+
+
+											<div class="modal fade" id="exampleModal-pause" tabindex="-1"
+												aria-labelledby="exampleModalLabel" aria-hidden="true">
+												<div class="modal-dialog modal-dialog-centered">
+													<div class="modal-content">
+														<div class="modal-header border-0 pb-0">
+															<h1 class="modal-title fs-5" id="exampleModalLabel">Xác
+																nhận tạm dừng nhận review</h1>
+															<button type="button" class="btn-close"
+																data-bs-dismiss="modal" aria-label="Close"></button>
+														</div>
+														<div class="modal-body">Xác nhận dừng nhận nhiệm vụ
+															sẽ không nhận thêm đơn review nữa cho đến khi bạn mở lại.</div>
+														<div class="modal-footer border-0 pt-0">
+															<button type="button" class="btn btn-light"
+																data-bs-dismiss="modal">Hủy</button>
+															<a
+																th:href="@{/admin/order/request-pause/{slug} (slug=${order.slug})}"
+																class="btn btn-primary">Xác nhận dừng</a>
+														</div>
+													</div>
+												</div>
+											</div>
+
+
+											<div class="modal fade" id="exampleModal-active"
+												tabindex="-1" aria-labelledby="exampleModalLabel"
+												aria-hidden="true">
+												<div class="modal-dialog modal-dialog-centered">
+													<div class="modal-content">
+														<div class="modal-header border-0 pb-0">
+															<h1 class="modal-title fs-5" id="exampleModalLabel">Xác
+																nhận mở nhận review</h1>
+															<button type="button" class="btn-close"
+																data-bs-dismiss="modal" aria-label="Close"></button>
+														</div>
+														<div class="modal-body">Xác nhận mở review để nhận
+															đơn từ reviewer.</div>
+														<div class="modal-footer border-0 pt-0">
+															<button type="button" class="btn btn-light"
+																data-bs-dismiss="modal">Hủy</button>
+															<a
+																th:href="@{/admin/order/request-active/{slug} (slug=${order.slug})}"
+																class="btn btn-primary">Xác nhận mở</a>
+														</div>
+													</div>
+												</div>
+											</div>
+
+										</div>
+										<div>
+											<span>Số lượng: <text class="fw-semibold"
+													th:text="${order.quantityDone} + '/' + ${order.quantity}">10/100</text></span>
+										</div>
+										<div class="progress">
+											<div class="progress-bar" role="progressbar"
+												aria-label="Example with label"
+												th:attr="aria-valuenow=${(order.quantityDone * 100) / order.quantity}"
+												aria-valuemin="0" aria-valuemax="100"
+												th:style="'width:' + ${(order.quantityDone * 100) / order.quantity} + '%'">
+												<div class="progress-bar  fs__10px"
+													th:text="${(order.quantityDone * 100) / order.quantity + '%'}"></div>
+											</div>
+											<div class="progress-bar bg-secondary " role="progressbar"
+												aria-label="Segment three"
+												th:attr="aria-valuenow=${(numberExpectedMissions * 100) / order.quantity}"
+												aria-valuemin="0" aria-valuemax="100"
+												th:style="'width:' + ${(numberExpectedMissions * 100) / order.quantity} + '%'">
+												<div class="progress-bar bg-secondary-subtle"></div>
+											</div>
+										</div>
+
+										<div class="mt-2">
+											<span>Số lượng đã làm trong ngày: <text
+													class="fw-semibold"
+													th:text="${order.turnQuantityDone} + '/' + ${order.turnQuantity}">10/100</text></span>
+										</div>
+
+										<div class="progress" role="progressbar"
+											aria-label="Example with label"
+											th:attr="aria-valuenow=${(order.turnQuantityDone * 100) / order.turnQuantity}"
+											aria-valuemin="0" aria-valuemax="100">
+											<div class="progress-bar  fs__10px"
+												th:style="'width:' + ${(order.turnQuantityDone * 100) / order.turnQuantity} + '%'"
+												th:text="${(order.turnQuantityDone * 100) / order.turnQuantity} + '%'"></div>
+										</div>
+
+									</div>
+								</div>
+
+								<div class="col-12 col-md-6 mb-1">
+									<div class="rounded shadow-sm p-2 bg-light">
+										<h6 class="fw-semibold">Số review đã làm</h6>
+										<div class="row">
+											<div class="col-6 col-md-4 mb-1">
+												<div
+													class="p-2  border-2 shadow-sm border-primary border-start ">
+													<span>Tổng:</span> <span class="fw-semibold text-primary"
+														th:text="${missions.size}"></span>
+												</div>
+											</div>
+
+											<div class="col-6 col-md-4 mb-1">
+												<div
+													class="p-2 border-start shadow-sm border-secondary border-2">
+													<span>Đang chờ:</span> <span
+														class="fw-semibold text-secondary"
+														th:text="${numberWaitingMission} + '/' + ${order.quantity}">10/100</span>
+												</div>
+											</div>
+
+											<div class="col-6 col-md-4 mb-1">
+												<div
+													class="p-2 border-start shadow-sm border-success border-2">
+													<span>Đã xác nhận:</span> <span
+														class="fw-semibold text-success"
+														th:text="${numberSuccessMission} + '/' + ${order.quantity}">10/100</span>
+												</div>
+											</div>
+
+											<div class="col-6 col-md-4 mb-1">
+												<div
+													class="p-2 border-start shadow-sm  border-info border-2">
+													<span>Đang chỉnh sửa:</span> <span
+														class="fw-semibold text-info"
+														th:text="${numberRequestEditMission}">106</span>
+												</div>
+											</div>
+											<div class="col-6 col-md-4 mb-1">
+												<div
+													class="p-2  border-start shadow-sm  border-danger border-2">
+													<span>Đã từ chối:</span> <span
+														class="fw-semibold text-danger"
+														th:text="${numberRefuseMission}">100</span>
+												</div>
+											</div>
+											<div class="col-6 col-md-4 mb-1">
+												<div
+													class="p-2  border-start shadow-sm  border-danger border-2">
+													<span>Đang kháng đơn:</span> <span
+														class="fw-semibold text-dark"
+														th:text="${appealMissions.size}">100</span>
+												</div>
+											</div>
+
+
+										</div>
+									</div>
+								</div>
+
+							</div>
+
+						</div>
+
+
+
+						<div class="mt-2">
+						<div class="rounded shadow-sm p-2 bg-light">
+
+							<h6 class="fw-semibold">Member đã thực hiện</h6>
+
+
+
+							<div class="wrapper py-2"
+								style="max-width: 100%; overflow-x: auto;">
+								<ul class="nav nav-pills d-flex overflow-x-auto tab__custom"
+									id="myTab" role="tablist" style="min-width: max-content;">
+									<li class="nav-item " role="presentation">
+										<button class="nav-link active w-100 " id="waiting-tab"
+											data-bs-toggle="tab" data-bs-target="#waiting-tab-pane"
+											type="button" role="tab" aria-controls="waiting-tab-pane"
+											aria-selected="true">Đang chờ xác nhận</button>
+									</li>
+
+									<li class="nav-item " role="presentation">
+										<button class="nav-link w-100 " id="appeal-tab"
+											data-bs-toggle="tab" data-bs-target="#appeal-tab-pane"
+											type="button" role="tab" aria-controls="appeal-tab-pane"
+											aria-selected="false">Kháng đơn</button>
+									</li>
+
+									<li class="nav-item " role="presentation">
+										<button class="nav-link w-100 " id="requesting-tab"
+											data-bs-toggle="tab" data-bs-target="#requesting-tab-pane"
+											type="button" role="tab" aria-controls="requesting-tab-pane"
+											aria-selected="false">Đang yêu cầu chỉnh sửa</button>
+									</li>
+
+									<li class="nav-item " role="presentation">
+										<button class="nav-link w-100 " id="confirmed-tab"
+											data-bs-toggle="tab" data-bs-target="#confirmed-tab-pane"
+											type="button" role="tab" aria-controls="confirmed-tab-pane"
+											aria-selected="false">Đã xác nhận</button>
+									</li>
+
+									<li class="nav-item " role="presentation">
+										<button class="nav-link w-100 " id="rejected-tab"
+											data-bs-toggle="tab" data-bs-target="#rejected-tab-pane"
+											type="button" role="tab" aria-controls="rejected-tab-pane"
+											aria-selected="false">Đã từ chối</button>
+									</li>
+
+									<li class="nav-item " role="presentation">
+										<button class="nav-link w-100 " id="all-tab"
+											data-bs-toggle="tab" data-bs-target="#all-tab-pane"
+											type="button" role="tab" aria-controls="all-tab-pane"
+											aria-selected="false">Tất cả</button>
+									</li>
+
+								</ul>
+							</div>
+
+							<div class="tab-content">
+								<div class="tab-pane fade show active" id="waiting-tab-pane"
+									role="tabpanel" aria-labelledby="waiting-tab" tabindex="0">
+									<div class="p-2">
+										<table id="example"
+											class="table table-striped   text-nowrap w-100">
+											<thead>
+												<tr>
+													<th></th>
+													<th>Người thực hiện</th>
+													<th>Link</th>
+													<th>Ngày thực hiện</th>
+													<th>Thao tác</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="item : ${waitingMissions}">
+													<td><a class="btn btn-primary"
+														th:href="@{/admin/order/mission-detail/{id} (id=${item.id})}">Chi
+															tiết</a></td>
+													<td>
+														<p class="fw-semibold m-0" th:text="${item.user.username}"></p>
+														<p class="text-secondary m-0 obfuscate-email"
+															th:text="${item.user.email}"></p>
+													</td>
+													<td><a th:text="${item.url}" th:href="${item.url}"
+														target="_blank" class="d-inline-block text-truncate"
+														style="max-width: 150px;"></a></td>
+													<td><span th:attr="data-order=${item.createdAt}"
+														th:text="${#dates.format(item.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+													</td>
+													<td><a class="btn btn-outline-primary"
+														data-bs-toggle="modal"
+														th:attr="data-bs-target='#exampleModal-success' + ${item.id}">Chấp
+															nhận</a> <a class="btn btn-outline-danger"
+														data-bs-toggle="modal"
+														th:attr="data-bs-target='#exampleModal-refuse' + ${item.id}">Từ
+															chối</a> <a class="btn btn-outline-info"
+														data-bs-toggle="modal"
+														th:attr="data-bs-target='#exampleModal-request-edit' + ${item.id}">Yêu
+															cầu chỉnh sửa</a></td>
+												</tr>
+
+
+											</tbody>
+
+										</table>
+									</div>
+								</div>
+
+
+								<div class="tab-pane fade" id="appeal-tab-pane" role="tabpanel"
+									aria-labelledby="appeal-tab" tabindex="0">
+									<div class="p-2">
+										<table id="example2"
+											class="table table-striped text-nowrap w-100">
+											<thead>
+												<tr>
+													<th></th>
+													<th>Người thực hiện</th>
+													<th>Link</th>
+													<th>Ngày thực hiện</th>
+													<th>Thao tác</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="item : ${appealMissions}">
+													<td><a class="btn btn-primary"
+														th:href="@{/admin/order/mission-detail/{id} (id=${item.id})}">Chi
+															tiết</a></td>
+													<td>
+														<p class="fw-semibold m-0" th:text="${item.user.username}"></p>
+														<p class="text-secondary m-0 obfuscate-email"
+															th:text="${item.user.email}"></p>
+													</td>
+													<td><a th:text="${item.url}" th:href="${item.url}"
+														target="_blank" class="d-inline-block text-truncate"
+														style="max-width: 150px;"></a></td>
+													<td><span th:attr="data-order=${item.createdAt}"
+														th:text="${#dates.format(item.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+													</td>
+													<td><a class="btn btn-outline-primary" type="button"
+														data-bs-toggle="modal"
+														th:attr="data-bs-target='#exampleModal-appeal-success' + ${item.id}">Chấp
+															nhận</a> <a class="btn btn-outline-danger"
+														data-bs-toggle="modal"
+														th:attr="data-bs-target='#exampleModal-appeal-refuse' + ${item.id}">Từ
+															chối</a></td>
+												</tr>
+
+
+											</tbody>
+
+										</table>
+									</div>
+								</div>
+
+								<div class="tab-pane fade" id="requesting-tab-pane"
+									role="tabpanel" aria-labelledby="requesting-tab" tabindex="0">
+									<div class="p-2">
+										<table id="example3"
+											class="table table-striped text-nowrap w-100">
+											<thead>
+												<tr>
+													<th></th>
+													<th>Người thực hiện</th>
+													<th>Link</th>
+													<th>Ngày thực hiện</th>
+													<th>Thao tác</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="item : ${requestEditMissions}">
+													<td><a class="btn btn-primary"
+														th:href="@{/admin/order/mission-detail/{id} (id=${item.id})}">Chi
+															tiết</a></td>
+													<td>
+														<p class="fw-semibold m-0" th:text="${item.user.username}"></p>
+														<p class="text-secondary m-0 obfuscate-email"
+															th:text="${item.user.email}"></p>
+													</td>
+													<td><a th:text="${item.url}" th:href="${item.url}"
+														target="_blank" class="d-inline-block text-truncate"
+														style="max-width: 150px;"></a></td>
+													<td><span th:attr="data-order=${item.createdAt}"
+														th:text="${#dates.format(item.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+													</td>
+													<td><a class="btn btn-outline-primary"
+														data-bs-toggle="modal"
+														th:attr="data-bs-target='#exampleModal-success' + ${item.id}">Chấp
+															nhận</a> <a class="btn btn-outline-danger"
+														data-bs-toggle="modal"
+														th:attr="data-bs-target='#exampleModal-refuse' + ${item.id}">Từ
+															chối</a> <a class="btn btn-outline-info"
+														data-bs-toggle="modal"
+														th:attr="data-bs-target='#exampleModal-request-edit' + ${item.id}">Yêu
+															cầu chỉnh sửa</a></td>
+												</tr>
+
+
+											</tbody>
+
+										</table>
+									</div>
+								</div>
+
+								<div class="tab-pane fade" id="confirmed-tab-pane"
+									role="tabpanel" aria-labelledby="confirmed-tab" tabindex="0">
+									<div class="p-2">
+
+										<table id="example4"
+											class="table table-striped text-nowrap w-100">
+											<thead>
+												<tr>
+													<th></th>
+													<th>Người thực hiện</th>
+													<th>Link</th>
+													<th>Ngày thực hiện</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="item : ${successMissions}">
+													<td><a class="btn btn-primary"
+														th:href="@{/admin/order/mission-detail/{id} (id=${item.id})}">Chi
+															tiết</a></td>
+													<td>
+														<p class="fw-semibold m-0" th:text="${item.user.username}"></p>
+														<p class="text-secondary m-0 obfuscate-email"
+															th:text="${item.user.email}"></p>
+													</td>
+													<td><a th:text="${item.url}" th:href="${item.url}"
+														target="_blank" class="d-inline-block text-truncate"
+														style="max-width: 150px;"></a></td>
+													<td><span th:attr="data-order=${item.createdAt}"
+														th:text="${#dates.format(item.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+													</td>
+
+												</tr>
+
+
+											</tbody>
+
+										</table>
+
+									</div>
+								</div>
+
+								<div class="tab-pane fade" id="rejected-tab-pane"
+									role="tabpanel" aria-labelledby="rejected-tab" tabindex="0">
+									<div class="p-2">
+
+										<table id="example5"
+											class="table table-striped text-nowrap w-100">
+											<thead>
+												<tr>
+													<th></th>
+													<th>Người thực hiện</th>
+													<th>Link</th>
+													<th>Ngày thực hiện</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="item : ${refuseMissions}">
+													<td><a class="btn btn-primary"
+														th:href="@{/admin/order/mission-detail/{id} (id=${item.id})}">Chi
+															tiết</a></td>
+													<td>
+														<p class="fw-semibold m-0" th:text="${item.user.username}"></p>
+														<p class="text-secondary m-0 obfuscate-email"
+															th:text="${item.user.email}"></p>
+													</td>
+													<td><a th:text="${item.url}" th:href="${item.url}"
+														target="_blank" class="d-inline-block text-truncate"
+														style="max-width: 150px;"></a></td>
+													<td><span th:attr="data-order=${item.createdAt}"
+														th:text="${#dates.format(item.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+													</td>
+
+												</tr>
+
+
+											</tbody>
+
+										</table>
+
+									</div>
+								</div>
+
+
+								<div class="tab-pane fade" id="all-tab-pane" role="tabpanel"
+									aria-labelledby="rejected-tab" tabindex="0">
+									<div class="p-2">
+
+										<table id="example6"
+											class="table table-striped text-nowrap w-100">
+											<thead>
+												<tr>
+													<th></th>
+													<th>Người thực hiện</th>
+													<th>Link</th>
+													<th>Ngày thực hiện</th>
+													<th>Trạng thái</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="item : ${missions}">
+													<td><a class="btn btn-primary"
+														th:href="@{/admin/order/mission-detail/{id} (id=${item.id})}">Chi
+															tiết</a></td>
+													<td>
+														<p class="fw-semibold m-0" th:text="${item.user.username}"></p>
+														<p class="text-secondary m-0 obfuscate-email"
+															th:text="${item.user.email}"></p>
+													</td>
+													<td><a th:text="${item.url}" th:href="${item.url}"
+														target="_blank" class="d-inline-block text-truncate"
+														style="max-width: 150px;"></a></td>
+													<td><span th:attr="data-order=${item.createdAt}"
+														th:text="${#dates.format(item.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+													</td>
+													<td><span class="badge bg-secondary"
+														th:if="${item.status == 'WAITING'}">Đang chờ</span> <span
+														class="badge bg-success"
+														th:if="${item.status == 'SUCCESS'}">Đã xác nhận</span> <span
+														class="badge bg-info"
+														th:if="${item.status == 'REQUEST_EDIT'}">Đang yêu
+															cầu chỉnh sửa</span> <span class="badge bg-warning"
+														th:if="${item.status == 'REQUEST_REFUSE'}">Đang từ
+															chối</span> <span class="badge bg-dark"
+														th:if="${item.status == 'APPEAL'}">Đang kháng đơn</span> <span
+														class="badge bg-danger" th:if="${item.status == 'REFUSED'}">Đã
+															từ chối</span></td>
+												</tr>
+
+
+											</tbody>
+
+										</table>
+
+									</div>
+								</div>
+
+
+							</div>
+
+
+						</div>
+					</div>
+
+
+					<div th:each="item : ${missions}">
+						<form class="modal fade"
+							th:id="'exampleModal-success' + ${item.id}" method="post"
+							enctype="multipart/form-data"
+							th:action="@{/admin/order/mission-detail/save}" tabindex="-1"
+							aria-labelledby="exampleModalLabel" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered">
+								<div class="modal-content">
+									<div class="modal-header border-0 pb-0">
+										<h1 class="modal-title fs-5" id="exampleModalLabel">Xác
+											nhận</h1>
+										<button type="button" class="btn-close"
+											data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="modal-body ">
+										<input name="missionId" type="hidden" th:value="${item.id}">
+										<input value="SUCCESS" name="status" type="hidden">
+										<!-- <input
+											type="hidden" th:name="${_csrf.parameterName}"
+											th:value="${_csrf.token}" /> -->
+										<div class="mb-3">
+											<label for="exampleFormControlTextarea1" class="form-label">Lời
+												nhắn cho người dùng</label>
+											<textarea class="form-control"
+												id="exampleFormControlTextarea1" rows="3" name="note"></textarea>
+										</div>
+
+										<div class="mb-3">
+											<label for="exampleFormControlInput1" class="form-label">Thêm
+												ảnh chi tiết</label> <input type="file" accept="image/*"
+												class="form-control" name="file">
+										</div>
+									</div>
+									<div class="modal-footer border-0 pt-0">
+										<button type="button" class="btn btn-light"
+											th:data-bs-dismiss="modal">Hủy</button>
+										<button type="submit" class="btn btn-primary">Xác
+											nhận</button>
+									</div>
+								</div>
+							</div>
+						</form>
+
+						<form class="modal fade" method="post"
+							enctype="multipart/form-data"
+							th:action="@{/admin/order/mission-detail/save}"
+							th:id="'exampleModal-refuse' + ${item.id}" tabindex="-1"
+							aria-labelledby="exampleModalLabel" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered">
+								<div class="modal-content">
+
+									<div class="modal-header border-0 pb-0">
+										<h1 class="modal-title fs-5" id="exampleModalLabel">Xác
+											nhận từ chối</h1>
+										<button type="button" class="btn-close"
+											data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="modal-body ">
+										<input name="missionId" type="hidden" th:value="${item.id}">
+										<input value="REQUEST_REFUSE" name="status" type="hidden">
+										<!-- <input type="hidden" th:name="${_csrf.parameterName}"
+											th:value="${_csrf.token}" /> -->
+										<div class="mb-3">
+											<label for="exampleFormControlTextarea1" class="form-label">Lời
+												nhắn cho người dùng</label>
+											<textarea class="form-control"
+												id="exampleFormControlTextarea1" rows="3" name="note"
+												required="required"></textarea>
+										</div>
+
+										<div class="mb-3">
+											<label for="exampleFormControlInput1" class="form-label">Thêm
+												ảnh chi tiết</label> <input type="file" accept="image/*"
+												class="form-control" name="file">
+										</div>
+									</div>
+
+									<div class="modal-footer border-0 pt-0">
+										<button type="button" class="btn btn-light"
+											th:data-bs-dismiss="modal">Hủy</button>
+										<button type="submit" class="btn btn-danger">Xác nhận
+											từ chối</button>
+									</div>
+								</div>
+							</div>
+						</form>
+
+
+						<form method="post" enctype="multipart/form-data"
+							th:action="@{/admin/order/mission-detail/save}" class="modal fade"
+							th:id="'exampleModal-request-edit' + ${item.id}" tabindex="-1"
+							aria-labelledby="exampleModalLabel" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered">
+								<div class="modal-content">
+									<div class="modal-header border-0 pb-0">
+										<h1 class="modal-title fs-5" id="exampleModalLabel">Yêu
+											cầu chỉnh sửa</h1>
+										<button type="button" class="btn-close"
+											data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="modal-body ">
+										<input name="missionId" type="hidden" th:value="${item.id}">
+										<input value="REQUEST_EDIT" name="status" type="hidden">
+										<!-- <input type="hidden" th:name="${_csrf.parameterName}"
+											th:value="${_csrf.token}" /> -->
+
+										<div class="mb-3">
+											<label for="exampleFormControlTextarea1" class="form-label">Lời
+												nhắn cho người dùng</label>
+											<textarea class="form-control"
+												id="exampleFormControlTextarea1" rows="3" name="note"
+												required="required"></textarea>
+										</div>
+
+										<div class="mb-3">
+											<label for="exampleFormControlInput1" class="form-label">Thêm
+												ảnh chi tiết</label> <input type="file" accept="image/*"
+												class="form-control" name="file">
+										</div>
+									</div>
+									<div class="modal-footer border-0 pt-0">
+										<button type="button" class="btn btn-light"
+											th:data-bs-dismiss="modal">Hủy</button>
+										<button type="submit" class="btn btn-info">Xác nhận
+											yêu cầu</button>
+									</div>
+								</div>
+							</div>
+						</form>
+						
+						<form class="modal fade"
+							th:id="'exampleModal-appeal-success' + ${item.id}" method="post"
+							enctype="multipart/form-data"
+							th:action="@{/admin/order/mission/appeal/save}" tabindex="-1"
+							aria-labelledby="exampleModalLabel" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered">
+								<div class="modal-content">
+									<div class="modal-header border-0 pb-0">
+										<h1 class="modal-title fs-5" id="exampleModalLabel">Xác
+											nhận kháng đơn</h1>
+										<button type="button" class="btn-close"
+											data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="modal-body ">
+										<input name="missionId" type="hidden" th:value="${item.id}">
+										<input value="SUCCESS" name="status" type="hidden">
+										<!-- <input
+											type="hidden" th:name="${_csrf.parameterName}"
+											th:value="${_csrf.token}" /> -->
+										<div class="mb-3">
+											<label for="exampleFormControlTextarea1" class="form-label">Lời
+												nhắn cho người dùng</label>
+											<textarea class="form-control"
+												id="exampleFormControlTextarea1" rows="3" name="note"></textarea>
+										</div>
+
+										<div class="mb-3">
+											<label for="exampleFormControlInput1" class="form-label">Thêm
+												ảnh chi tiết</label> <input type="file" accept="image/*"
+												class="form-control" name="file">
+										</div>
+									</div>
+									<div class="modal-footer border-0 pt-0">
+										<button type="button" class="btn btn-light"
+											th:data-bs-dismiss="modal">Hủy</button>
+										<button type="submit" class="btn btn-primary">Xác
+											nhận</button>
+									</div>
+								</div>
+							</div>
+						</form>
+						
+						<form class="modal fade"
+							th:id="'exampleModal-appeal-refuse' + ${item.id}" method="post"
+							enctype="multipart/form-data"
+							th:action="@{/admin/order/mission/appeal/save}" tabindex="-1"
+							aria-labelledby="exampleModalLabel" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered">
+								<div class="modal-content">
+									<div class="modal-header border-0 pb-0">
+										<h1 class="modal-title fs-5" id="exampleModalLabel">Xác
+											nhận từ chối kháng đơn</h1>
+										<button type="button" class="btn-close"
+											data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="modal-body ">
+										<input name="missionId" type="hidden" th:value="${item.id}">
+										<input value="REFUSED" name="status" type="hidden">
+										<!-- <input
+											type="hidden" th:name="${_csrf.parameterName}"
+											th:value="${_csrf.token}" /> -->
+										<div class="mb-3">
+											<label for="exampleFormControlTextarea1" class="form-label">Lời
+												nhắn cho người dùng</label>
+											<textarea class="form-control"
+												id="exampleFormControlTextarea1" rows="3" name="note"></textarea>
+										</div>
+
+										<div class="mb-3">
+											<label for="exampleFormControlInput1" class="form-label">Thêm
+												ảnh chi tiết</label> <input type="file" accept="image/*"
+												class="form-control" name="file">
+										</div>
+									</div>
+									<div class="modal-footer border-0 pt-0">
+										<button type="button" class="btn btn-light"
+											th:data-bs-dismiss="modal">Hủy</button>
+										<button type="submit" class="btn btn-danger">Xác
+											nhận</button>
+									</div>
+								</div>
+							</div>
+						</form>
+						
+					</div>
+
+
+
+				</div>
+
+			</div>
+			<!-- / Content -->
+
+			<!-- Footer -->
+			<!-- / Footer -->
+
+			<div class="content-backdrop fade"></div>
+		</div>
+		<!-- Content wrapper -->
+	</div>
+	<!-- / Layout page -->
+	</div>
+
+	<!-- Overlay -->
+	<div class="layout-overlay layout-menu-toggle"></div>
+	</div>
+
+
+	<script>
+		$(document).ready(function() {
+			$('#appeal-mission').DataTable({
+				scrollX : true,
+				order : []
+			});
+		});
+	</script>
+
+	<script>
+		$(document).ready(function() {
+			$('#missions').DataTable({
+				scrollX : true,
+				order : []
+			});
+		});
+	</script>
+	<!-- / Layout wrapper -->
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
+	<!-- Core JS -->
+	<!-- build:js assets/vendor/js/core.js -->
+	<div th:replace="~{Admin/Fragment/element :: bag}"></div>
+	<div th:replace="~{Admin/Fragment/element :: footer}"></div>
+</body>
+</html>

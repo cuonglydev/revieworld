@@ -1,0 +1,12 @@
+.booking_element_photo{
+    height: 180px;
+
+}
+
+@media screen and (max-width: 768px) {
+    .booking_element_photo{
+        height: 100px;
+    
+    }
+    
+}

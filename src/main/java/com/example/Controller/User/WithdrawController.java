@@ -80,7 +80,7 @@ public class WithdrawController {
 		
 		// Verify ownership
 		if (userBank.getUser().getId() != currentUser.getId()) {
-			redirectAttributes.addFlashAttribute("error", "Tài khoản không hợp lệ");
+			redirectAttributes.addFlashAttribute("danger", "Tài khoản không hợp lệ");
 			return "redirect:/account/withdraw";
 		}
 		
@@ -98,7 +98,7 @@ public class WithdrawController {
 		// Save withdraw request
 		withdrawService.save(withdraw);
 		
-		// Update user's bonus balance
+		// Update user's bonus balancen 
 		currentUser.setBonusAmount(currentUser.getBonusAmount() - amount);
 		userService.save(currentUser);
 		

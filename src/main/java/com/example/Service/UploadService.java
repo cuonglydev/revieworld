@@ -2,6 +2,7 @@ package com.example.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.net.URL;
 
 @Service
 public class UploadService {
@@ -44,4 +47,7 @@ public class UploadService {
 	    
 	    return uniqueFileName;
 	}
+    
+    
+ 
 }

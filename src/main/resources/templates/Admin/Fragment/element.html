@@ -23,7 +23,7 @@
 
 	<link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.css">
 	<!-- Page CSS -->
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<!-- Helpers -->
 	<script src="/Admin/assets/vendor/js/helpers.js"></script>
 
@@ -410,10 +410,46 @@
 			// Các cấu hình khác (tùy chỉnh)
 		}); */
 
-		new DataTable('#example');
-		new DataTable('#example2');
+		$(document).ready(function() {
+			$('#example').DataTable({
+				order : []
+			});
+		});
+		
+		$(document).ready(function() {
+			$('#example2').DataTable({
+				order : []
+			});
+		});
+		
+		$(document).ready(function() {
+			$('#example3').DataTable({
+				order : []
+			});
+		});
+		
+		$(document).ready(function() {
+			$('#example4').DataTable({
+				order : []
+			});
+		});
+		
+		$(document).ready(function() {
+			$('#example5').DataTable({
+				order : []
+			});
+		});
+		
+		$(document).ready(function() {
+			$('#example6').DataTable({
+				order : []
+			});
+		});
+		/* new DataTable('#');
 		new DataTable('#example3');
-
+		new DataTable('#example4');
+		new DataTable('#example5');
+		new DataTable('#example6'); */
 	</script>
 </div>
 

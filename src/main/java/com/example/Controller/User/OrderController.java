@@ -2,10 +2,14 @@ package com.example.Controller.User;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.relational.core.query.CriteriaDefinition.Combinator;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,13 +21,20 @@ import org.springframework.ui.Model;
 
 import com.example.Service.MissionNoteService;
 import com.example.Service.MissionService;
+import com.example.Service.OrderContentService;
+import com.example.Service.OrderPhotoService;
 import com.example.Service.OrderService;
 import com.example.Service.OrderTypeService;
 import com.example.Service.UploadService;
 import com.example.Service.UserService;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 import com.example.Entity.Mission;
 import com.example.Entity.MissionNote;
 import com.example.Entity.Order;
+import com.example.Entity.OrderContent;
+import com.example.Entity.OrderPhoto;
 import com.example.Entity.OrderType;
 import com.example.Entity.User;
 
@@ -48,6 +59,12 @@ public class OrderController {
 	@Autowired
 	private MissionNoteService missionNoteService;
 	
+	@Autowired
+	private OrderPhotoService orderPhotoService;
+	
+	@Autowired
+	private OrderContentService orderContentService;
+	
 	@Value("${static-folder}")
 	private String staticFolder;
 	
@@ -61,27 +78,93 @@ public class OrderController {
 		model.addAttribute("user", user);
 		model.addAttribute("order", order);
 		
+		List<OrderPhoto> orderPhotos = orderPhotoService.findAllByOrderId(order.getId());
+		model.addAttribute("orderPhotos", orderPhotos);
+		
+		List<OrderContent> orderContents = orderContentService.findAllByOrderId(order.getId());
+		model.addAttribute("orderContents", orderContents);
+		
 		List<Mission> waitingMissions = missionService.findAllByOrderIdAndStatus(order.getId(), "WAITING");
+		waitingMissions.sort(Comparator.comparing(Mission::getCreatedAt).reversed());
 		model.addAttribute("numberWaitingMission", waitingMissions.size());
 		model.addAttribute("waitingMissions", waitingMissions);
 		
+		List<Mission> requestEditMissions= missionService.findAllByOrderIdAndStatus(order.getId(), "REQUEST_EDIT");
+		requestEditMissions.sort(Comparator.comparing(Mission::getCreatedAt).reversed());
+		model.addAttribute("numberRequestEditMission", requestEditMissions.size());
+		model.addAttribute("requestEditMissions", requestEditMissions);
+		
 		List<Mission> missions = missionService.findAllByOrderId(order.getId());
+		missions.sort(Comparator.comparing(Mission::getCreatedAt).reversed());
 		model.addAttribute("missions", missions);
 		
 		List<Mission> successMissions = missionService.findAllByOrderIdAndStatus(order.getId(), "SUCCESS");
+		successMissions.sort(Comparator.comparing(Mission::getCreatedAt).reversed());
 		model.addAttribute("numberSuccessMission", successMissions.size());
 		model.addAttribute("successMissions", successMissions);
 		
 		List<String> statuses = Arrays.asList("REFUSED", "REQUEST_REFUSE", "APPEAL");
 		List<Mission> refuseMissions = missionService.findAllByOrderIdAndStatusIn(order.getId(), statuses);
+		refuseMissions.sort(Comparator.comparing(Mission::getCreatedAt).reversed());
 		model.addAttribute("numberRefuseMission", refuseMissions.size());
 		model.addAttribute("refuseMissions", refuseMissions);
 		
 		List<Mission> appealMissions =  missionService.findAllByOrderIdAndStatus(order.getId(), "APPEAL");
+		appealMissions.sort(Comparator.comparing(Mission::getCreatedAt).reversed());
 		model.addAttribute("numberAppealMission", appealMissions.size());
 		model.addAttribute("appealMissions", appealMissions);
 		
+		List<String> expectedStatuses = Arrays.asList("WAITING", "REQUEST_EDIT");
+		List<Mission> expectedMissions = missionService.findAllByOrderIdAndStatusIn(order.getId(), expectedStatuses);
+		model.addAttribute("numberExpectedMissions", expectedMissions.size());
+		
 		return "User/Pages/Order/order-detail";
+	}
+	
+	@GetMapping("/order/request-pause/{slug}")
+	public String pauseOrderFunction(@PathVariable String slug, RedirectAttributes redirectAttributes) {
+		try {
+			User user = userService.getCurrentUser();
+			Order order = orderService.findBySlug(slug);
+			if(user.getId() != order.getUser().getId()) {
+				return "/404";
+			}
+			if("PAUSE".equals(order.getStatus()) || "ACTIVE".equals(order.getStatus())) {
+				order.setStatus("REQUEST_PAUSE");
+				orderService.save(order);
+				redirectAttributes.addFlashAttribute("success", "Tạm dừng nhận review thành công!");
+			}
+			if("CLOSED".equals(order.getStatus())) {
+				redirectAttributes.addFlashAttribute("danger", "Đơn hàng này đã đóng!");
+			}
+		}catch (Exception e) {
+			// TODO: handle exception
+			redirectAttributes.addFlashAttribute("danger", "Tạm dừng nhận reivew thất bại!");
+		}
+		return "redirect:/order/" + slug;
+	}
+	
+	@GetMapping("/order/request-active/{slug}")
+	public String activeOrderFunction(@PathVariable String slug, RedirectAttributes redirectAttributes) {
+		try {
+			User user = userService.getCurrentUser();
+			Order order = orderService.findBySlug(slug);
+			if(user.getId() != order.getUser().getId()) {
+				return "/404";
+			}
+			if("REQUEST_PAUSE".equals(order.getStatus())) {
+				order.setStatus("ACTIVE");
+				orderService.save(order);
+				redirectAttributes.addFlashAttribute("success", "Mở nhận review thành công!");
+			}
+			if("CLOSED".equals(order.getStatus())) {
+				redirectAttributes.addFlashAttribute("danger", "Đơn hàng này đã đóng!");
+			}
+		}catch (Exception e) {
+			// TODO: handle exception
+			redirectAttributes.addFlashAttribute("danger", "Mở nhận review thất bại!");
+		}
+		return "redirect:/order/" + slug;
 	}
 	
 	@GetMapping("/order/mission-detail/{id}")
@@ -99,62 +182,94 @@ public class OrderController {
 		return "/User/Pages/Order/mission-detail";
 	}
 	
-	@GetMapping("/order/success/{id}")
-	public String successMissionFunction(@PathVariable int id, RedirectAttributes redirectAttributes) {
-		Mission mission = missionService.findById(id);
-		Order order = orderService.findById(mission.getOrder().getId());
+	@PostMapping("/order/mission-detail/save")
+	public String saveMissionDetail(@RequestParam("missionId") int missionId, @RequestParam("status") String status, @RequestParam(value = "note", required = false) String note
+			,@RequestParam(value ="file", required = false) MultipartFile file, RedirectAttributes redirectAttributes, HttpServletRequest request ) {
+		String referer = request.getHeader("Referer");
 		try {
-			User user = userService.getCurrentUser();
-			if(user.getId() != order.getUser().getId()) {
-				return "/404";
-			}
-			
-			mission.setStatus("SUCCESS");
-			missionService.save(mission);
-			
-			order.setQuantityDone(order.getQuantityDone() + 1);
-			orderService.save(order);
-			user.setBonusAmount(user.getBonusAmount() + mission.getAmount());
-			userService.save(user);
-			redirectAttributes.addFlashAttribute("success", "Xác nhận thành công!");
-		}catch (Exception e) {
-			// TODO: handle exception
-			redirectAttributes.addFlashAttribute("danger", "Xác nhận thất bại!");
-		}
-		return "redirect:/order/" + order.getSlug();
-	}
-	
-	@PostMapping("/order/refuse")
-	public String refuseOrderFunction(@RequestParam("missionId") int missionId, @RequestParam("note") String note, @RequestParam("file") MultipartFile file,
-			RedirectAttributes redirectAttributes) {
+		User user = userService.getCurrentUser();
 		Mission mission = missionService.findById(missionId);
 		Order order = orderService.findById(mission.getOrder().getId());
-		try {
-			User user = userService.getCurrentUser();
-			if(user.getId() != order.getUser().getId()) {
-				return "/404";
-			}
-			
-			mission.setStatus("REQUEST_REFUSE");
-			missionService.save(mission);
-			
-			MissionNote missionNote = new MissionNote();
-			missionNote.setNote(note);
-			
-			if (!file.isEmpty()) {
-                String filePhoto = uploadService.saveFile(file, "images"); // Lưu ảnh và lấy tên file
-                missionNote.setPhoto(staticFolder + "images/" + filePhoto); 
-			}else {
-				missionNote.setPhoto(null);
-			}
-			
-			
-			redirectAttributes.addFlashAttribute("success", "Từ chối đơn thành công!");
-		}catch (Exception e) {
-			redirectAttributes.addFlashAttribute("danger", "Không thể từ chối đơn này!");
+		User missionUser = userService.findById(mission.getUser().getId());
+		
+		if(mission.getOrder().getUser().getId() != user.getId()) {
+			return "/404";
 		}
-		return "redirect:/order/" + order.getSlug();
- 	}
+		
+		if(mission.getStatus() == null || mission.getStatus().isEmpty() || 
+				Set.of("SUCCESS", "REQUEST_REFUSE","REFUSE", "APPEAL").contains(mission.getStatus())) {
+			
+	
+			redirectAttributes.addFlashAttribute("danger", "Bạn không thể tiếp tục xác thực đơn này!");
+			return "redirect:" + (referer != null ? referer : "/");
+		}
+		
+		missionService.handleMissionStatusChange(mission, order, missionUser, status, note, file, "OWNER", redirectAttributes);
+		
+		
+		}catch (Exception e) {
+			redirectAttributes.addFlashAttribute("danger", "Thực hiện chức năng thất bại!");
+		}
+		
+		return "redirect:" + (referer != null ? referer : "/");
+	}
+	
+//	@GetMapping("/order/success/{id}")
+//	public String successMissionFunction(@PathVariable int id, RedirectAttributes redirectAttributes) {
+//		Mission mission = missionService.findById(id);
+//		Order order = orderService.findById(mission.getOrder().getId());
+//		try {
+//			User user = userService.getCurrentUser();
+//			if(user.getId() != order.getUser().getId()) {
+//				return "/404";
+//			}
+//			
+//			mission.setStatus("SUCCESS");
+//			missionService.save(mission);
+//			
+//			order.setQuantityDone(order.getQuantityDone() + 1);
+//			orderService.save(order);
+//			user.setBonusAmount(user.getBonusAmount() + mission.getAmount());
+//			userService.save(user);
+//			redirectAttributes.addFlashAttribute("success", "Xác nhận thành công!");
+//		}catch (Exception e) {
+//			// TODO: handle exception
+//			redirectAttributes.addFlashAttribute("danger", "Xác nhận thất bại!");
+//		}
+//		return "redirect:/order/" + order.getSlug();
+//	}
+	
+//	@PostMapping("/order/refuse")
+//	public String refuseOrderFunction(@RequestParam("missionId") int missionId, @RequestParam("note") String note, @RequestParam("file") MultipartFile file,
+//			RedirectAttributes redirectAttributes) {
+//		Mission mission = missionService.findById(missionId);
+//		Order order = orderService.findById(mission.getOrder().getId());
+//		try {
+//			User user = userService.getCurrentUser();
+//			if(user.getId() != order.getUser().getId()) {
+//				return "/404";
+//			}
+//			
+//			mission.setStatus("REQUEST_REFUSE");
+//			missionService.save(mission);
+//			
+//			MissionNote missionNote = new MissionNote();
+//			missionNote.setNote(note);
+//			
+//			if (!file.isEmpty()) {
+//                String filePhoto = uploadService.saveFile(file, "images"); // Lưu ảnh và lấy tên file
+//                missionNote.setPhoto(staticFolder + "images/" + filePhoto); 
+//			}else {
+//				missionNote.setPhoto(null);
+//			}
+//			
+//			
+//			redirectAttributes.addFlashAttribute("success", "Từ chối đơn thành công!");
+//		}catch (Exception e) {
+//			redirectAttributes.addFlashAttribute("danger", "Không thể từ chối đơn này!");
+//		}
+//		return "redirect:/order/" + order.getSlug();
+// 	}
 
 	@GetMapping("/order/all-order")
 	public String allOrderPage(Model model) {

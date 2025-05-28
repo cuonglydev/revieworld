@@ -1,0 +1,65 @@
+<div th:fragment="affiliate">
+<ul class="nav nav-tabs d-flex tab__custom" id="myTab" role="tablist">
+                  <li class="nav-item flex-grow-1 " role="presentation">
+                    <button class="nav-link active w-100 " id="system-tab" data-bs-toggle="tab"
+                      data-bs-target="#system-tab-pane" type="button" role="tab" aria-controls="system-tab-pane"
+                      aria-selected="true">Hệ thống</button>
+                  </li>
+                  <li class="nav-item flex-grow-1 " role="presentation">
+                    <button class="nav-link w-100 " id="commission-history-tab" data-bs-toggle="tab"
+                      data-bs-target="#commission-history-tab-pane" type="button" role="tab"
+                      aria-controls="commission-history-tab-pane" aria-selected="false">Lịch sử hoa hồng</button>
+                  </li>
+
+                </ul>
+
+                <div class="tab-content">
+                  <div class="tab-pane fade show active" id="system-tab-pane" role="tabpanel"
+                    aria-labelledby="system-tab" tabindex="0">
+                    <div class="p-2">
+                      <h5 class="fw-semibold">Danh sách người dùng bạn đã mời</h5>
+
+                      <table id="user-affiliate-data" class="table table-striped   text-nowrap w-100">
+                        <thead>
+                          <tr>
+                            <th>Thông tin người dùng</th>
+                            <th>Tổng số hoa hồng</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Herrod Chandler</td>
+                            <td></td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                    </div>
+                  </div>
+
+                  <div class="tab-pane fade" id="commission-history-tab-pane" role="tabpanel"
+                    aria-labelledby="commission-history-tab" tabindex="0">
+                    <div class="p-2">
+                      <h5 class="fw-semibold">Danh sách lịch sử hoa hồng</h5>
+
+                      <table id="user-affiliate-detail-data" class="table table-striped   text-nowrap w-100">
+                        <thead>
+                          <tr>
+                            <th>Thông tin người dùng</th>
+                            <th>Số tiền hoa hồng</th>
+                            <th>Thời gian</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Herrod Chandler</td>
+                            <td></td>
+                            <td></td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                    </div>
+                  </div>
+                </div>
+</div>

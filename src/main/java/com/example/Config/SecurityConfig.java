@@ -115,7 +115,7 @@ public class SecurityConfig {
 			.formLogin(form -> form
 				.loginPage("/login")
 				.loginProcessingUrl("/login")
-				.defaultSuccessUrl("/", true)
+				 .defaultSuccessUrl("/", false) 
 				.failureUrl("/login?error=true")
 				.permitAll()
 			)
@@ -127,7 +127,7 @@ public class SecurityConfig {
 							customAuthorizationRequestResolver(clientRegistrationRepository)))
 				.userInfoEndpoint(userInfo ->
 					userInfo.userService(customOAuth2UserService))
-				.defaultSuccessUrl("/", true))
+				.defaultSuccessUrl("/", false))
 			.rememberMe(remember -> remember
 				.rememberMeParameter("remember-me")
 				.tokenValiditySeconds(7 * 24 * 60 * 60)

@@ -19,15 +19,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.Entity.User;
+import com.example.Entity.DefaultRank;
 import com.example.Entity.Deposit;
 import com.example.Entity.Withdraw;
 import com.example.Entity.Mission;
+import com.example.Entity.Rank;
 import com.example.Entity.UserAffiliate;
 //import com.example.Entity.Dispute;
 import com.example.Service.UserService;
+import com.example.Service.DefaultRankService;
 import com.example.Service.DepositService;
 import com.example.Service.WithdrawService;
 import com.example.Service.MissionService;
+import com.example.Service.RankService;
 import com.example.Service.UserAffiliateService;
 //import com.example.Service.DisputeService;
 
@@ -54,13 +58,36 @@ public class UserManageController {
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 
+	@Autowired
+	private RankService rankService;
+	
+	@Autowired
+	DefaultRankService defaultRankService;
 
 
 	@GetMapping("/user")
 	public String userPage(Model model) {
 		List<User> users = userService.findAll();
 		model.addAttribute("users", users);
+		List<Rank> ranks = rankService.getAllRanks();
+		model.addAttribute("ranks", ranks);
+		DefaultRank defaultRank = defaultRankService.findById(1);
+		model.addAttribute("defaultRank", defaultRank);
 		return "Admin/Pages/User/user";
+	}
+	
+	
+	@GetMapping("/user/{id}")
+	public String userDetailPage(@PathVariable int id, Model model) {
+		try {
+			User user = userService.findById(id);
+			model.addAttribute("user", user);
+			List<Rank> ranks = rankService.getAllRanks();
+			model.addAttribute("ranks", ranks);
+		}catch (Exception e) {
+			model.addAttribute("danger", "Lỗi không tìm thấy người dùng!");
+		}
+		return "Admin/Pages/User/user-detail";
 	}
 
 	
@@ -144,7 +171,7 @@ public class UserManageController {
 		try {
 			User existingUser = userService.findByEmail(email);
 			if (existingUser != null) {
-				redirectAttributes.addFlashAttribute("error", "Email đã tồn tại trong hệ thống!");
+				redirectAttributes.addFlashAttribute("danger", "Email đã tồn tại trong hệ thống!");
 				return "redirect:/admin/user";
 			}
 
@@ -162,7 +189,7 @@ public class UserManageController {
 			userService.save(user);
 			redirectAttributes.addFlashAttribute("success", "Thêm người dùng thành công!");
 		} catch (Exception e) {
-			redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
+			redirectAttributes.addFlashAttribute("danger", "Có lỗi xảy ra: " + e.getMessage());
 		}
 		return "redirect:/admin/user";
 	}
