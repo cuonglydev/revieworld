@@ -1,0 +1,109 @@
+<!-- user-mission-history.html -->
+<div th:fragment="missionHistory">
+    <ul class="nav nav-tabs" id="missionTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="mission-history-tab" data-bs-toggle="tab" href="#mission-history" role="tab">LS Đơn</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="dispute-tab" data-bs-toggle="tab" href="#dispute" role="tab">Kháng đơn</a>
+        </li>
+    </ul>
+    <div class="tab-content pt-3" id="missionTabContent">
+        <!-- LS Đơn -->
+        <div class="tab-pane fade show active" id="mission-history" role="tabpanel">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên nhiệm vụ</th>
+                            <th>Số tiền</th>
+                            <th>Bằng chứng</th>
+                            <th>Trạng thái</th>
+                            <th>Thời gian</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="mission : ${missions}">
+                            <td th:text="${mission.id}"></td>
+                            <td th:text="${mission.name}"></td>
+                            <td th:text="${#numbers.formatDecimal(mission.amount, 0, 'COMMA', 0, 'POINT')} + ' $'"></td>
+                            <td>
+                                <button class="btn btn-sm btn-info" 
+                                        th:if="${mission.evidence != null}"
+                                        th:onclick="'viewMissionEvidence(\'' + ${mission.evidence} + '\')'">
+                                    <i class="bx bx-image"></i> Xem
+                                </button>
+                                <span th:if="${mission.evidence == null}" class="text-muted">Không có</span>
+                            </td>
+                            <td>
+                                <span th:class="${mission.status == 'COMPLETED' ? 'badge bg-success' : (mission.status == 'PENDING' ? 'badge bg-warning' : 'badge bg-danger')}"
+                                      th:text="${mission.status == 'COMPLETED' ? 'Hoàn thành' : (mission.status == 'PENDING' ? 'Đang chờ' : 'Thất bại')}">
+                                </span>
+                                <i class="bx bx-info-circle ms-1 text-muted" 
+                                   th:if="${mission.status == 'FAILED' && mission.rejectReason != null}"
+                                   th:title="${mission.rejectReason}"></i>
+                            </td>
+                            <td th:text="${#dates.format(mission.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(missions)}">
+                            <td colspan="6" class="text-center">Không có dữ liệu</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- Kháng đơn -->
+        <div class="tab-pane fade" id="dispute" role="tabpanel">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên nhiệm vụ</th>
+                            <th>Lý do kháng đơn</th>
+                            <th>Bằng chứng</th>
+                            <th>Trạng thái</th>
+                            <th>Thời gian</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="dispute : ${disputes}">
+                            <td th:text="${dispute.id}"></td>
+                            <td th:text="${dispute.mission.name}"></td>
+                            <td th:text="${dispute.reason}"></td>
+                            <td>
+                                <button class="btn btn-sm btn-info" 
+                                        th:onclick="'viewEvidence(\'' + ${dispute.evidence} + '\')'">
+                                    <i class="bx bx-image"></i> Xem
+                                </button>
+                            </td>
+                            <td>
+                                <span th:class="${dispute.status == 'APPROVED' ? 'badge bg-success' : (dispute.status == 'PENDING' ? 'badge bg-warning' : 'badge bg-danger')}"
+                                      th:text="${dispute.status == 'APPROVED' ? 'Đã duyệt' : (dispute.status == 'PENDING' ? 'Đang xử lý' : 'Từ chối')}">
+                                </span>
+                            </td>
+                            <td th:text="${#dates.format(dispute.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                            <td>
+                                <div th:if="${dispute.status == 'PENDING'}" class="btn-group">
+                                    <button type="button" class="btn btn-sm btn-success" 
+                                            th:onclick="'approveDispute(' + ${dispute.id} + ')'">
+                                        <i class="bx bx-check"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-danger" 
+                                            th:onclick="'rejectDispute(' + ${dispute.id} + ')'">
+                                        <i class="bx bx-x"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(disputes)}">
+                            <td colspan="7" class="text-center">Không có dữ liệu</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div> 

@@ -1,0 +1,26 @@
+header{
+    height: 60px;
+    z-index: 100;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+
+.logo-header{
+    height: 25px ;
+}
+
+
+.menu__item{
+    color: black;
+}
+
+.menu__item:focus{
+    color: #000;
+    background-color: var(--color-orange-light-light);
+}
+
+.menu__active{
+    background-color: var(--color-orange-light-light);
+}

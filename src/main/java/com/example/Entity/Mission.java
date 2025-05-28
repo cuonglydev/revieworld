@@ -33,8 +33,13 @@ public class Mission {
 	@Column(name = "url", length = 500)
 	private String url;
 	
-	@Column(name = "order_photo", length = 500)
-	private String orderPhoto;
+	@ManyToOne
+	@JoinColumn(name = "order_photo_id")
+	private OrderPhoto orderPhoto;
+	
+	@ManyToOne
+	@JoinColumn(name = "order_content_id")
+	private OrderContent orderContent;
 	
 	@Column(name = "admin_note", nullable = true, length = 500)
 	private String adminNote;

@@ -2,11 +2,17 @@ package com.example.Service;
 
 import java.util.List;
 import com.example.Entity.Mission;
+import com.example.Entity.Order;
+import com.example.Entity.OrderContent;
+import com.example.Entity.OrderPhoto;
 import com.example.Entity.User;
 import com.example.Repository.MissionRepository;
+import com.example.Repository.OrderRepository;
 import com.example.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Date;
 
@@ -53,6 +59,87 @@ public class MissionService {
 
     @Autowired
     private UserRepository userRepository;
+    
+    @Autowired 
+    private OrderService orderService;
+   
+    @Autowired
+    private UserService userService;
+    
+    @Autowired
+    private MissionNoteService missionNoteService;
+    
+    @Autowired
+    private OrderPhotoService orderPhotoService;
+    
+    @Autowired
+    private OrderContentService orderContentService;
+    
+    public void handleMissionStatusChange(Mission mission, Order order, User missionUser, String status, String note, MultipartFile file, String sender, RedirectAttributes redirectAttributes) {
+    	switch (status) {
+		case "SUCCESS" :
+			  mission.setStatus(status);
+	            mission.setStatusDate(new Date());
+	            missionNoteService.createNewMissionNote(note, file, status, mission, sender);
+	            missionRepository.save(mission);
+
+	            int quantityDone = order.getQuantityDone() + 1;
+	            order.setQuantityDone(quantityDone);
+	            if (quantityDone == order.getQuantity()) {
+	                order.setStatus("CLOSED");
+	            }
+	            orderService.save(order);
+
+	            missionUser.setBonusAmount(missionUser.getBonusAmount() + mission.getAmount());
+	            userService.save(missionUser);
+
+	            redirectAttributes.addFlashAttribute("success", "Xác nhận thành công!");
+	            break;
+
+		
+		 case "REQUEST_EDIT":
+	        case "REQUEST_REFUSE":
+	        
+	            mission.setStatus(status);
+	            mission.setStatusDate(new Date());
+	            missionNoteService.createNewMissionNote(note, file, status, mission, sender);
+	            missionRepository.save(mission);
+	            redirectAttributes.addFlashAttribute("success", "Yêu cầu xử lý thành công!");
+	            break;
+	            
+	       
+	            
+	        case "REFUSED":
+	        	  	mission.setStatus(status);
+		            mission.setStatusDate(new Date());
+		            missionNoteService.createNewMissionNote(note, file, status, mission, sender);
+		            missionRepository.save(mission);
+		            
+		            
+		            int quantityWorked = order.getWorkedQuantity() - 1;
+		            order.setWorkedQuantity(quantityWorked);
+		            orderService.save(order);
+		            
+		            if(mission.getOrderPhoto() != null) {
+		            	  OrderPhoto orderPhoto = orderPhotoService.findById(mission.getOrderPhoto().getId());
+		            	  orderPhoto.setStatus("ACTIVE");
+		            	  orderPhotoService.save(orderPhoto);
+		            }
+		            
+		            if(mission.getOrderContent() != null) {
+		            	OrderContent orderContent = orderContentService.findById(mission.getOrderContent().getId());
+		            	orderContent.setStatus("ACTIVE");
+		            	orderContentService.save(orderContent);
+		            }
+		            redirectAttributes.addFlashAttribute("success", "Yêu cầu xử lý thành công!");
+		            
+		            break;
+		            
+	        default:
+	            redirectAttributes.addFlashAttribute("danger", "Trạng thái không hợp lệ!");
+		          
+		}
+    }
 //
 //    // Bắt đầu nhiệm vụ (Trạng thái: WAITING)
 //    public Mission startMission(int missionId) {

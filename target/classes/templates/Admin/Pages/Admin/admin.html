@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+
+<!-- =========================================================
+* Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
+==============================================================
+
+* Product Page: https://themeselection.com/products/sneat-bootstrap-html-admin-template/
+* Created by: ThemeSelection
+* License: You must have a valid license purchased in order to legally use the theme for your project.
+* Copyright ThemeSelection (https://themeselection.com)
+
+=========================================================
+ -->
+<!-- beautify ignore:start -->
+<html lang="en" class="light-style layout-menu-fixed" dir="ltr"
+	data-theme="theme-default" data-assets-path="/Admin/assets/"
+	data-template="vertical-menu-template-free"  xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+
+<title>ADMIN - Analytics</title>
+
+<meta name="description" content="" />
+
+<!-- Favicon -->
+<div th:replace="~{Admin/Fragment/element :: head}"></div>
+</head>
+
+<body>
+	<!-- Layout wrapper -->
+	<div class="layout-wrapper layout-content-navbar">
+		<div class="layout-container">
+			<!-- Menu -->
+<div th:replace="~{Admin/Fragment/element :: menu}"></div>
+			<!-- / Menu -->
+
+			<!-- Layout container -->
+			<div class="layout-page">
+				<!-- Navbar -->
+
+         <div th:replace="~{Admin/Fragment/element :: header}"></div>
+
+				<!-- / Navbar -->
+
+				<!-- Content wrapper -->
+				<div class="content-wrapper">
+					<!-- Content -->
+
+					<div class="container-xxl flex-grow-1 container-p-y">
+						<div class="row">
+
+
+							<!-- content -->
+							
+							<div class="col-xl">
+								<div class="card mb-4">
+									<div
+										class="card-header d-flex justify-content-between align-items-center">
+										<h5 class="mb-0">Thêm tài khoản người dùng</h5>
+									</div>
+									<div class="card-body">
+										<form class="row" method="post" action="/admin/admin/save">
+											<div class="mb-3 col-6">
+												<label class="form-label">Tên đăng nhập</label> <input
+													type="text" class="form-control" required="required"
+													name="username" />
+											</div>
+											<div class="form-password-toggle mb-3 col-6">
+												<label class="form-label" for="basic-default-password12">Mật
+													khẩu</label>
+												<div class="input-group">
+													<input type="password" class="form-control"
+														autocomplete="off" id="basic-default-password12"
+														placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+														aria-describedby="basic-default-password2"
+														required="required" name="password" /> <span
+														id="basic-default-password2"
+														class="input-group-text cursor-pointer"><i
+														class="bx bx-hide"></i></span>
+												</div>
+											</div>
+
+											<div class="mb-3 col-12">
+												<label for="exampleFormControlSelect1" class="form-label">Chức
+													vụ</label> <select class="form-select"
+													id="exampleFormControlSelect1"
+													aria-label="Default select example" required="required"
+													name="role">
+
+													<option value="ROLE_ADMIN">ADMIN</option>
+													<option value="ROLE_EMPLOYEE">Employee</option>
+												</select>
+											</div>
+											
+
+											<button type="submit" class="btn btn-primary">Tạo
+												tài khoản</button>
+										</form>
+									</div>
+								</div>
+							</div>
+
+
+
+							<div class="col-12">
+								<div class="card">
+									<h5 class="card-header">Danh sách tài khoản</h5>
+									<div class="table-responsive text-nowrap">
+										<table class="table table-borderless" id="example">
+											<thead>
+												<tr>
+
+													<th>Tên dăng nhập</th>
+
+													<th>Chức vụ</th>
+													<th>Actions</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="item : ${admins}">
+
+
+
+													<td><span th:text="${item.username}"></span></td>
+													<td><span class="badge bg-label-primary me-1"
+														th:if="${item.role == 'ROLE_ADMIN'}">ADMIN</span> <span
+														class="badge bg-label-success me-1"
+														th:if="${item.role == 'ROLE_EMPLOYEE'}">NHÂN VIÊN</span>
+														
+													
+													<td>
+
+
+
+														<button type="button" class="btn btn-success"
+															data-bs-toggle="modal"
+															th:attr="data-bs-target='#modalCenter' + ${item.id}">
+															Chỉnh sửa</button> <!-- Modal -->
+														<div class="modal fade" tabindex="-1"
+															th:id="'modalCenter' + ${item.id}" aria-hidden="true">
+															<div class="modal-dialog modal-dialog-centered"
+																role="document">
+
+																<form class="modal-content" method="post"
+																	action="/admin/admin/save"
+																	enctype="multipart/form-data">
+																	<div class="modal-header">
+																		<h5 class="modal-title" id="modalCenterTitle">Sửa
+																			tài khoản</h5>
+																		<button type="button" class="btn-close"
+																			data-bs-dismiss="modal" aria-label="Close"></button>
+																	</div>
+																	<div class="modal-body row">
+																		<input th:value="${item.id}" hidden name="id">
+
+
+																		<div class="mb-3 col-12">
+																			<label class="form-label"
+																				for="basic-default-fullname">Tên đăng nhập</label> <input
+																				type="text" class="form-control"
+																				id="basic-default-fullname" placeholder=""
+																				th:value="${item.username}" name="username"
+																				required="required" />
+																		</div>
+																		<div class="form-password-toggle mb-3 col-12">
+																			<label class="form-label"
+																				for="basic-default-password12">Mật khẩu</label>
+																			<div class="input-group">
+																				<input type="password" class="form-control"
+																					id="basic-default-password12"
+																					placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+																					aria-describedby="basic-default-password2" name="password"
+																					/> <span
+																					id="basic-default-password2"
+																					class="input-group-text cursor-pointer"><i
+																					class="bx bx-hide"></i></span>
+																			</div>
+																		</div>
+																	
+
+
+																		<div class="mb-3 col-12">
+																			<label for="exampleFormControlSelect1"
+																				class="form-label">Chức vụ</label> <select
+																				class="form-select" id="exampleFormControlSelect1"
+																				aria-label="Default select example"
+																				required="required" name="role">
+
+																				<option value="ROLE_ADMIN"
+																					th:selected="${item.role == 'ROLE_ADMIN'}">ADMIN</option>
+																				<option value="ROLE_EMPLOYEE"
+																					th:selected="${item.role == 'ROLE_EMPLOYEE'}">Nhân viên</option>
+																					
+
+
+																			</select>
+																		</div>
+
+																	</div>
+
+
+
+
+
+
+
+																	<div class="modal-footer">
+																		<button type="button"
+																			class="btn btn-outline-secondary"
+																			data-bs-dismiss="modal">Close</button>
+																		<button type="submit" class="btn btn-primary">Lưu
+																			thay đổi</button>
+																	</div>
+																</form>
+
+															</div>
+														</div>
+
+
+
+														<button type="button" class="btn btn-danger"
+															data-bs-toggle="modal"
+															th:attr="data-bs-target='#modalCenterdelete' + ${item.id}">
+															<i class='bx bx-trash'></i>
+														</button> <!-- Modal -->
+														<div class="modal fade" tabindex="-1"
+															th:id="'modalCenterdelete' + ${item.id}"
+															aria-hidden="true">
+															<div class="modal-dialog modal-dialog-centered"
+																role="document">
+
+																<form class="modal-content">
+																	<div class="modal-header">
+																		<h5 class="modal-title" id="modalCenterTitle">Xóa
+																			tài khoản</h5>
+																		<button type="button" class="btn-close"
+																			data-bs-dismiss="modal" aria-label="Close"></button>
+																	</div>
+																	<div class="modal-body text-wrap">
+
+																		Bạn có chắc muốn xóa tài khoản <b
+																			th:text="${item.username}"></b> và không thể truy
+																		cập lại?
+																	</div>
+																	<div class="modal-footer">
+																		<button type="button"
+																			class="btn btn-outline-secondary"
+																			data-bs-dismiss="modal">Close</button>
+																		<a class="btn btn-danger"
+																			th:href="@{/admin/admin/delete/{id} (id=${item.id})}">Xác
+																			nhận xóa</a>
+																	</div>
+																</form>
+
+															</div>
+														</div>
+
+
+													</td>
+												</tr>
+
+
+
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+
+
+
+						</div>
+
+					</div>
+
+
+
+
+
+					<!-- Footer -->
+					<!-- / Footer -->
+
+					<div class="content-backdrop fade"></div>
+				</div>
+				<!-- Content wrapper -->
+			</div>
+			<!-- / Layout page -->
+		</div>
+
+		<!-- Overlay -->
+		<div class="layout-overlay layout-menu-toggle"></div>
+	</div>
+	<!-- / Layout wrapper -->
+
+    <div th:replace="~{Admin/Fragment/element :: bag}"></div>
+<div th:replace="~{Admin/Fragment/element :: footer}"></div>
+</body>
+</html>

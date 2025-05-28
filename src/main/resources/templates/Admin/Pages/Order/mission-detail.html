@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+
+<!-- =========================================================
+* Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
+==============================================================
+
+* Product Page: https://themeselection.com/products/sneat-bootstrap-html-admin-template/
+* Created by: ThemeSelection
+* License: You must have a valid license purchased in order to legally use the theme for your project.
+* Copyright ThemeSelection (https://themeselection.com)
+
+=========================================================
+ -->
+<!-- beautify ignore:start -->
+<html
+  lang="en"
+  class="light-style layout-menu-fixed"
+  dir="ltr"
+  data-theme="theme-default"
+  data-assets-path="/Admin/assets/"
+  data-template="vertical-menu-template-free"
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+    />
+
+    <title>ADMIN - Analytics</title>
+
+    <meta name="description" content="" />
+
+    <!-- Favicon -->
+   <div th:replace="~{Admin/Fragment/element :: head}"></div>
+   
+
+  </head>
+
+  <body>
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+      <div class="layout-container">
+        <!-- Menu -->
+<div th:replace="~{Admin/Fragment/element :: menu}"></div>
+        <!-- / Menu -->
+
+        <!-- Layout container -->
+        <div class="layout-page">
+          <!-- Navbar -->
+
+         <div th:replace="~{Admin/Fragment/element :: header}"></div>
+
+          <!-- / Navbar -->
+
+          <!-- Content wrapper -->
+          <div class="content-wrapper">
+            <!-- Content -->
+
+            <div class="container-xxl flex-grow-1 container-p-y">
+              <div class="row">
+              <div class="col-12">
+								<nav aria-label="breadcrumb">
+									<ol class="breadcrumb">
+										<li class="breadcrumb-item"><a href="/admin/order">Đơn
+												hàng</a></li>
+												<li class="breadcrumb-item"><a th:href="@{/admin/order/{id} (id=${mission.order.id})}" th:text="${mission.order.name}"></a></li>
+										<li class="breadcrumb-item active" aria-current="page"
+											>Chi tiết nhiệm vụ</li>
+									</ol>
+								</nav>
+							</div>
+							
+					<div class="col-12">
+						<div class="card">
+							<div class="card-header">
+								
+							</div>
+							
+							<div class="card-body">
+								<div class="row">
+					<div class="col-12 col-md-6 mb-2">
+						<h6>Yêu cầu của bạn</h6>
+						<span th:text="${order.detail}"></span>
+						<p class="text-secondary" th:if="${mission.orderPhoto != null}">Ảnh
+							yêu cầu</p>
+						<img th:src="${mission.orderPhoto.photo}"
+							th:if="${mission.orderPhoto != null}" class="w-100 rounded">
+							<p class="text-secondary mb-0 mt-1" th:if="${mission.orderContent != null}">Nội dung yêu cầu</p>
+							<span th:if="${mission.orderContent != null}" th:text="${mission.orderContent.content}"></span>
+						<h6 class="mt-2">Thông tin reviewer</h6>
+						<div>
+							<span class="text-secondary">Tên:</span> <span class=""
+								th:text="${mission.user.username}"></span>
+						</div>
+						<div>
+							<span class="text-secondary">Email:</span> <span
+								class="obfuscate-email" th:text="${mission.user.email}"></span>
+						</div>
+						<div class="w-100">
+							<span class="text-secondary">Link đánh giá:</span> <a
+								class="wrap-url" th:text="${mission.url}"
+								th:href="${mission.url}" target="_blank"></a>
+						</div>
+						<div>
+							<span class="text-secondary">Thời gian đánh giá:</span> <span
+								th:text="${#dates.format(mission.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+						</div>
+						<div>
+							<span class="text-secondary">Trạng thái hiện tại:</span> <span
+								th:if="${mission.status == 'WAITING'}"
+								class="badge bg-secondary">Đang chờ</span>
+								<span
+								th:if="${mission.status == 'REQUEST_EDIT'}"
+								class="badge bg-info">Đang chỉnh sửa</span>
+								<span
+								th:if="${mission.status == 'REFUSE'}"
+								class="badge bg-danger">Đã từ chối</span>
+								<span
+								th:if="${mission.status == 'REQUEST_REFUSE'}"
+								class="badge bg-warning">Từ chối</span>
+								<span
+								th:if="${mission.status == 'APPEAL'}"
+								class="badge bg-dark">Đang kháng đơn</span>
+								<span
+								th:if="${mission.status == 'SUCCESS'}"
+								class="badge bg-success">Đã xác nhận</span>
+						</div>
+					</div>
+
+					<div class="col-12 col-md-6">
+						<div class=" rounded border ">
+							
+							<div class="p-2 overflow-auto flex flex-col-reverse"
+								id="scrollableDiv" style="height: 400px;">
+
+								<div class=" mt-1 " th:each="item : ${missionNotes}" th:classappend="${item.sender == 'ADMIN' ? ' text-end ps-4' : ' text-start pe-4' }">
+									<div class="rounded border  overflow-hidden bg__gray__light__subtle ">
+										<div class="p-2 bg-info text-white " th:if="${item.type == 'REQUEST_EDIT'}">
+										<span>Yêu cầu chỉnh sửa</span>
+										<span class="badge bg-light text-danger" th:text="${mission.order.user.email}">ADMIN</span>
+										</div>
+										<div class="p-2 bg-dark text-white " th:if="${item.type == 'APPEAL'}">Đang gửi kháng đơn</div>
+										<div class="p-2 bg-danger text-white d-flex align-items-center justify-content-between"
+										  th:if="${item.type == 'REQUEST_REFUSE'}">
+										  <span>Từ chối</span>
+										  <span class="badge bg-light text-danger" th:text="${mission.order.user.email}">ADMIN</span>
+										  </div>
+										<div class="p-2 bg-primary text-white "  th:if="${item.type == 'EDITED'}">Đã chỉnh sửa</div>
+										<div class="p-2 bg-success text-white d-flex justify-content-between align-items-center"
+											th:if="${item.type == 'SUCCESS'}">
+											
+											<span class="badge bg-light text-success" th:if="${item.sender == 'ADMIN'}">ADMIN</span>
+											<span>Chấp nhận</span>
+											<span class="badge bg-light text-success" th:if="${item.sender == 'OWNER'}" th:text="${mission.user.email}">ADMIN</span>
+											</div>
+											
+											<div class="p-2 bg-danger text-white d-flex align-items-center justify-content-between"
+											th:if="${item.type == 'REFUSED'}"  >
+											
+												<span class="badge bg-light text-danger" th:if="${item.sender == 'ADMIN'}">ADMIN</span>
+													<span>Đã từ chối</span>
+											</div>
+											
+										<img class="w-100"
+											th:src="${item.photo}" th:if="${item.photo != null}">
+										<div class="p-1 text-start">
+											<span class="" th:text="${item.note}"> Nội dung hay content là những thông
+												tin chứa đựng bên trong các phương tiện truyền thông bao gồm
+												Internet, điện ảnh, truyền hình, truyền thanh radio, đĩa
+												CD/VCD, DVD, sách báo, tạp chí, nghệ thuật tạo hình cũng như
+												các sự kiện trực tiếp.</span>
+											<p class="fs__12px m-0 text-start text-secondary" th:classappend="${item.sender == 'WORKER' or item.sender == 'OWNER' ? 'text-end' : 'text-start' }"
+											 th:text="${#dates.format(item.createdAt, 'yyyy-MM-dd HH:mm')}">12:00
+												12-12-2002</p>
+										</div>
+									</div>
+								</div>
+
+								
+
+
+							</div>
+							<div class="p-2 border-top text-end" id="accordion-parent" th:if="${mission.status == 'WAITING' or mission.status == 'REQUEST_EDIT'}">
+								<a class="btn btn-danger" data-bs-toggle="collapse"
+									href="#collapseExample-request-refuse" role="button"
+									aria-expanded="false"
+									aria-controls="collapseExample-request-refuse"><i
+									class="fa-solid fa-xmark"></i></a> <a
+									class="btn btn-info text-white" data-bs-toggle="collapse"
+									href="#collapseExample-request-edit" role="button"
+									aria-expanded="false"
+									aria-controls="collapseExample-request-edit"><i
+									class="fa-solid fa-pen-to-square"></i></a> <a
+									class="btn btn-primary" data-bs-toggle="collapse"
+									href="#collapseExample-success" role="button"
+									aria-expanded="false" aria-controls="collapseExample-success"><i
+									class="fa-solid fa-check"></i></a>
+
+								<div class="collapse mt-1" id="collapseExample-request-refuse"
+									data-bs-parent="#accordion-parent">
+									<div class="card card-body">
+
+										<form method="post" th:action="@{/admin/order/mission-detail/save}" enctype="multipart/form-data">
+											<input name="missionId" type="hidden" th:value="${mission.id}">
+											<input value="REQUEST_REFUSE" name="status" type="hidden">
+											<div class="mb-3 text-start">
+												<label for="exampleFormControlTextarea1" class="form-label">Để
+													lại lời nhắn</label>
+												<textarea class="form-control" name="note" required="required"
+													id="exampleFormControlTextarea1" rows="3"></textarea>
+											</div>
+
+											<div class="mb-3">
+												<input type="file" accept="image/*" class="form-control" name="file">
+											</div>
+
+											<div class="">
+												<button class="btn btn-danger w-100 ">Từ chối</button>
+											</div>
+										</form>
+
+									</div>
+								</div>
+								<div class="collapse mt-1" id="collapseExample-request-edit" 
+									data-bs-parent="#accordion-parent">
+									<div class="card card-body">
+										<form method="post" th:action="@{/admin/order/mission-detail/save}" enctype="multipart/form-data">
+											<input name="missionId" type="hidden" th:value="${mission.id}">
+											<input value="REQUEST_EDIT" name="status" type="hidden">
+											<div class="mb-3 text-start">
+												<label for="exampleFormControlTextarea1" class="form-label">Để
+													lại lời nhắn</label>
+												<textarea class="form-control" name="note" required="required"
+													id="exampleFormControlTextarea1" rows="3"></textarea>
+											</div>
+
+											<div class="mb-3">
+												<input type="file" accept="image/*" class="form-control" name="file">
+											</div>
+
+											<div class="">
+												<button type="submit" class="btn btn-info text-white w-100 ">Yêu
+													cầu chỉnh sửa</button>
+											</div>
+										</form>
+									</div>
+								</div>
+								<div class="collapse mt-1" id="collapseExample-success"
+									data-bs-parent="#accordion-parent">
+									<div class="card card-body">
+										<form method="post" th:action="@{/admin/order/mission-detail/save}" enctype="multipart/form-data">
+											<input name="missionId" type="hidden" th:value="${mission.id}">
+											<input value="SUCCESS" name="status" type="hidden">
+											<div class="mb-3 text-start">
+												<label for="exampleFormControlTextarea1" class="form-label">Để
+													lại lời nhắn</label>
+												<textarea class="form-control" name="note" 
+													id="exampleFormControlTextarea1" rows="3"></textarea>
+											</div>
+
+											<div class="mb-3">
+												<input type="file" accept="image/*" class="form-control" name="file">
+											</div>
+
+											<div class="">
+												<button class="btn btn-primary w-100 ">Xác nhận</button>
+											</div>
+										</form>
+
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+							</div>
+						</div>
+					</div>
+              
+             
+              </div>
+              
+            </div>
+            <!-- / Content -->
+
+            <!-- Footer -->
+            <!-- / Footer -->
+
+            <div class="content-backdrop fade"></div>
+          </div>
+          <!-- Content wrapper -->
+        </div>
+        <!-- / Layout page -->
+      </div>
+
+      <!-- Overlay -->
+      <div class="layout-overlay layout-menu-toggle"></div>
+    </div>
+    <!-- / Layout wrapper -->
+	<script>
+  window.onload = function () {
+    const div = document.getElementById('scrollableDiv');
+    div.scrollTop = div.scrollHeight;
+  };
+</script>
+
+    
+    <!-- Core JS -->
+    <!-- build:js assets/vendor/js/core.js -->
+    <div th:replace="~{Admin/Fragment/element :: bag}"></div>
+<div th:replace="~{Admin/Fragment/element :: footer}"></div>
+  </body>
+</html>

@@ -1,0 +1,12 @@
+.custom-nav{
+
+}
+
+.custom-nav .nav-link{
+    color: black;
+}
+
+.custom-nav .active{
+    background-color: var(--color-orange) !important;
+    color: white;
+}

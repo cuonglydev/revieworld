@@ -35,6 +35,9 @@ public class MissionNote {
 	@Column(name = "photo", length = 500)
 	private String photo;
 	
+	@Column(name = "type")
+	private String type;
+	
 	@Column(name = "sender", nullable = false)
 	private String sender;
 	

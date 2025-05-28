@@ -18,7 +18,7 @@ public class OrderPhotoService {
 		return orderPhotoRepository.findById(id).orElse(null);
 	}
 	
-	public List<OrderPhoto> findAllByIOrderId(int orderId){
+	public List<OrderPhoto> findAllByOrderId(int orderId){
 		return orderPhotoRepository.findAllByOrderId(orderId);
 	}
 	

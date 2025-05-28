@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reviewords</title>
+
+   <div th:replace="~{User/Fragment/element :: head}"></div>
+
+
+</head>
+
+<body>
+
+   <div th:replace="~{User/Fragment/element :: header}"></div>
+  
+    
+  <div class="container">
+    <div class="border-bottom border-secondary-subtle d-flex justify-content-between p-2">
+        <a href="#" id="goBack" class="text-secondary fs__12px"><i class="fa-solid fa-arrow-left"></i> Trở về</a>
+        <span class="fw-semibold">Lịch sử nhiệm vụ</span>
+    </div>
+</div>
+
+
+
+  <section class="mt-3"> 
+    <div class="container">
+        <div class="rounded shadow-sm bg-light ">
+             <div th:replace="~{User/Pages/Account/Fragment/mission-history-element :: mission-history}"></div>
+        </div>
+    </div>
+  </section>
+
+
+
+ 
+
+  <script src="/User/js/goBack.js"></script>
+  <script src="/User/js/bootstrap.bundle.min.js"></script>
+  <script src="/User/js/menu.js"></script>
+</body>
+
+</html>

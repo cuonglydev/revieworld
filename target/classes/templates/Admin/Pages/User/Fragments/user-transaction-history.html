@@ -1,0 +1,102 @@
+<!-- user-transaction-history.html -->
+<div th:fragment="transactionHistory">
+    <ul class="nav nav-tabs" id="transactionTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="deposit-tab" data-bs-toggle="tab" href="#deposit" role="tab">LS nạp</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="withdraw-tab" data-bs-toggle="tab" href="#withdraw" role="tab">LS rút</a>
+        </li>
+    </ul>
+    <div class="tab-content pt-3" id="transactionTabContent">
+        <!-- LS nạp -->
+        <div class="tab-pane fade show active" id="deposit" role="tabpanel">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Số tiền</th>
+                            <th>Phương thức</th>
+                            <th>Trạng thái</th>
+                            <th>Thời gian</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="deposit : ${deposits}">
+                            <td th:text="${deposit.id}"></td>
+                            <td th:text="${#numbers.formatDecimal(deposit.amount, 0, 'COMMA', 0, 'POINT')} + ' $'"></td>
+                            <td>
+                                <span th:switch="${deposit.method}">
+                                    <span th:case="'BANK'" class="badge bg-label-primary">Chuyển khoản</span>
+                                    <span th:case="'MOMO'" class="badge bg-label-danger">Ví Momo</span>
+                                    <span th:case="*" th:text="${deposit.method}"></span>
+                                </span>
+                            </td>
+                            <td>
+                                <span th:class="${deposit.status == 'SUCCESS' ? 'badge bg-success' : (deposit.status == 'PENDING' ? 'badge bg-warning' : 'badge bg-danger')}"
+                                      th:text="${deposit.status == 'SUCCESS' ? 'Thành công' : (deposit.status == 'PENDING' ? 'Đang xử lý' : 'Thất bại')}">
+                                </span>
+                            </td>
+                            <td th:text="${#dates.format(deposit.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(deposits)}">
+                            <td colspan="5" class="text-center">Không có dữ liệu</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- LS rút -->
+        <div class="tab-pane fade" id="withdraw" role="tabpanel">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Số tiền</th>
+                            <th>Phương thức</th>
+                            <th>Trạng thái</th>
+                            <th>Thời gian</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="withdraw : ${withdraws}">
+                            <td th:text="${withdraw.id}"></td>
+                            <td th:text="${#numbers.formatDecimal(withdraw.amount, 0, 'COMMA', 0, 'POINT')} + ' $'"></td>
+                            <td>
+                                <span th:switch="${withdraw.method}">
+                                    <span th:case="'BANK'" class="badge bg-label-primary">Chuyển khoản</span>
+                                    <span th:case="'MOMO'" class="badge bg-label-danger">Ví Momo</span>
+                                    <span th:case="*" th:text="${withdraw.method}"></span>
+                                </span>
+                            </td>
+                            <td>
+                                <span th:class="${withdraw.status == 'SUCCESS' ? 'badge bg-success' : (withdraw.status == 'PENDING' ? 'badge bg-warning' : 'badge bg-danger')}"
+                                      th:text="${withdraw.status == 'SUCCESS' ? 'Thành công' : (withdraw.status == 'PENDING' ? 'Đang xử lý' : 'Từ chối')}">
+                                </span>
+                            </td>
+                            <td th:text="${#dates.format(withdraw.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                            <td>
+                                <div th:if="${withdraw.status == 'PENDING'}" class="btn-group">
+                                    <button type="button" class="btn btn-sm btn-success" 
+                                            th:onclick="'approveWithdraw(' + ${withdraw.id} + ')'">
+                                        <i class="bx bx-check"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-danger" 
+                                            th:onclick="'rejectWithdraw(' + ${withdraw.id} + ')'">
+                                        <i class="bx bx-x"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(withdraws)}">
+                            <td colspan="6" class="text-center">Không có dữ liệu</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div> 
